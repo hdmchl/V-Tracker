@@ -1,5 +1,9 @@
 ###################
 *.project
+*.xcworkspacedata
+*.xcuserstate
+*.xcscheme
+*.plist
 
 # Packages #
 ############
