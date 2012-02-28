@@ -1,4 +1,4 @@
-PTtracker
+PT Tracker
 ===============
 
 More info. coming soon
