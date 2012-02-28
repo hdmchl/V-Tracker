@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		
+		<title>PT Tracker</title>
+  
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+		<meta charset="utf-8">
+
+
+		<!-- iPad/iPhone specific css below, add after your main css -->
+		<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="ipad.css" type="text/css" />		
+		<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="iphone.css" type="text/css" />
+
+		<script type="text/javascript" charset="utf-8" src="scripts/phonegap-1.4.1.js"></script>
+		<script type="text/javascript" charset="utf-8" src="scripts/geolocation.js"></script>
+
+		<script type="text/javascript">
+			// prevent dragging
+			function preventBehavior(e) 
+			{ 
+				e.preventDefault(); 
+			}
+			document.addEventListener("touchmove", preventBehavior, false);
+			
+			function onBodyLoad()
+			{		
+				document.addEventListener("deviceready", onDeviceReady, false);
+			}
+	
+			// PhoneGap has been initialized and is ready to roll
+			function onDeviceReady()
+			{
+				//navigator.notification.alert("PhoneGap is working");        
+			}
+		</script>
+			
+	</head>
+
+	<body onload="onBodyLoad()">
+		<h1>Hello world!</h1>
+		
+		<a href="javascript:getLocation();">START</a>
+		
+		<h2>Position</h2>
+		<div id="position"></div>
+      
+		<p><a href="javascript:stop();">STOP</a>
+		<br /><a href="javascript:clear();">CLEAR</a></p>
+	</body>
+	
+</html>
