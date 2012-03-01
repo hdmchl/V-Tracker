@@ -6,48 +6,139 @@
 		<title>PT Tracker</title>
   
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
-		<meta charset="utf-8">
+		<meta charset="utf-8" />
 
-
-		<!-- iPad/iPhone specific css below, add after your main css -->
-		<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="ipad.css" type="text/css" />		
-		<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="iphone.css" type="text/css" />
-
-		<script type="text/javascript" charset="utf-8" src="scripts/phonegap-1.4.1.js"></script>
+		<!-- iPad/iPhone specific css below -->
+		<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="styles/ipad.css" type="text/css" />		
+		<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="styles/iphone.css" type="text/css" />
+		
+		<!-- general css styling -->
+		<link rel="stylesheet" href="styles/styles.css" type="text/css" />
+		
+		<!-- general js scripts -->
+		<script type="text/javascript" charset="utf-8" src="scripts/scripts.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/geolocation.js"></script>
-
-		<script type="text/javascript">
-			// prevent dragging
-			function preventBehavior(e) 
-			{ 
-				e.preventDefault(); 
-			}
-			document.addEventListener("touchmove", preventBehavior, false);
+		<script type="text/javascript" charset="utf-8" src="scripts/accelerometer.js"></script>
+		<script type="text/javascript" charset="utf-8" src="scripts/notifications.js"></script>
 			
-			function onBodyLoad()
-			{		
+		<!-- phongap dependancies -->
+		<script type="text/javascript" charset="utf-8" src="scripts/phonegap-1.4.1.js"></script>
+	
+		<!-- jQuery.mobile dependancies -->
+		<link rel="stylesheet" href="jquery/jquery.mobile-1.0.1.css" type="text/css" />
+		<script type="text/javascript" src="jquery/jquery-1.7.1.js"></script>
+		<script type="text/javascript" charset="utf-8" src="scripts/jquery-mods.js"></script>
+		<script type="text/javascript" src="jquery/jquery.mobile-1.0.1.js"></script> 
+			
+		<!-- load scripts -->	
+		<script type="text/javascript">
+			function onBodyLoad() {		
 				document.addEventListener("deviceready", onDeviceReady, false);
 			}
 	
-			// PhoneGap has been initialized and is ready to roll
-			function onDeviceReady()
-			{
-				//navigator.notification.alert("PhoneGap is working");        
+			function onDeviceReady() {
+				//We're ready to roll      
 			}
 		</script>
 			
 	</head>
 
 	<body onload="onBodyLoad()">
-		<h1>Hello world!</h1>
 		
-		<a href="javascript:getLocation();">START</a>
+		<div data-role="page" id="homepage" data-theme="d">
+			
+			<div data-role="header">
+				<h1>PT Tracker</h1>
+			</div><!-- /header -->
+			
+			<div data-role="content">
+				
+				<div data-role="collapsible-set">
+                    <div data-role="collapsible" data-collapsed="true">
+                        <h3>GeoLocation</h3>
+						
+						<div data-role="controlgroup" data-type="horizontal">
+							<button type="button" onClick=get_geoLocation()>Start</button>
+							<button type="button" onClick=GL_stop()>Stop</button>
+							<button type="button" onClick=clearDiv('geolocation')>Clear</button>
+						</div>
+							
+						<div id="geolocation">Waiting for GPS...</div>
+                    </div>
+					
+					<div data-role="collapsible" data-collapsed="true">
+                        <h3>Acceleration</h3>
+						
+						<div data-role="controlgroup" data-type="horizontal">
+							<button type="button" onClick=startWatch()>Start</button>
+							<button type="button" onClick=stopWatch()>Stop</button>
+							<button type="button" onClick=clearDiv('acceleration')>Clear</button>
+						</div>
+						
+						<div id="acceleration">Waiting for accelerometer...</div>
+                    </div>
+					
+					<div data-role="collapsible" data-collapsed="true">
+                        <h3>Notifications</h3>
+						
+						<div data-role="controlgroup" data-type="vertical">
+							<a href="#" onclick="showAlert(); return false;" data-role="button">Show Alert</a>
+							<a href="#" onclick="playBeep(); return false;" data-role="button">Play Beep</a>
+							<a href="#" onclick="vibrate(); return false;" data-role="button">Vibrate</a>
+						</div>
+                    </div>
+                </div>
+				
+			</div><!-- /home -->
+			
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar" data-iconpos="top">
+					<ul>
+                        <li>
+                            <a href="#homepage" data-theme="" data-icon="home" class="ui-btn-active ui-state-persist">
+                                Home
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#about" data-theme="" data-icon="info" data-transition="slide">
+                                About
+                            </a>
+                        </li>
+                    </ul>
+				</div>
+			</div><!-- /footer -->
+			
+		</div><!-- /homepage -->
 		
-		<h2>Position</h2>
-		<div id="position"></div>
-      
-		<p><a href="javascript:stop();">STOP</a>
-		<br /><a href="javascript:clear();">CLEAR</a></p>
+		<div data-role="page" id="about" data-theme="d">
+			
+			<div data-role="header">
+				<h1>About</h1>
+				
+			</div><!-- /header -->
+			<div data-role="content" id="about">
+				<p>Hello, world!</p>
+			</div><!-- /about -->
+			
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar" data-iconpos="top">
+					<ul>
+                        <li>
+                            <a href="#homepage" data-theme="" data-icon="home" data-rel="back" data-transition="slide">
+                                Home
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#about" data-theme="" data-icon="info" class="ui-btn-active ui-state-persist">
+                                About
+                            </a>
+                        </li>
+                    </ul>
+				</div>
+			</div><!-- /footer -->
+
+		</div>
+
 	</body>
 	
 </html>
