@@ -1,11 +1,10 @@
 // alert dialog dismissed
-function alertDismissed() {
-	// do something
+function notifications_alertDismissed() {
+	//do something
 }
 
 // Show a custom alert
-//
-function showAlert() {
+function notifications_showAlert() {
 	navigator.notification.alert(
 								 'You are the winner!',  // message
 								 alertDismissed,         // callback
@@ -13,14 +12,12 @@ function showAlert() {
 								 'Done'                  // buttonName
 								 );
 }			
-// Beep three times
-//
-function playBeep() {
-	navigator.notification.beep(1);
+// Beep 
+function notifications_playBeep() {
+	navigator.notification.beep(1); //iOS will ignore the beep number
 }
 
-// Vibrate for 2 seconds
-//
-function vibrate() {
+// Vibrate
+function notifications_vibrate() {
 	navigator.notification.vibrate(2000);
 }
