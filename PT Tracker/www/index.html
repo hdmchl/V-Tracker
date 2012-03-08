@@ -3,7 +3,7 @@
 	
 	<head>
 		
-		<title>PT Tracker</title>
+		<title>Public Transport Tracker</title>
   
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
 		<meta charset="utf-8" />
@@ -17,13 +17,18 @@
 		
 		<!-- general js scripts -->
 		<script type="text/javascript" charset="utf-8" src="scripts/scripts.js"></script>
+		<script type="text/javascript" charset="utf-8" src="scripts/compatibility.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/geolocation.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/accelerometer.js"></script>
+		<script type="text/javascript" charset="utf-8" src="scripts/storage.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/notifications.js"></script>
-			
+		
 		<!-- phongap dependancies -->
-		<script type="text/javascript" charset="utf-8" src="scripts/phonegap-1.4.1.js"></script>
+		<script type="text/javascript" charset="utf-8" src="libraries/phonegap-1.4.1.js"></script>
 	
+		<!-- other library dependancies -->
+		<script type="text/javascript" charset="utf-8" src="libraries/modernizr-2.5.3.js"></script>
+		
 		<!-- jQuery.mobile dependancies -->
 		<link rel="stylesheet" href="jquery/jquery.mobile-1.0.1.css" type="text/css" />
 		<script type="text/javascript" src="jquery/jquery-1.7.1.js"></script>
@@ -37,7 +42,8 @@
 			}
 	
 			function onDeviceReady() {
-				//We're ready to roll      
+				//We're ready to roll
+				checkBrowserCompatibilities();
 			}
 		</script>
 			
@@ -70,8 +76,8 @@
                         <h3>Acceleration</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal">
-							<button type="button" onClick=startWatch()>Start</button>
-							<button type="button" onClick=stopWatch()>Stop</button>
+							<button type="button" onClick=accelerometer_startWatching()>Start</button>
+							<button type="button" onClick=accelerometer_stopWatching()>Stop</button>
 							<button type="button" onClick=clearDiv('acceleration')>Clear</button>
 						</div>
 						
