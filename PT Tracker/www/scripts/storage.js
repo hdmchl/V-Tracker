@@ -14,7 +14,7 @@ function populateDB(tx) {
 }
 
 function errorCB(err) {
-    alert("Error processing SQL: "+err.code);
+    alert("Error processing SQL: " + err.code + ", " + err.message);
 }
 
 function successCB() {
@@ -44,6 +44,4 @@ function querySuccess(tx, results) {
 	table = table + '</p>';
 	 
 	document.getElementById('databases').innerHTML = table;
-	
-	//alert(results.rows.item(0).id + "," + results.rows.item(0).data);
 }
