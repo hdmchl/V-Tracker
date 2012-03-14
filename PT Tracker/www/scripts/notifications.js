@@ -7,7 +7,7 @@ function notifications_alertDismissed() {
 function notifications_showAlert() {
 	navigator.notification.alert(
 								 'You are the winner!',  // message
-								 alertDismissed,         // callback
+								 notifications_alertDismissed,         // callback
 								 'Game Over',            // title
 								 'Done'                  // buttonName
 								 );

@@ -15,7 +15,7 @@
 		<!-- general css styling -->
 		<link rel="stylesheet" href="styles/styles.css" type="text/css" />
 		
-		<!-- general js scripts -->
+		<!-- js helper scripts -->
 		<script type="text/javascript" charset="utf-8" src="scripts/scripts.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/compatibility.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/geolocation.js"></script>
@@ -64,8 +64,8 @@
                         <h3>GeoLocation</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal">
-							<button type="button" onClick=get_geoLocation()>Start</button>
-							<button type="button" onClick=GL_stop()>Stop</button>
+							<button type="button" onClick=geoLocation_startWatching()>Start</button>
+							<button type="button" onClick=geoLocation_stopWatching()>Stop</button>
 							<button type="button" onClick=clearDiv('geolocation')>Clear</button>
 						</div>
 							
@@ -85,12 +85,24 @@
                     </div>
 					
 					<div data-role="collapsible" data-collapsed="true">
+                        <h3>Databases</h3>
+						
+						<div data-role="controlgroup" data-type="horizontal">
+							<button type="button" onClick=storage_init()>Init</button>
+							<button type="button" onClick=storage_show()>Show</button>
+							<button type="button" onClick=clearDiv('databases')>Clear</button>
+						</div>
+						
+						<div id="databases">Waiting for db object...</div>
+                    </div>
+					
+					<div data-role="collapsible" data-collapsed="true">
                         <h3>Notifications</h3>
 						
 						<div data-role="controlgroup" data-type="vertical">
-							<a href="#" onclick="showAlert(); return false;" data-role="button">Show Alert</a>
-							<a href="#" onclick="playBeep(); return false;" data-role="button">Play Beep</a>
-							<a href="#" onclick="vibrate(); return false;" data-role="button">Vibrate</a>
+							<a href="#" onclick="notifications_showAlert(); return false;" data-role="button">Show Alert</a>
+							<a href="#" onclick="notifications_playBeep(); return false;" data-role="button">Play Beep</a>
+							<a href="#" onclick="notifications_vibrate(); return false;" data-role="button">Vibrate</a>
 						</div>
                     </div>
                 </div>

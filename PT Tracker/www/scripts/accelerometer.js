@@ -1,4 +1,3 @@
-// The watch id references the current `watchAcceleration`
 var accelerometer_watchID = null;
 
 // Start watching the acceleration
@@ -11,7 +10,7 @@ function accelerometer_startWatching() {
 
 // Stop watching the acceleration
 function accelerometer_stopWatching() {
-	if (watchID) {
+	if (accelerometer_watchID) {
 		navigator.accelerometer.clearWatch(accelerometer_watchID);
 		accelerometer_watchID = null;
 	}

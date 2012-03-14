@@ -1,6 +1,9 @@
 //Modifications to jQuery are done in here...
 
-$(document).bind("mobileinit", function() {
-	 $.mobile.touchOverflowEnabled = true;
-});
+$(document).bind(
+				 "mobileinit", 
+				 function() {
+							 $.mobile.touchOverflowEnabled = true;
+							 }
+				 );
 

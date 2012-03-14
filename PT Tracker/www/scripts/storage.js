@@ -1,5 +1,9 @@
-function initStorage() {
-	var db = window.openDatabase("PTTracker_db", "1.00", "PT Tracker DB", 1000000);
+function storage_init() {
+	var db = window.openDatabase("PTTracker_db", "1.00", "PT Tracker DB", 2 * 1024*1024); //create a 2MBs database
+	
+	db.transaction(populateDB, errorCB, successCB);
+	
+	db.transaction(queryDB, errorCB);
 }
 
 function populateDB(tx) {
@@ -17,59 +21,29 @@ function successCB() {
     alert("success!");
 }
 
-var db = window.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
-//db.transaction(populateDB, errorCB, successCB);
-
-
-
-
-
-
-
-function gotFS(fileSystem) {
-	fileSystem.root.getFile("readme.txt", {create: true, exclusive: false}, gotFileEntry, fail);
+function storage_show() {
+	var db = window.openDatabase("PTTracker_db", "1.00", "PT Tracker DB", 2 * 1024*1024); //create a 2MBs database
+	db.transaction(queryDB, errorCB);
 }
 
-function gotFileEntry(fileEntry) {
-	fileEntry.createWriter(gotFileWriter, fail);
+function queryDB(tx) {
+    tx.executeSql('SELECT * FROM DEMO', [], querySuccess, errorCB);
 }
 
-function gotFileWriter(writer) {
-	writer.onwriteend = function(evt) {
-		console.log("contents of file now 'some sample text'");
-		writer.truncate(11);  
-		writer.onwriteend = function(evt) {
-			console.log("contents of file now 'some sample'");
-			writer.seek(4);
-			writer.write(" different text");
-			writer.onwriteend = function(evt){
-				console.log("contents of file now 'some different text'");
-			}
-		};
-	};
-	writer.write("some sample text");
+function querySuccess(tx, results) {
+	document.getElementById('databases').innerHTML = '';
+	
+	var len = results.rows.length;
+	
+	var table = '<p>DEMO table: ' + len + ' rows found.</p><p>';
+	
+	for (var i=0; i<len; i++){
+		table = table + '<br>' + "Row = " + i + " ID = " + results.rows.item(i).id + " Data =  " + results.rows.item(i).data;
+	}
+	
+	table = table + '</p>';
+	 
+	document.getElementById('databases').innerHTML = table;
+	
+	//alert(results.rows.item(0).id + "," + results.rows.item(0).data);
 }
-
-function fail(error) {
-	console.log(error.code);
-}
-
-
-/*
-function resumeGame() {
-    if (!supportsLocalStorage()) { return false; }
-    gGameInProgress = (localStorage["halma.game.in.progress"] == "true");
-    if (!gGameInProgress) { return false; }
-    gPieces = new Array(kNumPieces);
-    for (var i = 0; i < kNumPieces; i++) {
-		var row = parseInt(localStorage["halma.piece." + i + ".row"]);
-		var column = parseInt(localStorage["halma.piece." + i + ".column"]);
-		gPieces[i] = new Cell(row, column);
-    }
-    gNumPieces = kNumPieces;
-    gSelectedPieceIndex = parseInt(localStorage["halma.selectedpiece"]);
-    gSelectedPieceHasMoved = localStorage["halma.selectedpiecehasmoved"] == "true";
-    gMoveCount = parseInt(localStorage["halma.movecount"]);
-    drawBoard();
-    return true;
-}*/
