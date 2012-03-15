@@ -1,10 +1,17 @@
+var geoLocation_timer = null;
+
 function geoLocation_startWatching() {
+	geoLocation_get();
+	console.log("geoLocation watch started");
+}
+
+function geoLocation_get() {
 	navigator.geolocation.getCurrentPosition(geoLocation_onSuccess, geoLocation_onError);
 }
 
-var geoLocation_timer;
-
-var geoLocation_onSuccess = function(position) {
+var geoLocation_onSuccess = function(position) {	
+	updateGeoLocationTable(position);
+	
 	var speedINkph = position.coords.speed * (60*60/1000);
 	
 	var location = 
@@ -14,12 +21,12 @@ var geoLocation_onSuccess = function(position) {
 		'Accuracy: '          + position.coords.accuracy          + '<br />' +
 		'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '<br />' +
 		'Heading: '           + position.coords.heading           + '<br />' +
-		'Speed: '             + position.coords.speed + ' - ' + speedINkph + '<br />' +
+		'Speed: '             + position.coords.speed + ' -- ' + speedINkph + '<br />' +
 		'Timestamp: '         + new Date(position.timestamp)      + '<br />';
 	
 	document.getElementById('geolocation').innerHTML = location;
 	
-	geoLocation_timer = setTimeout("geoLocation_startWatching()",500);
+	geoLocation_timer = setTimeout("geoLocation_get()", 200);
 }
 
 // onError Callback receives a PositionError object
@@ -30,4 +37,5 @@ function geoLocation_onError(error) {
 
 function geoLocation_stopWatching() {
 	clearTimeout(geoLocation_timer);
+	console.log("geoLocation_timer stopped");
 }
