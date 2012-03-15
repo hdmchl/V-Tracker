@@ -1,5 +1,7 @@
+var db = null;
+
 function storage_init() {
-	var db = window.openDatabase("PTTracker_db", "1.00", "PT Tracker DB", 2 * 1024*1024); //create a 2MBs database
+	db = window.openDatabase("PTTracker_db", "1.00", "PT Tracker DB", 2 * 1024*1024); //create a 2MBs database
 	console.log("Database opened!");
 	
 	db.transaction(clear, storage_errorCB, storage_successCB);
@@ -25,7 +27,6 @@ function updateGeoLocationTable(position) {
 					'"' + position.coords.speed             + '",' +
 					'"' + new Date(position.timestamp)      + '"';
 
-	var db = window.openDatabase("PTTracker_db", "1.00", "PT Tracker DB", 2 * 1024*1024); //create a 2MBs database
 	db.transaction(populateGeoLocationTable, storage_errorCB, storage_successCB);
 }
 
@@ -48,7 +49,7 @@ function storage_successCB() {
 
 //SHOW DATA
 function storage_show() {
-	var db = window.openDatabase("PTTracker_db", "1.00", "PT Tracker DB", 2 * 1024*1024); //create a 2MBs database
+	db = window.openDatabase("PTTracker_db", "1.00", "PT Tracker DB", 2 * 1024*1024); //create a 2MBs database
 	db.transaction(queryDB, storage_errorCB);
 }
 
