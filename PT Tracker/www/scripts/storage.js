@@ -82,8 +82,6 @@ function queryDB(tx) {
 }
 
 function querySuccess(tx, results) {
-	document.getElementById('databases').innerHTML = '';
-	
 	var len = results.rows.length;
 	
 	var table = '<p>Table length: ' + len + ' rows found.</p>';
@@ -94,5 +92,5 @@ function querySuccess(tx, results) {
 								    "Longitude = " + results.rows.item(i).Longitude + '</p>';
 	}
 	 
-	document.getElementById('databases').innerHTML = table;
+	document.getElementById('databases').innerHTML = document.getElementById('databases').innerHTML + table;
 }
