@@ -1,11 +1,20 @@
 var db = null;
 
 function storage_init() {
+	document.getElementById('databases').innerHTML = '';
 	db = window.openDatabase("PTTracker_db", "1.00", "PT Tracker DB", 2 * 1024*1024); //create a 2MBs database
 	consoleLog("Database opened!");
+	
+	db.transaction(function (tx) {
+				   //create tables
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS GEOLOCATION (id unique, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp);');
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS ACCELEROMETER (id unique, AccelerationX, AccelerationY, AccelerationZ, Timestamp);');
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS COMPASS (id unique, Heading);');
+				   }, storage_errorCB, storage_successCB);
 }
 
 function storage_clear() {
+	document.getElementById('databases').innerHTML = '';
 	db.transaction(clear, storage_errorCB, storage_successCB);
 	consoleLog("Database tables cleared!");
 }
@@ -14,10 +23,12 @@ function clear(tx) {
 	//drop existing tables
 	tx.executeSql('DROP TABLE IF EXISTS GEOLOCATION;');
 	tx.executeSql('DROP TABLE IF EXISTS ACCELEROMETER;');
+	tx.executeSql('DROP TABLE IF EXISTS COMPASS;');
 	
 	//create new ones
 	tx.executeSql('CREATE TABLE IF NOT EXISTS GEOLOCATION (id unique, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp);');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS ACCELEROMETER (id unique, AccelerationX, AccelerationY, AccelerationZ, Timestamp);');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS COMPASS (id unique, Heading);');
 }
 
 //Accelerometer Table
@@ -37,6 +48,21 @@ var accelerometerTable_rowIdCounter = 0;
 function populateAccelerometerTable(tx) {
 	tx.executeSql('INSERT INTO ACCELEROMETER VALUES (' + accelerometerTable_rowIdCounter + ',' + accelerometer_acceleration + ');');
 	accelerometerTable_rowIdCounter++;
+}
+
+//Compass Table
+var compass_heading = '';
+function updateCompassTable(heading) {
+	
+	compass_heading = '"' + heading.magneticHeading + '"';
+	
+	db.transaction(populateCompassTable, storage_errorCB, storage_successCB);
+}
+
+var compassTable_rowIdCounter = 0;
+function populateCompassTable(tx) {
+	tx.executeSql('INSERT INTO COMPASS VALUES (' + compassTable_rowIdCounter + ',' + compass_heading + ');');
+	compassTable_rowIdCounter++;
 }
 
 //GeoLocation Table
@@ -74,6 +100,8 @@ function storage_successCB() {
 //******** RETRIEVING DATA FROM DB ********
 var dbTables = [];
 function storage_show() {
+	document.getElementById('databases').innerHTML = '';
+	
 	db.transaction(function (tx) {
 				   tx.executeSql('SELECT * FROM sqlite_master WHERE type=\'table\'', [], function (tx, results) {
 								 for (var i=0; i<results.rows.length; i++) {dbTables[i] = results.rows.item(i).name;}
@@ -88,7 +116,7 @@ function queryDB() {
 	if (qc < dbTables.length) {
 		var tableQuery = 'SELECT * FROM ' + dbTables[qc];
 		
-		console.log(tableQuery);
+		consoleLog(tableQuery);
 		
 		db.transaction(function (tx){
 					   tx.executeSql(tableQuery, [], displayQueryResults, storage_errorCB);

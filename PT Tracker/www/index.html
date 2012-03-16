@@ -20,6 +20,7 @@
 		<script type="text/javascript" charset="utf-8" src="scripts/compatibility.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/geolocation.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/accelerometer.js"></script>
+		<script type="text/javascript" charset="utf-8" src="scripts/compass.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/storage.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/notifications.js"></script>
 		
@@ -86,6 +87,18 @@
                     </div>
 					
 					<div data-role="collapsible" data-collapsed="true">
+                        <h3>Compass</h3>
+						
+						<div data-role="controlgroup" data-type="horizontal">
+							<button type="button" onClick=compass_startWatching()>Start</button>
+							<button type="button" onClick=compass_stopWatching()>Stop</button>
+							<button type="button" onClick=clearDiv('compass')>Clear</button>
+						</div>
+						
+						<div id="compass">Waiting for compass start...</div>
+                    </div>
+					
+					<div data-role="collapsible" data-collapsed="true">
                         <h3>Databases</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal">
@@ -94,7 +107,6 @@
 							<button type="button" onClick=storage_clear()>Clear</button>
 						</div>
 						
-						<button type="button" onClick=clearDiv('databases')>Clear query results</button>
 						<div id="databases"></div>
                     </div>
 					
