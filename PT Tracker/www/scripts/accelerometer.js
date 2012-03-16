@@ -18,6 +18,9 @@ function accelerometer_stopWatching() {
 
 // onSuccess: Get a snapshot of the current acceleration
 function accelerometer_onSuccess(acceleration) {
+	updateAccelerometerTable(acceleration); //update SQL
+	
+	//display results in real-time
 	var element = document.getElementById('acceleration');
 	
 	element.innerHTML = 'Acceleration X: ' + acceleration.x + '<br />' +

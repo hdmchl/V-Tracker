@@ -91,9 +91,10 @@
 						<div data-role="controlgroup" data-type="horizontal">
 							<button type="button" onClick=storage_init()>Init</button>
 							<button type="button" onClick=storage_show()>Show</button>
-							<button type="button" onClick=clearDiv('databases')>Clear</button>
+							<button type="button" onClick=storage_clear()>Clear</button>
 						</div>
 						
+						<button type="button" onClick=clearDiv('databases')>Clear query results</button>
 						<div id="databases">Waiting for db object...</div>
                     </div>
 					
