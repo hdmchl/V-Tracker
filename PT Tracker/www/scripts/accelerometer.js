@@ -28,5 +28,5 @@ function accelerometer_onSuccess(acceleration) {
 
 // onError: Failed to get the acceleration
 function accelerometer_onError() {
-	alert('Error: Could not watch accelerometer!');
+	consoleLog('Error: Could not watch accelerometer!');
 }

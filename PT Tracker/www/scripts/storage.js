@@ -2,18 +2,21 @@ var db = null;
 
 function storage_init() {
 	db = window.openDatabase("PTTracker_db", "1.00", "PT Tracker DB", 2 * 1024*1024); //create a 2MBs database
-	console.log("Database opened!");
+	consoleLog("Database opened!");
 	
 	db.transaction(clear, storage_errorCB, storage_successCB);
+	consoleLog("Database tables initialised!");
 }
 
 function clear(tx) {
-	tx.executeSql('DROP TABLE IF EXISTS DEMO;');
+	//drop existing tables
 	tx.executeSql('DROP TABLE IF EXISTS GEOLOCATION;');
 	
+	//create new ones
 	tx.executeSql('CREATE TABLE IF NOT EXISTS GEOLOCATION (id unique, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp);');
 }
 
+//GeoLocation Table
 var geoLocation_position = '';
 function updateGeoLocationTable(position) {
 	
@@ -30,26 +33,23 @@ function updateGeoLocationTable(position) {
 	db.transaction(populateGeoLocationTable, storage_errorCB, storage_successCB);
 }
 
-var rowIdCounter = 0;
+var geoLocationTable_rowIdCounter = 0;
 function populateGeoLocationTable(tx) {
-	//console.log(geoLocation_position);
-	
-	tx.executeSql('INSERT INTO GEOLOCATION VALUES (' + rowIdCounter + ',' + geoLocation_position + ');');
-	rowIdCounter++;
+	tx.executeSql('INSERT INTO GEOLOCATION VALUES (' + geoLocationTable_rowIdCounter + ',' + geoLocation_position + ');');
+	geoLocationTable_rowIdCounter++;
 }
 
+//******** ERROR HANDLING ********
 function storage_errorCB(error) {
-    console.log("Error processing SQL: " + error.code + ", " + error.message);
+    consoleLog("Error processing SQL: " + error.code + ", " + error.message);
 }
 
 function storage_successCB() {
-    //console.log("SQL processed successfully!");
+    consoleLog("SQL processed successfully!");
 }
 
-
-//SHOW DATA
+//******** RETRIEVING DATA FROM DB ********
 function storage_show() {
-	db = window.openDatabase("PTTracker_db", "1.00", "PT Tracker DB", 2 * 1024*1024); //create a 2MBs database
 	db.transaction(queryDB, storage_errorCB);
 }
 

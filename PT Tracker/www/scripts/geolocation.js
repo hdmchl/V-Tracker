@@ -2,7 +2,7 @@ var geoLocation_timer = null;
 
 function geoLocation_startWatching() {
 	geoLocation_get();
-	console.log("geoLocation watch started");
+	consoleLog("geoLocation watch started");
 }
 
 function geoLocation_get() {
@@ -10,10 +10,11 @@ function geoLocation_get() {
 }
 
 var geoLocation_onSuccess = function(position) {	
-	updateGeoLocationTable(position);
+	updateGeoLocationTable(position); //update SQL
 	
-	var speedINkph = position.coords.speed * (60*60/1000);
+	var speedINkph = position.coords.speed * (60*60/1000); //calculate speed in km/hr
 	
+	//display results in real-time
 	var location = 
 		'Latitude: '          + position.coords.latitude          + '<br />' +
 		'Longitude: '         + position.coords.longitude         + '<br />' +
@@ -26,7 +27,7 @@ var geoLocation_onSuccess = function(position) {
 	
 	document.getElementById('geolocation').innerHTML = location;
 	
-	geoLocation_timer = setTimeout("geoLocation_get()", 200);
+	geoLocation_timer = setTimeout("geoLocation_get()", 400);
 }
 
 // onError Callback receives a PositionError object
@@ -37,5 +38,6 @@ function geoLocation_onError(error) {
 
 function geoLocation_stopWatching() {
 	clearTimeout(geoLocation_timer);
-	console.log("geoLocation_timer stopped");
+	geoLocation_timer = null;
+	consoleLog("geoLocation_timer stopped");
 }
