@@ -72,25 +72,43 @@ function storage_successCB() {
 }
 
 //******** RETRIEVING DATA FROM DB ********
+var dbTables = [];
 function storage_show() {
-	db.transaction(queryDB, storage_errorCB);
+	db.transaction(function (tx) {
+				   tx.executeSql('SELECT * FROM sqlite_master WHERE type=\'table\'', [], function (tx, results) {
+								 for (var i=0; i<results.rows.length; i++) {dbTables[i] = results.rows.item(i).name;}
+								 }, storage_errorCB);
+				   }, storage_errorCB, queryDB);
 }
 
-function queryDB(tx) {
-    tx.executeSql('SELECT * FROM GEOLOCATION', [], querySuccess, storage_errorCB);
-	tx.executeSql('SELECT * FROM ACCELEROMETER', [], querySuccess, storage_errorCB);
+var qc = 0;
+function queryDB() {
+	qc++;
+	
+	if (qc < dbTables.length) {
+		var tableQuery = 'SELECT * FROM ' + dbTables[qc];
+		
+		console.log(tableQuery);
+		
+		db.transaction(function (tx){
+					   tx.executeSql(tableQuery, [], displayQueryResults, storage_errorCB);
+					   }, storage_errorCB, queryDB);		
+	}
+	else {
+		qc = 0;
+	}
 }
 
-function querySuccess(tx, results) {
+function displayQueryResults(tx, results) {
 	var len = results.rows.length;
 	
-	var table = '<p>Table length: ' + len + ' rows found.</p>';
+	var table = '<p>' + dbTables[qc] + ' length: ' + len + '</p>';
 	
-	for (var i=0; i<len; i++){
-		table = table + '<p>' +     "Row Id = "    + results.rows.item(i).id + '<br />' +
+	/*for (var i=0; i<len; i++) {
+		table = table + '<p>' +     "Row Id = "          + results.rows.item(i).id + '<br />' +
 									"Acceleration X = "  + results.rows.item(i).AccelerationX + '<br />' +
-								    "Longitude = " + results.rows.item(i).Longitude + '</p>';
-	}
-	 
-	document.getElementById('databases').innerHTML = document.getElementById('databases').innerHTML + table;
+									"Longitude = "       + results.rows.item(i).Longitude + '</p>';
+	}*/
+	
+	document.getElementById('databases').innerHTML = document.getElementById('databases').innerHTML + table + '<hr/>';
 }
