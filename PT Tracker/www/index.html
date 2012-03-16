@@ -33,7 +33,7 @@
 		<link rel="stylesheet" href="jquery/jquery.mobile-1.0.1.css" type="text/css" />
 		<script type="text/javascript" src="jquery/jquery-1.7.1.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/jquery-mods.js"></script>
-		<script type="text/javascript" src="jquery/jquery.mobile-1.0.1.js"></script> 
+		<script type="text/javascript" src="jquery/jquery.mobile-1.0.1.js"></script>		
 			
 		<!-- load scripts -->	
 		<script type="text/javascript">
@@ -52,14 +52,14 @@
 
 	<body onload="onBodyLoad()">
 		
-		<div data-role="page" id="homepage" data-theme="d">
+		<!-- Start of homepage -->
+		<div data-role="page" id="homepage" data-theme="b">
 			
-			<div data-role="header">
+			<div data-role="header" data-position="fixed">
 				<h1>PT Tracker</h1>
 			</div><!-- /header -->
 			
-			<div data-role="content">
-				
+			<div data-role="content" data-fullscreen="true">
 				<div data-role="collapsible-set">
                     <div data-role="collapsible" data-collapsed="true">
                         <h3>GeoLocation</h3>
@@ -107,51 +107,59 @@
 						</div>
                     </div>
                 </div>
-				
-			</div><!-- /home -->
+			</div><!-- /content -->
 			
-			<div data-role="footer" data-position="fixed">
+			<div data-role="footer" data-position="fixed" data-id="footer">
 				<div data-role="navbar" data-iconpos="top">
 					<ul>
-                        <li>
-                            <a href="#homepage" data-theme="" data-icon="home" class="ui-btn-active ui-state-persist">
-                                Home
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#about" data-theme="" data-icon="info" data-transition="slide">
-                                About
-                            </a>
-                        </li>
+                        <li><a href="#" data-icon="home" class="ui-btn-active ui-state-persist">Home</a></li>
+						<li><a href="#alerts" data-icon="alert" data-transition="slide" class="ui-state-persist">Alerts Console</a></li>
+                        <li><a href="#info" data-icon="info" data-transition="slide" class="ui-state-persist">Project Info</a></li>
                     </ul>
 				</div>
-			</div><!-- /footer -->
+			</div>
 			
 		</div><!-- /homepage -->
 		
-		<div data-role="page" id="about" data-theme="d">
+		<!-- start of alerts page -->
+		<div data-role="page" id="alerts" data-theme="b">
 			
-			<div data-role="header">
-				<h1>About</h1>
-				
+			<div data-role="header" data-position="fixed">
+				<h1>Alerts Console</h1>
 			</div><!-- /header -->
-			<div data-role="content" id="about">
+			
+			<div data-role="content" data-fullscreen="true">
+				<h3>Received messages:</h3>
+				<div id="alertsConsole"></div>
+			</div><!-- /content -->
+
+			<div data-role="footer" data-position="fixed" data-id="footer">
+				<div data-role="navbar" data-iconpos="top">
+					<ul>
+                        <li><a href="#homepage" data-icon="home" data-direction="reverse" data-transition="slide" class="ui-state-persist">Home</a></li>
+						<li><a href="#" data-icon="alert" class="ui-btn-active ui-state-persist">Alerts Console</a></li>
+                        <li><a href="#info" data-icon="info" data-transition="slide" class="ui-state-persist">Project Info</a></li>
+                    </ul>
+				</div>
+			</div>
+		</div><!-- /alerts page -->
+
+		<div data-role="page" id="info" data-theme="b">
+			
+			<div data-role="header" data-position="fixed">
+				<h1>Project Info</h1>
+			</div><!-- /header -->
+			
+			<div data-role="content" data-fullscreen="true">
 				<p>Hello, world!</p>
 			</div><!-- /about -->
 			
-			<div data-role="footer" data-position="fixed">
+			<div data-role="footer" data-position="fixed" data-id="footer">
 				<div data-role="navbar" data-iconpos="top">
 					<ul>
-                        <li>
-                            <a href="#homepage" data-theme="" data-icon="home" data-rel="back" data-transition="slide">
-                                Home
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#about" data-theme="" data-icon="info" class="ui-btn-active ui-state-persist">
-                                About
-                            </a>
-                        </li>
+                        <li><a href="#homepage" data-icon="home" data-direction="reverse" data-transition="slide" class="ui-state-persist">Home</a></li>
+						<li><a href="#alerts" data-icon="alert" data-direction="reverse" data-transition="slide" class="ui-state-persist">Alerts Console</a></li>
+                        <li><a href="#" data-icon="info" class="ui-btn-active ui-state-persist">Project Info</a></li>
                     </ul>
 				</div>
 			</div><!-- /footer -->
