@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F5475841527EEA80016EF85 /* Cordova.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5475831527EEA80016EF85 /* Cordova.framework */; };
+		0F54758C1527EF7E0016EF85 /* CDVDeprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F54758B1527EF7E0016EF85 /* CDVDeprecated.m */; };
 		0F92F57C14FCD07700F344D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F92F57B14FCD07700F344D6 /* Foundation.framework */; };
 		0F92F57E14FCD07700F344D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F92F57D14FCD07700F344D6 /* UIKit.framework */; };
 		0F92F58014FCD07700F344D6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F92F57F14FCD07700F344D6 /* CoreGraphics.framework */; };
@@ -22,7 +24,6 @@
 		0F92F59414FCD07700F344D6 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F92F59314FCD07700F344D6 /* CoreMedia.framework */; };
 		0F92F59A14FCD07700F344D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0F92F59814FCD07700F344D6 /* InfoPlist.strings */; };
 		0F92F59C14FCD07700F344D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F92F59B14FCD07700F344D6 /* main.m */; };
-		0F92F59F14FCD07700F344D6 /* PhoneGap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F92F59E14FCD07700F344D6 /* PhoneGap.framework */; };
 		0F92F5A414FCD07700F344D6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0F92F5A214FCD07700F344D6 /* Localizable.strings */; };
 		0F92F5A814FCD07700F344D6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0F92F5A614FCD07700F344D6 /* Localizable.strings */; };
 		0F92F5AB14FCD07700F344D6 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F92F5AA14FCD07700F344D6 /* icon.png */; };
@@ -31,7 +32,7 @@
 		0F92F5B214FCD07700F344D6 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F92F5B114FCD07700F344D6 /* Default.png */; };
 		0F92F5B414FCD07700F344D6 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F92F5B314FCD07700F344D6 /* Default@2x.png */; };
 		0F92F5B614FCD07700F344D6 /* Capture.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0F92F5B514FCD07700F344D6 /* Capture.bundle */; };
-		0F92F5B814FCD07700F344D6 /* PhoneGap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0F92F5B714FCD07700F344D6 /* PhoneGap.plist */; };
+		0F92F5B814FCD07700F344D6 /* Cordova.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0F92F5B714FCD07700F344D6 /* Cordova.plist */; };
 		0F92F5BC14FCD07700F344D6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F92F5BB14FCD07700F344D6 /* AppDelegate.m */; };
 		0F92F5BF14FCD07700F344D6 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F92F5BE14FCD07700F344D6 /* MainViewController.m */; };
 		0F92F5C114FCD07700F344D6 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0F92F5C014FCD07700F344D6 /* MainViewController.xib */; };
@@ -40,6 +41,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0F5475831527EEA80016EF85 /* Cordova.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cordova.framework; path = "/Users/Hadi/Developer/PT-Tracker/PT Tracker/Cordova.framework"; sourceTree = "<absolute>"; };
+		0F54758A1527EF7E0016EF85 /* CDVDeprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDVDeprecated.h; sourceTree = "<group>"; };
+		0F54758B1527EF7E0016EF85 /* CDVDeprecated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDVDeprecated.m; sourceTree = "<group>"; };
 		0F92F57714FCD07700F344D6 /* PT Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PT Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F92F57B14FCD07700F344D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0F92F57D14FCD07700F344D6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -58,7 +62,6 @@
 		0F92F59914FCD07700F344D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0F92F59B14FCD07700F344D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0F92F59D14FCD07700F344D6 /* PT Tracker-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PT Tracker-Prefix.pch"; sourceTree = "<group>"; };
-		0F92F59E14FCD07700F344D6 /* PhoneGap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhoneGap.framework; path = /Users/Shared/PhoneGap/Frameworks/PhoneGap.framework; sourceTree = "<absolute>"; };
 		0F92F5A314FCD07700F344D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0F92F5A714FCD07700F344D6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Resources/es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0F92F5AA14FCD07700F344D6 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = Resources/icons/icon.png; sourceTree = "<group>"; };
@@ -67,7 +70,7 @@
 		0F92F5B114FCD07700F344D6 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Resources/splash/Default.png; sourceTree = "<group>"; };
 		0F92F5B314FCD07700F344D6 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Resources/splash/Default@2x.png"; sourceTree = "<group>"; };
 		0F92F5B514FCD07700F344D6 /* Capture.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Capture.bundle; path = Resources/Capture.bundle; sourceTree = "<group>"; };
-		0F92F5B714FCD07700F344D6 /* PhoneGap.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PhoneGap.plist; sourceTree = "<group>"; };
+		0F92F5B714FCD07700F344D6 /* Cordova.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Cordova.plist; sourceTree = "<group>"; };
 		0F92F5BA14FCD07700F344D6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Classes/AppDelegate.h; sourceTree = "<group>"; };
 		0F92F5BB14FCD07700F344D6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Classes/AppDelegate.m; sourceTree = "<group>"; };
 		0F92F5BD14FCD07700F344D6 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MainViewController.h; path = Classes/MainViewController.h; sourceTree = "<group>"; };
@@ -96,7 +99,7 @@
 				0F92F59014FCD07700F344D6 /* SystemConfiguration.framework in Frameworks */,
 				0F92F59214FCD07700F344D6 /* MobileCoreServices.framework in Frameworks */,
 				0F92F59414FCD07700F344D6 /* CoreMedia.framework in Frameworks */,
-				0F92F59F14FCD07700F344D6 /* PhoneGap.framework in Frameworks */,
+				0F5475841527EEA80016EF85 /* Cordova.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,9 +113,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0F5475891527EF7E0016EF85 /* deprecated */ = {
+			isa = PBXGroup;
+			children = (
+				0F54758A1527EF7E0016EF85 /* CDVDeprecated.h */,
+				0F54758B1527EF7E0016EF85 /* CDVDeprecated.m */,
+			);
+			path = deprecated;
+			sourceTree = "<group>";
+		};
 		0F92F56914FCD07700F344D6 = {
 			isa = PBXGroup;
 			children = (
+				0F5475891527EF7E0016EF85 /* deprecated */,
+				0F5475831527EEA80016EF85 /* Cordova.framework */,
 				0F92F5D014FCD1D000F344D6 /* README.md */,
 				0F92F5CD14FCD0BA00F344D6 /* www */,
 				0F92F59514FCD07700F344D6 /* PT Tracker */,
@@ -152,7 +166,6 @@
 		0F92F59514FCD07700F344D6 /* PT Tracker */ = {
 			isa = PBXGroup;
 			children = (
-				0F92F59E14FCD07700F344D6 /* PhoneGap.framework */,
 				0F92F5A014FCD07700F344D6 /* Resources */,
 				0F92F5B914FCD07700F344D6 /* Classes */,
 				0F92F5C214FCD07700F344D6 /* Plugins */,
@@ -168,7 +181,7 @@
 				0F92F59814FCD07700F344D6 /* InfoPlist.strings */,
 				0F92F59B14FCD07700F344D6 /* main.m */,
 				0F92F59D14FCD07700F344D6 /* PT Tracker-Prefix.pch */,
-				0F92F5B714FCD07700F344D6 /* PhoneGap.plist */,
+				0F92F5B714FCD07700F344D6 /* Cordova.plist */,
 				0F92F5C014FCD07700F344D6 /* MainViewController.xib */,
 			);
 			name = "Supporting Files";
@@ -303,7 +316,7 @@
 				0F92F5B214FCD07700F344D6 /* Default.png in Resources */,
 				0F92F5B414FCD07700F344D6 /* Default@2x.png in Resources */,
 				0F92F5B614FCD07700F344D6 /* Capture.bundle in Resources */,
-				0F92F5B814FCD07700F344D6 /* PhoneGap.plist in Resources */,
+				0F92F5B814FCD07700F344D6 /* Cordova.plist in Resources */,
 				0F92F5C114FCD07700F344D6 /* MainViewController.xib in Resources */,
 				0F92F5CE14FCD0BA00F344D6 /* www in Resources */,
 				0F92F5D114FCD1D000F344D6 /* README.md in Resources */,
@@ -324,7 +337,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "\n\t\t\t\t\t\t\t\tif [ ! -d \"$PROJECT_DIR/www\" ] ; then\n\t\t\t\t\t\t\t\t\tcp -R /Users/Shared/PhoneGap/Frameworks/PhoneGap.framework/www \"$PROJECT_DIR\"\n\t\t\t\t\t\t\t\tfi\n\t\t\t\t\t\t\t\t# detect www folder reference in project, if missing, print warning\n\t\t\t\t\t\t\t\tgrep \"{isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = \\\"<group>\\\"; };\" \"$PROJECT_DIR/$PROJECT_NAME.xcodeproj/project.pbxproj\"\n\t\t\t\t\t\t\t\trc=$? \n\t\t\t\t\t\t\t\tif [ $rc != 0 ] ; then\n\t\t\t\t\t\t\t\techo -e \"warning: Missing - Add $PROJECT_DIR/www as a folder reference in your project. Just drag and drop the folder into your project, into the Project Navigator of Xcode 4. Make sure you select the second radio-button: 'Create folder references for any added folders' (which will create a blue folder)\" 1>&2\n\t\t\t\t\t\t\t\tfi\t\t\t\t\t\t\t";
+			shellScript = "\n\t\t\t\t\t\t\t\tif [ ! -d \"$PROJECT_DIR/www\" ] ; then\n\t\t\t\t\t\t\t\t\tcp -R /Users/Shared/PhoneGap/Frameworks/Cordova.framework/www \"$PROJECT_DIR\"\n\t\t\t\t\t\t\t\tfi\n\t\t\t\t\t\t\t\t# detect www folder reference in project, if missing, print warning\n\t\t\t\t\t\t\t\tgrep \"{isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = \\\"<group>\\\"; };\" \"$PROJECT_DIR/$PROJECT_NAME.xcodeproj/project.pbxproj\"\n\t\t\t\t\t\t\t\trc=$? \n\t\t\t\t\t\t\t\tif [ $rc != 0 ] ; then\n\t\t\t\t\t\t\t\techo -e \"warning: Missing - Add $PROJECT_DIR/www as a folder reference in your project. Just drag and drop the folder into your project, into the Project Navigator of Xcode 4. Make sure you select the second radio-button: 'Create folder references for any added folders' (which will create a blue folder)\" 1>&2\n\t\t\t\t\t\t\t\tfi\t\t\t\t\t\t\t";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -336,6 +349,7 @@
 				0F92F59C14FCD07700F344D6 /* main.m in Sources */,
 				0F92F5BC14FCD07700F344D6 /* AppDelegate.m in Sources */,
 				0F92F5BF14FCD07700F344D6 /* MainViewController.m in Sources */,
+				0F54758C1527EF7E0016EF85 /* CDVDeprecated.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,11 +439,14 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = /Users/Shared/PhoneGap/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Users/Shared/Cordova/Frameworks,
+					"\"$(SRCROOT)\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PT Tracker/PT Tracker-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = "PHONEGAP_FRAMEWORK=YES";
+				GCC_PREPROCESSOR_DEFINITIONS = "CORDOVA_FRAMEWORK=YES";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "PT Tracker/PT Tracker-Info.plist";
 				OTHER_LDFLAGS = (
@@ -454,10 +471,13 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = /Users/Shared/PhoneGap/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Users/Shared/Cordova/Frameworks,
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PT Tracker/PT Tracker-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = "PHONEGAP_FRAMEWORK=YES";
+				GCC_PREPROCESSOR_DEFINITIONS = "CORDOVA_FRAMEWORK=YES";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "PT Tracker/PT Tracker-Info.plist";
 				OTHER_LDFLAGS = (

@@ -22,19 +22,22 @@
 //  PT Tracker
 //
 //  Created by Hadi Michel Salem on 28/02/12.
-//  Copyright __MyCompanyName__ 2012. All rights reserved.
+//  Copyright Monash University 2012. All rights reserved.
 //
 
 #import "AppDelegate.h"
 #import "MainViewController.h"
 
-#ifdef PHONEGAP_FRAMEWORK
-    #import <PhoneGap/PGPlugin.h>
-    #import <PhoneGap/PGURLProtocol.h>
-#else
-    #import "PGPlugin.h"
-    #import "PGURLProtocol.h"
-#endif
+#import "CDVDeprecated.h"
+
+//removed in the update to Cordova 1.5
+//#ifdef PHONEGAP_FRAMEWORK
+//    #import <PhoneGap/PGPlugin.h>
+//    #import <PhoneGap/PGURLProtocol.h>
+//#else
+//    #import "PGPlugin.h"
+//    #import "PGURLProtocol.h"
+//#endif
 
 
 @implementation AppDelegate
@@ -49,7 +52,7 @@
     NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage]; 
     [cookieStorage setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
     
-    [PGURLProtocol registerPGHttpURLProtocol];
+    [CDVURLProtocol registerPGHttpURLProtocol];
     
     return [super init];
 }
@@ -140,7 +143,7 @@
 	return [self.viewController getCommandInstance:className];
 }
 
-- (BOOL) execute:(InvokedUrlCommand*)command
+- (BOOL) execute:(CDVInvokedUrlCommand*)command
 {
 	return [self.viewController execute:command];
 }
