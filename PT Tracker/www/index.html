@@ -7,6 +7,11 @@
   
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
 		<meta charset="utf-8" />
+		
+		<!-- set apple mobile settings -->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-touch-fullscreen" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 		<!-- iPad/iPhone specific css below -->
 		<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="styles/ipad.css" type="text/css" />		
@@ -26,16 +31,15 @@
 		
 		<!-- phongap dependancies -->
 		<script type="text/javascript" charset="utf-8" src="libraries/cordova-1.5.0.js"></script>
-		<!--<script type="text/javascript" charset="utf-8" src="libraries/phonegap-1.4.1.js"></script>-->
 	
 		<!-- other library dependancies -->
 		<script type="text/javascript" charset="utf-8" src="libraries/modernizr-2.5.3.js"></script>
 		
-		<!-- jQuery.mobile dependancies -->
-		<link rel="stylesheet" href="jquery/jquery.mobile-1.0.1.css" type="text/css" />
+		<!-- jQuery.mobile dependancies -->		
+		<link rel="stylesheet" href="jquery/jquery.mobile-1.1.0-rc.1.css" type="text/css" />
 		<script type="text/javascript" src="jquery/jquery-1.7.1.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/jquery-mods.js"></script>
-		<script type="text/javascript" src="jquery/jquery.mobile-1.0.1.js"></script>		
+		<script type="text/javascript" src="jquery/jquery.mobile-1.1.0-rc.1.js"></script>		
 			
 		<!-- load scripts -->	
 		<script type="text/javascript">
@@ -58,11 +62,34 @@
 		<div data-role="page" id="homepage" data-theme="b">
 			
 			<div data-role="header" data-position="fixed">
+				<a data-icon="refresh" data-theme="a" onClick="window.location.reload();">R</a>
 				<h1>PT Tracker</h1>
+				<a data-icon="info" data-theme="b" href="info.html" data-transition="flip" data-prefetch>Info</a>
 			</div><!-- /header -->
 			
 			<div data-role="content" data-fullscreen="true">
-				<div data-role="collapsible-set">
+				<div id="loader" style="visibility: hidden">
+					<div id="processStatus">
+						<p>Process is running
+						<br><img src="images/loader.gif"></p>
+					</div>
+					
+					<div data-role="controlgroup" data-type="horizontal">
+						<button type="button" data-icon="check" onClick="()">Done</button>
+					</div>
+					
+					<p>Received messages</p>
+					<div id="alertsConsole"></div>
+				</div>
+								 
+				<h2 style="margin-top: 0;">Controls</h2>			
+				<div data-role="controlgroup" data-type="horizontal" id="data-controller">
+					<button type="button" data-icon="" onClick="()">Init</button>
+					<button type="button" data-icon="arrow-r" onClick="startDataCollection()">Start</button>
+				</div>
+				
+				<h2>Debugging Access</h2>
+				<div data-role="collapsible-set">	
                     <div data-role="collapsible" data-collapsed="true">
                         <h3>GeoLocation</h3>
 						
@@ -123,62 +150,7 @@
                 </div>
 			</div><!-- /content -->
 			
-			<div data-role="footer" data-position="fixed" data-id="footer">
-				<div data-role="navbar" data-iconpos="top">
-					<ul>
-                        <li><a href="#" data-icon="home" class="ui-btn-active ui-state-persist">Home</a></li>
-						<li><a href="#alerts" data-icon="alert" data-transition="slide" class="ui-state-persist">Alerts Console</a></li>
-                        <li><a href="#info" data-icon="info" data-transition="slide" class="ui-state-persist">Project Info</a></li>
-                    </ul>
-				</div>
-			</div>
-			
 		</div><!-- /homepage -->
-		
-		<!-- start of alerts page -->
-		<div data-role="page" id="alerts" data-theme="b">
-			
-			<div data-role="header" data-position="fixed">
-				<h1>Alerts Console</h1>
-			</div><!-- /header -->
-			
-			<div data-role="content" data-fullscreen="true">
-				<h3>Received messages:</h3>
-				<div id="alertsConsole"></div>
-			</div><!-- /content -->
-
-			<div data-role="footer" data-position="fixed" data-id="footer">
-				<div data-role="navbar" data-iconpos="top">
-					<ul>
-                        <li><a href="#homepage" data-icon="home" data-direction="reverse" data-transition="slide" class="ui-state-persist">Home</a></li>
-						<li><a href="#" data-icon="alert" class="ui-btn-active ui-state-persist">Alerts Console</a></li>
-                        <li><a href="#info" data-icon="info" data-transition="slide" class="ui-state-persist">Project Info</a></li>
-                    </ul>
-				</div>
-			</div>
-		</div><!-- /alerts page -->
-
-		<div data-role="page" id="info" data-theme="b">
-			
-			<div data-role="header" data-position="fixed">
-				<h1>Project Info</h1>
-			</div><!-- /header -->
-			
-			<div data-role="content" data-fullscreen="true">
-				<p>Hello, world!</p>
-			</div><!-- /about -->
-			
-			<div data-role="footer" data-position="fixed" data-id="footer">
-				<div data-role="navbar" data-iconpos="top">
-					<ul>
-                        <li><a href="#homepage" data-icon="home" data-direction="reverse" data-transition="slide" class="ui-state-persist">Home</a></li>
-						<li><a href="#alerts" data-icon="alert" data-direction="reverse" data-transition="slide" class="ui-state-persist">Alerts Console</a></li>
-                        <li><a href="#" data-icon="info" class="ui-btn-active ui-state-persist">Project Info</a></li>
-                    </ul>
-				</div>
-			</div><!-- /footer -->
-
-		</div>
 
 	</body>
 	
