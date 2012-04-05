@@ -59,44 +59,55 @@
 	<body onload="onBodyLoad()">
 		
 		<!-- Start of homepage -->
-		<div data-role="page" id="homepage" data-theme="b">
+		<div data-role="page" id="homepage" data-theme="c">
 			
 			<div data-role="header" data-position="fixed">
-				<a data-icon="refresh" data-theme="a" onClick="window.location.reload();">R</a>
+				<a data-icon="refresh" data-theme="a" onClick="window.location.reload();">Reload</a>
 				<h1>PT Tracker</h1>
-				<a data-icon="info" data-theme="b" href="info.html" data-transition="flip" data-prefetch>Info</a>
+				<a data-icon="info" data-theme="b" href="info.html" data-transition="slide" data-prefetch>Info</a>
 			</div><!-- /header -->
 			
 			<div data-role="content" data-fullscreen="true">
 				<div id="loader" style="visibility: hidden">
 					<div id="processStatus">
 						<p>Process is running
-						<br><img src="images/loader.gif"></p>
+						<br><img src="jquery/images/bar-loader.gif"></p>
 					</div>
 					
 					<div data-role="controlgroup" data-type="horizontal">
-						<button type="button" data-icon="check" onClick="()">Done</button>
+						<a data-role="button" data-icon="check" href="javascript:stopDataCollection();">Done</a>
 					</div>
 					
 					<p>Received messages</p>
 					<div id="alertsConsole"></div>
 				</div>
-								 
-				<h2 style="margin-top: 0;">Controls</h2>			
-				<div data-role="controlgroup" data-type="horizontal" id="data-controller">
-					<button type="button" data-icon="" onClick="()">Init</button>
-					<button type="button" data-icon="arrow-r" onClick="startDataCollection()">Start</button>
+				
+				<h2 style="margin-top: 0;">Controls</h2>	
+				<div data-role="controlgroup" data-type="horizontal">
+					<a href="javascript:stopDataCollection();" data-role="button" data-icon="">Init</a>
+					<a href="javascript:startDataCollection();" data-role="button" data-icon="arrow-r">Start</a>
 				</div>
 				
 				<h2>Debugging Access</h2>
-				<div data-role="collapsible-set">	
+				<div data-role="collapsible-set">
+					<div data-role="collapsible" data-collapsed="true">
+                        <h3>Alerts Console Log</h3>
+						
+						<div data-role="controlgroup" data-type="horizontal">
+							<a data-role="button" href="javascript:displayAlertsConsoleLog()">Retrieve</a>
+							<a data-role="button" href="javascript:clearDiv('alertsConsoleLog')">Clear</a>
+						</div>
+						
+						<div id="alertsConsoleLog">Waiting for Retrieve request...</div>
+                    </div>
+					
                     <div data-role="collapsible" data-collapsed="true">
                         <h3>GeoLocation</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal">
-							<button type="button" onClick=geoLocation_startWatching()>Start</button>
-							<button type="button" onClick=geoLocation_stopWatching()>Stop</button>
-							<button type="button" onClick=clearDiv('geolocation')>Clear</button>
+							<a data-role="button" href="javascript:geoLocation_startWatching()">Start</a>
+							<a data-role="button" href="javascript:geoLocation_stopWatching()">Stop</a>
+							<a data-role="button" href="javascript:clearDiv('geolocation')">Clear</a>
 						</div>
 							
 						<div id="geolocation">Waiting for GPS to start...</div>
@@ -106,9 +117,9 @@
                         <h3>Acceleration</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal">
-							<button type="button" onClick=accelerometer_startWatching()>Start</button>
-							<button type="button" onClick=accelerometer_stopWatching()>Stop</button>
-							<button type="button" onClick=clearDiv('acceleration')>Clear</button>
+							<a data-role="button" href="javascript:accelerometer_startWatching()">Start</a>
+							<a data-role="button" href="javascript:accelerometer_stopWatching()">Stop</a>
+							<a data-role="button" href="javascript:clearDiv('acceleration')">Clear</a>
 						</div>
 						
 						<div id="acceleration">Waiting for accelerometer start...</div>
@@ -118,9 +129,9 @@
                         <h3>Compass</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal">
-							<button type="button" onClick=compass_startWatching()>Start</button>
-							<button type="button" onClick=compass_stopWatching()>Stop</button>
-							<button type="button" onClick=clearDiv('compass')>Clear</button>
+							<a data-role="button" href="javascript:compass_startWatching()">Start</a>
+							<a data-role="button" href="javascript:compass_stopWatching()">Stop</a>
+							<a data-role="button" href="javascript:clearDiv('compass')">Clear</a>
 						</div>
 						
 						<div id="compass">Waiting for compass start...</div>
@@ -130,16 +141,16 @@
                         <h3>Databases</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal">
-							<button type="button" onClick=storage_init()>Init</button>
-							<button type="button" onClick=storage_show()>Show</button>
-							<button type="button" onClick=storage_clear()>Clear</button>
+							<a data-role="button" href="javascript:storage_init()">Init</a>
+							<a data-role="button" href="javascript:storage_show()">Show</a>
+							<a data-role="button" href="javascript:storage_clear()">Clear</a>
 						</div>
 						
 						<div id="databases"></div>
                     </div>
 					
 					<div data-role="collapsible" data-collapsed="true">
-                        <h3>Notifications</h3>
+                        <h3>User Notifications</h3>
 						
 						<div data-role="controlgroup" data-type="vertical">
 							<a href="#" onclick="notifications_showAlert(); return false;" data-role="button">Show Alert</a>

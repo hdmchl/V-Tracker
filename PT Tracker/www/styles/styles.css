@@ -32,7 +32,7 @@ body {
 #alertsConsole {
 	font-weight: normal;
 	font-size: 15px;
-	max-height: 150px;
+	height: 150px;
 	overflow: scroll;
 }
 /******************************************************/
