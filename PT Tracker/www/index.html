@@ -82,12 +82,12 @@
 					<div id="alertsConsole"></div>
 				</div>
 				
-				<h2 style="margin-top: 0;">Controls</h2>	
+				<h2 style="margin-top: 0;">Data-Collection</h2>					
 				<div data-role="controlgroup" data-type="horizontal">
-					<a href="javascript:stopDataCollection();" data-role="button" data-icon="">Init</a>
-					<a href="javascript:startDataCollection();" data-role="button" data-icon="arrow-r">Start</a>
+					<a href="javascript:initDataCollection();" data-role="button" data-icon="">Reset</a>
+					<a href="javascript:startDataCollection();" data-role="button" data-icon="arrow-r">Collect Data</a>
 				</div>
-				
+
 				<h2>Debugging Access</h2>
 				<div data-role="collapsible-set">
 					<div data-role="collapsible" data-collapsed="true">
@@ -98,16 +98,16 @@
 							<a data-role="button" href="javascript:clearDiv('alertsConsoleLog')">Clear</a>
 						</div>
 						
-						<div id="alertsConsoleLog">Waiting for Retrieve request...</div>
+						<div id="alertsConsoleLog">Waiting for a retrieve request...</div>
                     </div>
 					
                     <div data-role="collapsible" data-collapsed="true">
                         <h3>GeoLocation</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal">
-							<a data-role="button" href="javascript:geoLocation_startWatching()">Start</a>
+							<a data-role="button" href="javascript:geoLocation_startWatching()">Watch</a>
 							<a data-role="button" href="javascript:geoLocation_stopWatching()">Stop</a>
-							<a data-role="button" href="javascript:clearDiv('geolocation')">Clear</a>
+							<a data-role="button" href="javascript:clearDiv('geolocation')">clc</a>
 						</div>
 							
 						<div id="geolocation">Waiting for GPS to start...</div>
@@ -117,9 +117,9 @@
                         <h3>Acceleration</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal">
-							<a data-role="button" href="javascript:accelerometer_startWatching()">Start</a>
+							<a data-role="button" href="javascript:accelerometer_startWatching()">Watch</a>
 							<a data-role="button" href="javascript:accelerometer_stopWatching()">Stop</a>
-							<a data-role="button" href="javascript:clearDiv('acceleration')">Clear</a>
+							<a data-role="button" href="javascript:clearDiv('acceleration')">clc</a>
 						</div>
 						
 						<div id="acceleration">Waiting for accelerometer start...</div>
@@ -129,9 +129,9 @@
                         <h3>Compass</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal">
-							<a data-role="button" href="javascript:compass_startWatching()">Start</a>
+							<a data-role="button" href="javascript:compass_startWatching()">Watch</a>
 							<a data-role="button" href="javascript:compass_stopWatching()">Stop</a>
-							<a data-role="button" href="javascript:clearDiv('compass')">Clear</a>
+							<a data-role="button" href="javascript:clearDiv('compass')">clc</a>
 						</div>
 						
 						<div id="compass">Waiting for compass start...</div>
@@ -141,9 +141,9 @@
                         <h3>Databases</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal">
-							<a data-role="button" href="javascript:storage_init()">Init</a>
+							<a data-role="button" href="javascript:storage_clear()">Reset</a>
 							<a data-role="button" href="javascript:storage_show()">Show</a>
-							<a data-role="button" href="javascript:storage_clear()">Clear</a>
+							<a data-role="button" href="javascript:clearDiv('databases')">clc</a>
 						</div>
 						
 						<div id="databases"></div>

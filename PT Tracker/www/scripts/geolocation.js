@@ -15,7 +15,8 @@ var geoLocation_onSuccess = function(position) {
 	var speedINkph = position.coords.speed * (60*60/1000); //calculate speed in km/hr
 	
 	//display results in real-time
-	var location = 
+	if (showRealtimeData) {
+		var location = 
 		'Latitude: '          + position.coords.latitude          + '<br />' +
 		'Longitude: '         + position.coords.longitude         + '<br />' +
 		'Altitude: '          + position.coords.altitude          + '<br />' +
@@ -26,14 +27,17 @@ var geoLocation_onSuccess = function(position) {
 		'Timestamp: '         + new Date(position.timestamp)      + '<br />';
 	
 	document.getElementById('geolocation').innerHTML = location;
+	}
 	
-	geoLocation_timer = setTimeout("geoLocation_get()", 400);
+	geoLocation_timer = setTimeout("geoLocation_get()", 400); //send off a new request after 400ms
 }
 
 // onError Callback receives a PositionError object
 function geoLocation_onError(error) {
-	alert('code: '    + error.code    + '\n' +
-		  'message: ' + error.message + '\n');
+	consoleLog('Geolocation error code: ' + error.code + ' & Message: ' + error.message);
+	
+	//try again after 2 seconds	  
+	geoLocation_timer = setTimeout("geoLocation_get()", 2000);
 }
 
 function geoLocation_stopWatching() {

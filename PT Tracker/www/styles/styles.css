@@ -8,6 +8,12 @@ body {
 	text-align: justify;
 }
 
+#data-controller {
+	margin: auto;
+	text-align: center;
+	line-height: 20px;
+}
+
 /*********************** LOADER  **********************/
 #loader {
 	z-index: 100;
@@ -36,9 +42,3 @@ body {
 	overflow: scroll;
 }
 /******************************************************/
-
-#data-controller {
-	margin: auto;
-	text-align: center;
-	line-height: 20px;
-}

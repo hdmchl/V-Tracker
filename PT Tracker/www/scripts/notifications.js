@@ -19,5 +19,5 @@ function notifications_playBeep() {
 
 // Vibrate
 function notifications_vibrate() {
-	navigator.notification.vibrate(2000);
+	navigator.notification.vibrate(3000);
 }

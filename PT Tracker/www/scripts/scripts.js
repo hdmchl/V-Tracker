@@ -1,30 +1,68 @@
-//helper scripts
+/* scripts.js
+ *
+ * These are helper scripts
+ * 
+ */
 
+//declare global variables
+var showRealtimeData = true;
+
+//clear a div on request
 function clearDiv(divId) {
 	document.getElementById(divId).innerHTML = '';
 }
 
+//console logging for alerts
 var alertsConsoleLog = [];
 var alertsConsoleCounter = 1;
 function consoleLog(message) {
-	console.log(message);
-	
-	alertsConsoleLog[alertsConsoleCounter] = alertsConsoleCounter + ") " + message + "<br />";
-	
-	var buffer = alertsConsoleLog[alertsConsoleCounter-5] + alertsConsoleLog[alertsConsoleCounter-4] + alertsConsoleLog[alertsConsoleCounter-3] + alertsConsoleLog[alertsConsoleCounter-2] + alertsConsoleLog[alertsConsoleCounter-1] + alertsConsoleLog[alertsConsoleCounter];
+	console.log(message); //display alerts in console
+	alertsConsoleLog[alertsConsoleCounter] = alertsConsoleCounter + ') ' + message + '<br />';
+		
+	//display latest alerts in window
+	var buffer = ''
+	for(i=5;i>0;i--) {
+		if (alertsConsoleLog[alertsConsoleCounter-i]) {
+			buffer = buffer + alertsConsoleLog[alertsConsoleCounter-i];
+		}
+	}
 	
 	document.getElementById('alertsConsole').innerHTML = buffer;
 	
-	alertsConsoleCounter++;
+	alertsConsoleCounter++; //increment counter
 }
 
-function deleteAlertsConsoleLog() {
-	alertsConsoleLog.length = 0;
-	alertsConsoleCounter = 1;
+//Data-collection
+function initDataCollection() {
+	storage_clear(); //clear database in preparation for data collection
 	
-	document.getElementById('alertsConsoleLog').innerHTML = '';
+	//clear dom
+	clearDiv('alertsConsoleLog');
+	clearDiv('geolocation');
+	clearDiv('acceleration');
+	clearDiv('compass');
+	clearDiv('databases');
 }
 
+function startDataCollection() {
+	document.getElementById('loader').style.visibility = 'visible';
+	showRealtimeData = false;
+	
+	geoLocation_startWatching();
+	accelerometer_startWatching();
+	compass_startWatching();	
+}
+
+function stopDataCollection() {
+	geoLocation_stopWatching();	
+	accelerometer_stopWatching();
+	compass_stopWatching();
+	
+	showRealtimeData = true;
+	document.getElementById('loader').style.visibility = 'hidden';
+}
+
+//Debugging Access
 function displayAlertsConsoleLog() {
 	var buffer = '';
 
@@ -33,22 +71,4 @@ function displayAlertsConsoleLog() {
 	}
 
 	document.getElementById('alertsConsoleLog').innerHTML = buffer;
-}
-
-function startDataCollection() {
-	document.getElementById('loader').style.visibility = 'visible';
-	
-	accelerometer_startWatching();
-	compass_startWatching();
-}
-
-function stopDataCollection() {
-	accelerometer_stopWatching();
-	compass_stopWatching();
-
-	document.getElementById('loader').style.visibility = 'hidden';
-}
-
-function analyse() {
-	
 }
