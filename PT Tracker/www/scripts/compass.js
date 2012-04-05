@@ -1,3 +1,10 @@
+/* compass.js
+ * 
+ * Written by Hadi Michael in 2012
+ * Faculty of Engineering, Monash University (Australia)
+ *
+ */
+
 var compass_watchID = null;
 
 // Start watching the acceleration

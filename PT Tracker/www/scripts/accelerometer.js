@@ -1,3 +1,10 @@
+/* accelerometer.js
+ * 
+ * Written by Hadi Michael in 2012
+ * Faculty of Engineering, Monash University (Australia)
+ *
+ */
+
 var accelerometer_watchID = null;
 
 // Start watching the acceleration
@@ -33,9 +40,6 @@ function accelerometer_onSuccess(acceleration) {
 	var p1 = Math.asin( Math.max(gravity / Math.sqrt(Math.pow(y,2)+Math.pow(z,2)), -1) );
 	var p2 = Math.atan2(z,y); 
 	var pitch = (p1 - p2) * 180/Math.PI;
-	
-	console.log('Roll: ' + roll);
-	console.log('Pich: ' + pitch);
 	
 	//display results in real-time
 	if (showRealtimeData) {

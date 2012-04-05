@@ -1,3 +1,10 @@
+/* geolocation.js
+ * 
+ * Written by Hadi Michael in 2012
+ * Faculty of Engineering, Monash University (Australia)
+ *
+ */
+
 var geoLocation_timer = null;
 
 function geoLocation_startWatching() {

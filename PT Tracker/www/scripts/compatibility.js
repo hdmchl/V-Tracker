@@ -1,5 +1,11 @@
-//use modernizr to test the browser compatibility
+/* compatibility.js
+ * 
+ * Written by Hadi Michael in 2012
+ * Faculty of Engineering, Monash University (Australia)
+ *
+ */
 
+//use modernizr to test the browser compatibility
 function checkBrowserCompatibilities() {
 	var incompatibilities = '';
 	
