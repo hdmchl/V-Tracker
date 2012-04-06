@@ -62,9 +62,9 @@
 		<div data-role="page" id="homepage" data-theme="c">
 			
 			<div data-role="header" data-position="fixed">
-				<a data-icon="refresh" data-theme="a" onClick="window.location.reload();">Reload</a>
+				<a data-icon="refresh" data-theme="a" onClick="window.location.reload();" style="visibility: hidden;">Reload</a>
 				<h1>PT Tracker</h1>
-				<a data-icon="info" data-theme="b" href="info.html" data-transition="slide" data-prefetch>Info</a>
+				<a data-icon="info" data-theme="b" href="info.html" data-transition="slide" class="ui-btn-right" data-prefetch>Info</a>
 			</div><!-- /header -->
 			
 			<div data-role="content" data-fullscreen="true">
@@ -105,10 +105,10 @@
                     <div data-role="collapsible" data-collapsed="true">
                         <h3>GeoLocation</h3>
 						
-						<div data-role="controlgroup" data-type="horizontal">
+						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 							<a data-role="button" href="javascript:geoLocation_startWatching()">Watch</a>
 							<a data-role="button" href="javascript:geoLocation_stopWatching()">Stop</a>
-							<a data-role="button" href="javascript:clearDiv('geolocation')">clc</a>
+							<a data-role="button" href="javascript:clearDiv('geolocation')">Clear</a>
 						</div>
 							
 						<div id="geolocation">Waiting for GPS to start...</div>
@@ -117,10 +117,10 @@
 					<div data-role="collapsible" data-collapsed="true">
                         <h3>Acceleration</h3>
 						
-						<div data-role="controlgroup" data-type="horizontal">
+						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 							<a data-role="button" href="javascript:accelerometer_startWatching()">Watch</a>
 							<a data-role="button" href="javascript:accelerometer_stopWatching()">Stop</a>
-							<a data-role="button" href="javascript:clearDiv('acceleration')">clc</a>
+							<a data-role="button" href="javascript:clearDiv('acceleration')">Clear</a>
 						</div>
 						
 						<div id="acceleration">Waiting for accelerometer start...</div>
@@ -129,10 +129,10 @@
 					<div data-role="collapsible" data-collapsed="true">
                         <h3>Compass</h3>
 						
-						<div data-role="controlgroup" data-type="horizontal">
+						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 							<a data-role="button" href="javascript:compass_startWatching()">Watch</a>
 							<a data-role="button" href="javascript:compass_stopWatching()">Stop</a>
-							<a data-role="button" href="javascript:clearDiv('compass')">clc</a>
+							<a data-role="button" href="javascript:clearDiv('compass')">Clear</a>
 						</div>
 						
 						<div id="compass">Waiting for compass start...</div>
@@ -141,10 +141,10 @@
 					<div data-role="collapsible" data-collapsed="true">
                         <h3>Databases</h3>
 						
-						<div data-role="controlgroup" data-type="horizontal">
+						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 							<a data-role="button" href="javascript:storage_clear()">Reset</a>
 							<a data-role="button" href="javascript:storage_show()">Show</a>
-							<a data-role="button" href="javascript:clearDiv('databases')">clc</a>
+							<a data-role="button" href="javascript:clearDiv('databases')">Clear</a>
 						</div>
 						
 						<div id="databases"></div>
