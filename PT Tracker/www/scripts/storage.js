@@ -11,14 +11,14 @@ var db = null; //declare the database
 function storage_init() {
 	document.getElementById('databases').innerHTML = '';
 	db = window.openDatabase("PTTracker_db", "1.00", "PT Tracker DB", 2 * 1024*1024); //create a 2MBs database
-	consoleLog("Database opened!");
+	consoleLog("Database opened! Storage Initiated.");
 	
 	//create tables
 	db.transaction(function (tx) {
 				   tx.executeSql('CREATE TABLE IF NOT EXISTS GEOLOCATION (id unique, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp);');
 				   tx.executeSql('CREATE TABLE IF NOT EXISTS ACCELEROMETER (id unique, AccelerationX, AccelerationY, AccelerationZ, Timestamp);');
 				   tx.executeSql('CREATE TABLE IF NOT EXISTS COMPASS (id unique, Heading);');
-				   tx.executeSql('CREATE TABLE IF NOT EXISTS CONSOLELOG (id unique, Message);');
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS CONSOLELOG (id, Message);');
 				   }, storage_errorCB, storage_successCB);
 }
 //******************************** END INITIALISE STORAGE *********************************//
@@ -37,7 +37,7 @@ function storage_clear() {
 				   tx.executeSql('CREATE TABLE IF NOT EXISTS GEOLOCATION (id unique, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp);');
 				   tx.executeSql('CREATE TABLE IF NOT EXISTS ACCELEROMETER (id unique, AccelerationX, AccelerationY, AccelerationZ, Timestamp);');
 				   tx.executeSql('CREATE TABLE IF NOT EXISTS COMPASS (id unique, Heading);');
-				   tx.executeSql('CREATE TABLE IF NOT EXISTS CONSOLELOG (id unique, Message);');
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS CONSOLELOG (id, Message);');
 				   }, storage_errorCB, storage_successCB);
 	
 	consoleLog("Database tables reset!");
