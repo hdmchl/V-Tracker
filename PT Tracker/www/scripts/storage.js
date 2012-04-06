@@ -129,28 +129,38 @@ function storage_successCB() {
 //********************************** END ERROR HANDLING ***********************************//
 
 //******************************** RETRIEVING DATA FROM DB ********************************//
+var dbTables = [];
 function storage_show() {
 	document.getElementById('databases').innerHTML = '';
 	
-	var dbTables = [];
-	
 	db.transaction(function (tx) {
 				   tx.executeSql('SELECT * FROM sqlite_master WHERE type=\'table\'', [], function (tx, results) {
-								 for (var i=0; i<results.rows.length; i++) {dbTables[i] = results.rows.item(i).name;queryDB(dbTables[i]);}
+								 for (var i=1; i<results.rows.length; i++) {dbTables[i] = results.rows.item(i).name;}
 								 }, storage_errorCB);
-				   }, storage_errorCB, storage_successCB);
+				   }, storage_errorCB, queryDB);
 }
 
-function queryDB(table) {
-	var tableQuery = 'SELECT * FROM ' + table;
-	consoleLog(tableQuery);
+var qc = 0;
+function queryDB() {
+	qc++;
+	
+	if (qc < dbTables.length) {
+		var tableQuery = 'SELECT * FROM ' + dbTables[qc];
 		
-	db.transaction(function (tx){
-				   tx.executeSql(tableQuery, [], function (tx, results) {
-								 var buffer = document.getElementById('databases').innerHTML;
-								 buffer = buffer + '<p>' + table + ' length: ' + results.rows.length; + '</p>';
-								 document.getElementById('databases').innerHTML = buffer;
-								 }, storage_errorCB);
-				   }, storage_errorCB, storage_successCB);			
+		//consoleLog(tableQuery);
+		
+		db.transaction(function (tx){
+					   tx.executeSql(tableQuery, [], displayQueryResults, storage_errorCB);
+					   }, storage_errorCB, queryDB);		
+	}
+	else {
+		qc = 0;
+	}
+}
+
+function displayQueryResults(tx, results) {	
+	var buffer = '<p>' + dbTables[qc] + ' length: ' + results.rows.length + '</p>';
+	
+	document.getElementById('databases').innerHTML = document.getElementById('databases').innerHTML + buffer;
 }
 //****************************** END RETRIEVING DATA FROM DB ********************************//

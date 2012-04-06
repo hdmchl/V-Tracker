@@ -12,6 +12,8 @@ function accelerometer_startWatching() {
 	var options = { frequency: 300 }; //Update acceleration every xxx milliseconds
 	
 	accelerometer_watchID = navigator.accelerometer.watchAcceleration(accelerometer_onSuccess, accelerometer_onError, options);
+	
+	consoleLog("accelerometer_watch started");
 }
 
 // Stop watching the acceleration

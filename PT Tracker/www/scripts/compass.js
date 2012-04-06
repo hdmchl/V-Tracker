@@ -12,6 +12,8 @@ function compass_startWatching() {
 	var options = { frequency: 300 }; //Update acceleration every xxx milliseconds
 	
 	compass_watchID = navigator.compass.watchHeading(compass_onSuccess, compass_onError, options);
+	
+	consoleLog("compass_watch started");
 }
 
 // Stop watching the acceleration
