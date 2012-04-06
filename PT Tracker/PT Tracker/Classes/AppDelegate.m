@@ -21,7 +21,7 @@
 //  AppDelegate.m
 //  PT Tracker
 //
-//  Created by Hadi Michel Salem on 28/02/12.
+//  Created by Hadi Michael on 28/02/12.
 //  Copyright Monash University 2012. All rights reserved.
 //
 

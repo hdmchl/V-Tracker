@@ -1,7 +1,7 @@
 //
 //  MainViewController.h
 //
-//  Created by Hadi Michel Salem on 28/02/12.
+//  Created by Hadi Michael on 28/02/12.
 //  Copyright (c) 2012 Monash University. All rights reserved.
 //
 
