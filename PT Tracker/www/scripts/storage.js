@@ -15,10 +15,10 @@ function storage_init() {
 	
 	//create tables
 	db.transaction(function (tx) {
-				   tx.executeSql('CREATE TABLE IF NOT EXISTS GEOLOCATION (id unique, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp);');
-				   tx.executeSql('CREATE TABLE IF NOT EXISTS ACCELEROMETER (id unique, AccelerationX, AccelerationY, AccelerationZ, Timestamp);');
-				   tx.executeSql('CREATE TABLE IF NOT EXISTS COMPASS (id unique, Heading);');
-				   tx.executeSql('CREATE TABLE IF NOT EXISTS CONSOLELOG (id, Message);');
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS GEOLOCATION (id unique, Timestamp, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed);');
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS ACCELEROMETER (id unique, Timestamp, AccelerationX, AccelerationY, AccelerationZ);');
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS COMPASS (id unique, Timestamp, Heading);');
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS CONSOLELOG (id, Timestamp, Message);');
 				   }, storage_errorCB, storage_successCB);
 }
 //******************************** END INITIALISE STORAGE *********************************//
@@ -34,10 +34,10 @@ function storage_clear() {
 				   tx.executeSql('DROP TABLE IF EXISTS CONSOLELOG;');
 				   
 				   //create new ones
-				   tx.executeSql('CREATE TABLE IF NOT EXISTS GEOLOCATION (id unique, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed, Timestamp);');
-				   tx.executeSql('CREATE TABLE IF NOT EXISTS ACCELEROMETER (id unique, AccelerationX, AccelerationY, AccelerationZ, Timestamp);');
-				   tx.executeSql('CREATE TABLE IF NOT EXISTS COMPASS (id unique, Heading);');
-				   tx.executeSql('CREATE TABLE IF NOT EXISTS CONSOLELOG (id, Message);');
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS GEOLOCATION (id unique, Timestamp, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed);');
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS ACCELEROMETER (id unique, Timestamp, AccelerationX, AccelerationY, AccelerationZ);');
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS COMPASS (id unique, Timestamp, Heading);');
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS CONSOLELOG (id, Timestamp, Message);');
 				   }, storage_errorCB, storage_successCB);
 	
 	consoleLog("Database tables reset!");
@@ -48,7 +48,7 @@ function storage_clear() {
 //ConsoleLog Table
 var consoleLog_message = '';
 function updateConsoleLogTable(message) {
-	consoleLog_message = '"' + message + '"';
+	consoleLog_message = '"' + Date(new Date().getTime()) + '",' + '"' + message + '"';
 	
 	db.transaction(populateConsoleLogTable, function (error) {
 				   console.log("Log Error for: " + message + " | Details: " + error.code + ", " + error.message);
@@ -67,10 +67,10 @@ function populateConsoleLogTable(tx) {
 var accelerometer_acceleration = '';
 function updateAccelerometerTable(acceleration) {
 	accelerometer_acceleration =
+	'"' + new Date(acceleration.timestamp) + '",' +
 	'"' + acceleration.x          + '",' +
 	'"' + acceleration.y          + '",' +
-	'"' + acceleration.z          + '",' +
-	'"' + new Date(acceleration.timestamp)      + '"';
+	'"' + acceleration.z          + '"';
 	
 	db.transaction(populateAccelerometerTable, storage_errorCB, storage_successCB);
 }
@@ -84,7 +84,9 @@ function populateAccelerometerTable(tx) {
 //Compass Table
 var compass_heading = '';
 function updateCompassTable(heading) {
-	compass_heading = '"' + heading.magneticHeading + '"';
+	compass_heading = 
+	'"' + Date(new Date().getTime())  + '",' +               
+	'"' + heading.magneticHeading     + '"';
 	
 	db.transaction(populateCompassTable, storage_errorCB, storage_successCB);
 }
@@ -99,14 +101,14 @@ function populateCompassTable(tx) {
 var geoLocation_position = '';
 function updateGeoLocationTable(position) {	
 	geoLocation_position =
+	                '"' + new Date(position.timestamp)       + '",' +
 					'"' + position.coords.latitude          + '",' +
 					'"' + position.coords.longitude         + '",' +
 					'"' + position.coords.altitude          + '",' +
 					'"' + position.coords.accuracy          + '",' +
 					'"' + position.coords.altitudeAccuracy  + '",' +
 					'"' + position.coords.heading           + '",' +
-					'"' + position.coords.speed             + '",' +
-					'"' + new Date(position.timestamp)      + '"';
+					'"' + position.coords.speed             + '"';
 
 	db.transaction(populateGeoLocationTable, storage_errorCB, storage_successCB);
 }
