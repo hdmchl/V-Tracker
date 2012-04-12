@@ -114,6 +114,8 @@
     
     [self.window addSubview:self.viewController.view];
     [self.window makeKeyAndVisible];
+	
+	[UIApplication sharedApplication].idleTimerDisabled = YES; 
     
     return YES;
 }
