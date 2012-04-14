@@ -115,7 +115,7 @@
     [self.window addSubview:self.viewController.view];
     [self.window makeKeyAndVisible];
 	
-	[UIApplication sharedApplication].idleTimerDisabled = YES; 
+	[UIApplication sharedApplication].idleTimerDisabled = YES; //stop screen from dimming
     
     return YES;
 }
