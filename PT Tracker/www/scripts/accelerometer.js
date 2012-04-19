@@ -29,11 +29,11 @@ function accelerometer_stopWatching() {
 function accelerometer_onSuccess(acceleration) {
 	updateAccelerometerTable(acceleration); //update SQL
 
-	var gravity = -1.025;
+	var gravity = -10.05;
 	
-	var x = parseFloat(acceleration.x);
-	var y = parseFloat(acceleration.y);
-	var z = parseFloat(acceleration.z);
+	var x = -parseFloat(acceleration.x);
+	var y = -parseFloat(acceleration.y);
+	var z = -parseFloat(acceleration.z);
 	
 	var r1 = Math.atan2(z,x);
 	var r2 = Math.asin( Math.max(gravity / Math.sqrt(Math.pow(x,2)+Math.pow(z,2)), -1) );
@@ -47,9 +47,9 @@ function accelerometer_onSuccess(acceleration) {
 	if (showRealtimeData) {
 		var element = document.getElementById('acceleration');
 		
-		element.innerHTML = 'Acceleration X: ' + acceleration.x + '<br />' +
-							'Acceleration Y: ' + acceleration.y + '<br />' +
-							'Acceleration Z: ' + acceleration.z + '<br />' +
+		element.innerHTML = 'Acceleration X: ' + Math.round(10000*parseFloat(acceleration.x))/10000 + ' m/s^2<br />' +
+							'Acceleration Y: ' + Math.round(10000*parseFloat(acceleration.y))/10000 + ' m/s^2<br />' +
+							'Acceleration Z: ' + Math.round(10000*parseFloat(acceleration.z))/10000 + ' m/s^2<br />' +
 							'Timestamp: '      + new Date(acceleration.timestamp) + '<br />' +
 							'Roll: '           + Math.round(100*roll)/100 + '<br />' +
 							'Pitch: '          + Math.round(100*pitch)/100 + '<br />';

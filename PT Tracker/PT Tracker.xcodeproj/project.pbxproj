@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0F5475841527EEA80016EF85 /* Cordova.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5475831527EEA80016EF85 /* Cordova.framework */; };
-		0F54758C1527EF7E0016EF85 /* CDVDeprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F54758B1527EF7E0016EF85 /* CDVDeprecated.m */; };
+		0F4D8785153FD84E000601BA /* Cordova.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F4D8784153FD84E000601BA /* Cordova.framework */; };
 		0F92F57C14FCD07700F344D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F92F57B14FCD07700F344D6 /* Foundation.framework */; };
 		0F92F57E14FCD07700F344D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F92F57D14FCD07700F344D6 /* UIKit.framework */; };
 		0F92F58014FCD07700F344D6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F92F57F14FCD07700F344D6 /* CoreGraphics.framework */; };
@@ -41,9 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0F5475831527EEA80016EF85 /* Cordova.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cordova.framework; path = "/Users/Hadi/Developer/PT-Tracker/PT Tracker/Cordova.framework"; sourceTree = "<absolute>"; };
-		0F54758A1527EF7E0016EF85 /* CDVDeprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDVDeprecated.h; sourceTree = "<group>"; };
-		0F54758B1527EF7E0016EF85 /* CDVDeprecated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDVDeprecated.m; sourceTree = "<group>"; };
+		0F4D8784153FD84E000601BA /* Cordova.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cordova.framework; sourceTree = "<group>"; };
 		0F92F57714FCD07700F344D6 /* PT Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PT Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F92F57B14FCD07700F344D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0F92F57D14FCD07700F344D6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -99,7 +96,7 @@
 				0F92F59014FCD07700F344D6 /* SystemConfiguration.framework in Frameworks */,
 				0F92F59214FCD07700F344D6 /* MobileCoreServices.framework in Frameworks */,
 				0F92F59414FCD07700F344D6 /* CoreMedia.framework in Frameworks */,
-				0F5475841527EEA80016EF85 /* Cordova.framework in Frameworks */,
+				0F4D8785153FD84E000601BA /* Cordova.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,20 +110,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0F5475891527EF7E0016EF85 /* deprecated */ = {
-			isa = PBXGroup;
-			children = (
-				0F54758A1527EF7E0016EF85 /* CDVDeprecated.h */,
-				0F54758B1527EF7E0016EF85 /* CDVDeprecated.m */,
-			);
-			path = deprecated;
-			sourceTree = "<group>";
-		};
 		0F92F56914FCD07700F344D6 = {
 			isa = PBXGroup;
 			children = (
-				0F5475891527EF7E0016EF85 /* deprecated */,
-				0F5475831527EEA80016EF85 /* Cordova.framework */,
+				0F4D8784153FD84E000601BA /* Cordova.framework */,
 				0F92F5D014FCD1D000F344D6 /* README.md */,
 				0F92F5CD14FCD0BA00F344D6 /* www */,
 				0F92F59514FCD07700F344D6 /* PT Tracker */,
@@ -349,7 +336,6 @@
 				0F92F59C14FCD07700F344D6 /* main.m in Sources */,
 				0F92F5BC14FCD07700F344D6 /* AppDelegate.m in Sources */,
 				0F92F5BF14FCD07700F344D6 /* MainViewController.m in Sources */,
-				0F54758C1527EF7E0016EF85 /* CDVDeprecated.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,7 +392,7 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -424,7 +410,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
