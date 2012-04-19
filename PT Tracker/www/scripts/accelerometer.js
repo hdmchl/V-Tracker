@@ -47,9 +47,9 @@ function accelerometer_onSuccess(acceleration) {
 	if (showRealtimeData) {
 		var element = document.getElementById('acceleration');
 		
-		element.innerHTML = 'Acceleration X: ' + Math.round(10000*parseFloat(acceleration.x))/10000 + ' m/s^2<br />' +
-							'Acceleration Y: ' + Math.round(10000*parseFloat(acceleration.y))/10000 + ' m/s^2<br />' +
-							'Acceleration Z: ' + Math.round(10000*parseFloat(acceleration.z))/10000 + ' m/s^2<br />' +
+		element.innerHTML = 'Acceleration X: ' + Math.round(100000*parseFloat(acceleration.x))/100000 + ' m/s^2<br />' +
+							'Acceleration Y: ' + Math.round(100000*parseFloat(acceleration.y))/100000 + ' m/s^2<br />' +
+							'Acceleration Z: ' + Math.round(100000*parseFloat(acceleration.z))/100000 + ' m/s^2<br />' +
 							'Timestamp: '      + new Date(acceleration.timestamp) + '<br />' +
 							'Roll: '           + Math.round(100*roll)/100 + '<br />' +
 							'Pitch: '          + Math.round(100*pitch)/100 + '<br />';
