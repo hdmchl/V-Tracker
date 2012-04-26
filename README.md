@@ -1,13 +1,12 @@
 Public Transport Tracker (PT Tracker)
 ===============
-**Project description:** 'Real-time tracking of Melbourne's public transport network using web-technologies on a mobile device'
-
 'PT Tracker' is part of a research project in the Deparment of Electrical and Computer Systems Engineering (ECSE) at Monash University, Australia. For more information, please refer to the project's [wiki](https://github.com/hadimichael/PT-Tracker/wiki "Wiki").
 
 (work in progress)
 ---------------
 The code in this repository is incomplete and is a work-in-progress.
 
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 LICENSE (Apache 2.0)
 ===============
