@@ -139,11 +139,11 @@ function storage_show() {
 				   tx.executeSql('SELECT * FROM sqlite_master WHERE type=\'table\'', [], function (tx, results) {
 								 for (var i=1; i<results.rows.length; i++) {dbTables[i] = results.rows.item(i).name;}
 								 }, storage_errorCB);
-				   }, storage_errorCB, queryDB);
+				   }, storage_errorCB, storage_queryDB);
 }
 
 var qc = 0;
-function queryDB() {
+function storage_queryDB() {
 	qc++;
 	
 	if (qc < dbTables.length) {
@@ -153,7 +153,7 @@ function queryDB() {
 		
 		db.transaction(function (tx){
 					   tx.executeSql(tableQuery, [], displayQueryResults, storage_errorCB);
-					   }, storage_errorCB, queryDB);		
+					   }, storage_errorCB, storage_queryDB);		
 	}
 	else {
 		qc = 0;
