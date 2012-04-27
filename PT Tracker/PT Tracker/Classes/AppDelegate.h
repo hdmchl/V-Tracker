@@ -35,7 +35,19 @@
 
 
 @interface AppDelegate : NSObject < UIApplicationDelegate > {
-
+	
+	/////////////////////////////////////////////////// NON STANDARD CODE - added by Hadi ////////////
+	// declare database integration variables
+	NSString *databaseName; 
+	NSString *databasePath; 
+	NSString *databaseFile; 
+	NSString *masterName; 
+	NSString *masterPath; 
+	NSString *masterFile;
+	NSString *backupPath;
+	NSString *backupFile;
+	/////////////////////////////////////////////////// END NON-STANDARD CODE ////////////
+	
 }
 
 // invoke string is passed to your app on launch, this is only valid if you 

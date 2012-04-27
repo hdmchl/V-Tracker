@@ -113,10 +113,81 @@
 
     /////////////////////////////////////////////////// NON STANDARD CODE - added by Hadi ////////////
 	[UIApplication sharedApplication].idleTimerDisabled = YES; //stop screen from dimming
+	
+	//Copy over the database if it doesn't exist 
+	// Setup some globals 
+	databaseName = @"0000000000000001.db"; 
+	masterName = @"Databases.db"; 
+	
+	// Get the path to the Library directory and append the databaseName 
+	NSArray *libraryPaths = NSSearchPathForDirectoriesInDomains 
+	(NSLibraryDirectory, NSUserDomainMask, YES); 
+	NSString *libraryDir = [libraryPaths objectAtIndex:0]; 
+	// the directory path for the Databases.db file 
+	masterPath = [libraryDir stringByAppendingPathComponent:@"Caches/"]; 
+	// the directory path for the 0000000000000001.db file 
+	databasePath = [libraryDir stringByAppendingPathComponent:@"Caches/file__0/"]; 
+	// the directory+full path for backup files
+	backupPath =  [libraryDir stringByAppendingPathComponent:@"../Documents/Backups/websqldbs.appdata.db/"];
+	backupFile = [backupPath stringByAppendingPathComponent:databaseName];
+	// the full path for the Databases.db file 
+	masterFile = [masterPath stringByAppendingPathComponent:masterName]; 
+	// the full path for the 0000000000000001.db file 
+	databaseFile = [databasePath stringByAppendingPathComponent:databaseName]; 
+	// Execute the "checkAndCreateDatabase" function 
+	[self checkAndCreateDatabase]; 
+	
 	/////////////////////////////////////////////////// END NON-STANDARD CODE ////////////
 	
     return YES;
 }
+
+/////////////////////////////////////////////////// NON STANDARD CODE - added by Hadi ////////////
+-(void) checkAndCreateDatabase{ 
+	// Check if the SQL database has already been saved to the users phone, if not then copy it over 
+	BOOL success; 
+	
+	// Create a FileManager object, we will use this to check the status 
+	// of the database and to copy it over if required 
+	NSFileManager *fileManager = [NSFileManager defaultManager]; 
+	
+	// Check if the database has already been created in the users filesystem 
+	success = [fileManager fileExistsAtPath:databasePath]; 
+	
+	// If the database already exists then return without doing anything 
+	if(success) {
+		BOOL resetDB = false; //change this BOOL to TRUE if you want to reset the user's databases at launch
+		if (resetDB) {
+			NSLog ( @"resetDB is set to true.");
+			[fileManager removeItemAtPath:backupFile error:nil];
+			[fileManager removeItemAtPath:databaseFile error:nil];
+			[fileManager removeItemAtPath:masterFile error:nil]; 
+		} else {
+			NSLog ( @"db-integration was not required!");
+			return;
+		}
+	}
+	
+	// If not then proceed to copy the database from the application to the users filesystem 
+	
+	// Get the path to the database in the application package 
+	NSString *databasePathFromApp = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:databaseName]; 
+	NSString *masterPathFromApp = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:masterName]; 
+	
+	// Create the database folder structure 
+	[fileManager createDirectoryAtPath:databasePath withIntermediateDirectories:YES attributes:nil error:NULL]; 
+	
+	// Copy the database from the package to the users filesystem
+	[fileManager copyItemAtPath:databasePathFromApp toPath:databaseFile error:nil]; 
+	
+	// Copy the Databases.db from the package to the appropriate place 
+	[fileManager copyItemAtPath:masterPathFromApp toPath:masterFile error:nil]; 
+	
+	NSLog ( @"db-initialisation complete. Database were copied accross.");
+	
+	[fileManager release]; 
+} 
+/////////////////////////////////////////////////// END NON-STANDARD CODE ////////////
 
 // this happens while we are running ( in the background, or from within our own app )
 // only valid if PT-Tracker-Info.plist specifies a protocol to handle

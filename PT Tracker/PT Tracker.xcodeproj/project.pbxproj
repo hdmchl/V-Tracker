@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F2DF1BE154ACFC90022BA94 /* Databases.db in Resources */ = {isa = PBXBuildFile; fileRef = 0F2DF1BD154ACFC90022BA94 /* Databases.db */; };
+		0F2DF1C2154AD2440022BA94 /* 0000000000000001.db in Resources */ = {isa = PBXBuildFile; fileRef = 0F2DF1C1154AD2440022BA94 /* 0000000000000001.db */; };
 		0F4D8785153FD84E000601BA /* Cordova.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F4D8784153FD84E000601BA /* Cordova.framework */; };
 		0F92F57C14FCD07700F344D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F92F57B14FCD07700F344D6 /* Foundation.framework */; };
 		0F92F57E14FCD07700F344D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F92F57D14FCD07700F344D6 /* UIKit.framework */; };
@@ -40,6 +42,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0F2DF1BD154ACFC90022BA94 /* Databases.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = Databases.db; sourceTree = "<group>"; };
+		0F2DF1C1154AD2440022BA94 /* 0000000000000001.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0000000000000001.db; sourceTree = "<group>"; };
 		0F4D8784153FD84E000601BA /* Cordova.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cordova.framework; sourceTree = "<group>"; };
 		0F92F57714FCD07700F344D6 /* PT Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PT Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F92F57B14FCD07700F344D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -177,6 +181,8 @@
 		0F92F5A014FCD07700F344D6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0F2DF1C1154AD2440022BA94 /* 0000000000000001.db */,
+				0F2DF1BD154ACFC90022BA94 /* Databases.db */,
 				0F92F5B514FCD07700F344D6 /* Capture.bundle */,
 				0F92F5A114FCD07700F344D6 /* en.lproj */,
 				0F92F5A514FCD07700F344D6 /* es.lproj */,
@@ -307,6 +313,8 @@
 				0F92F5C114FCD07700F344D6 /* MainViewController.xib in Resources */,
 				0F92F5CE14FCD0BA00F344D6 /* www in Resources */,
 				0F92F5D114FCD1D000F344D6 /* README.md in Resources */,
+				0F2DF1BE154ACFC90022BA94 /* Databases.db in Resources */,
+				0F2DF1C2154AD2440022BA94 /* 0000000000000001.db in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
