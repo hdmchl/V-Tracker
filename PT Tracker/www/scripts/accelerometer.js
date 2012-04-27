@@ -5,7 +5,7 @@
  *
  */
 
-function calculate(acceleration,orientation) {
+function accelerometer_calculateRPY(acceleration,orientation) {
 	var gravity = -10.05;
 	
 	var x = -parseFloat(acceleration.x);
@@ -27,28 +27,28 @@ function calculate(acceleration,orientation) {
 	}
 }
 
-var accelX = 0;
-var accelY = 0;
-var accelZ = 10.15;
+var accelerometer_accelX = 0;
+var accelerometer_accelY = 0;
+var accelerometer_accelZ = 9;
 
-function highPassFilter(acceleration) {
+function accelerometer_highPassFilter(acceleration) {
 	var kFilteringFactor = 0.96;
 	
 	// Subtract the low-pass value from the current value to get a simplified high-pass filter
-    accelX = acceleration.x - ( (acceleration.x * kFilteringFactor) + (accelX * (1.0 - kFilteringFactor)) );
-    accelY = acceleration.y - ( (acceleration.y * kFilteringFactor) + (accelY * (1.0 - kFilteringFactor)) );
-    accelZ = acceleration.z - ( (acceleration.z * kFilteringFactor) + (accelZ * (1.0 - kFilteringFactor)) );
+    accelerometer_accelX = acceleration.x - ( (acceleration.x * kFilteringFactor) + (accelerometer_accelX * (1.0 - kFilteringFactor)) );
+    accelerometer_accelY = acceleration.y - ( (acceleration.y * kFilteringFactor) + (accelerometer_accelY * (1.0 - kFilteringFactor)) );
+    accelerometer_accelZ = acceleration.z - ( (acceleration.z * kFilteringFactor) + (accelerometer_accelZ * (1.0 - kFilteringFactor)) );
 	
-	var ret = accelX + ' || ' + accelY + ' || ' + accelZ; 
+	var filtered = accelerometer_accelX + ' || ' + accelerometer_accelY + ' || ' + accelerometer_accelZ; 
 	
-	return ret;
+	return filtered;
 }
 
 var accelerometer_watchID = null;
 
 // Start watching the acceleration
 function accelerometer_startWatching() {	
-	var options = { frequency: 200 }; //Update acceleration every xxx milliseconds
+	var options = { frequency: 200 }; //Update frequency for acceleration in milliseconds
 	
 	accelerometer_watchID = navigator.accelerometer.watchAcceleration(accelerometer_onSuccess, accelerometer_onError, options);
 	
@@ -64,7 +64,6 @@ function accelerometer_stopWatching() {
 	}
 }
 
-
 // onSuccess: Get a snapshot of the current acceleration
 function accelerometer_onSuccess(acceleration) {
 	updateAccelerometerTable(acceleration); //update SQL
@@ -77,9 +76,9 @@ function accelerometer_onSuccess(acceleration) {
 							'Acceleration Y: ' + Math.round(10000*parseFloat(acceleration.y))/10000 + '<br />' +
 							'Acceleration Z: ' + Math.round(10000*parseFloat(acceleration.z))/10000 + '<br />' +
 							'Timestamp: '      + new Date(acceleration.timestamp) + '<br />' +
-							'Roll: '           + calculate(acceleration,'roll') + '<br />' +
-							'Pitch: '          + calculate(acceleration,'pitch') + '<br />' +
-		                    'filtered: '       + highPassFilter(acceleration) + '<br />';
+							'Roll: '           + accelerometer_calculateRPY(acceleration,'roll') + '<br />' +
+							'Pitch: '          + accelerometer_calculateRPY(acceleration,'pitch') + '<br />' +
+		                    'filtered: '       + accelerometer_highPassFilter(acceleration) + '<br />';
 	}
 }
 
