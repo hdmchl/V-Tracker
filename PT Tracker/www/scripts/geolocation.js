@@ -18,6 +18,7 @@ function geoLocation_get() {
 
 var geoLocation_onSuccess = function(position) {	
 	updateGeoLocationTable(position); //update SQL
+	localisation_setUserLocation(position); //set localise data
 	
 	var speedINkph = position.coords.speed * (60*60/1000); //calculate speed in km/hr
 	
