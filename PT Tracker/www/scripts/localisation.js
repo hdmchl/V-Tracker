@@ -42,7 +42,6 @@ function localisation_findStation() {
 function localisation_init() {
 	//retieve localisation data
 	db.transaction(function (tx) {tx.executeSql('SELECT * FROM train_locations', [], localisation_querySuccess, localisation_errorCB)},localisation_errorCB);
-	
 	document.getElementById('localisation').innerHTML = '';
 }
 
