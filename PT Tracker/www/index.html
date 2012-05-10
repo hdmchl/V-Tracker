@@ -26,6 +26,7 @@
 		<script type="text/javascript" charset="utf-8" src="scripts/geolocation.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/accelerometer.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/compass.js"></script>
+		<script type="text/javascript" charset="utf-8" src="scripts/gyroscope.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/storage.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/notifications.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/localisation.js"></script>
@@ -97,7 +98,7 @@
 				
 				<h2 style="margin-top: 0;">Path fitting</h2>
 				<a data-role="button" href="javascript:pathFit()">Fit</a>
-				<div id="graphPlaceholder" style="width:95%;height:300px;"></div>
+				<div id="graphPlaceholder" style="width:280px;height:300px;display:none;"></div>
 				
 				<h2>Debugging Access</h2>
 				<div data-role="collapsible-set">
@@ -157,6 +158,18 @@
 						</div>
 						
 						<div id="compass">Waiting for compass start...</div>
+                    </div>
+                    
+                    <div data-role="collapsible" data-collapsed="true">
+                        <h3>Gyroscope</h3>
+						
+						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+							<a data-role="button" href="javascript:gyroscope_startWatching()">Watch</a>
+							<a data-role="button" href="javascript:gyroscope_stopWatching()">Stop</a>
+							<a data-role="button" href="javascript:clearDiv('gyroscope')">Clear</a>
+						</div>
+						
+						<div id="gyroscope">Waiting for gyroscope start...</div>
                     </div>
 					
 					<div data-role="collapsible" data-collapsed="true">
