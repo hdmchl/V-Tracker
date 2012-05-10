@@ -16,7 +16,6 @@ function pathFit() {
 	 
 	console.log(s1.at(80));
 	
-	$.plot($("#placeholder"), [ numeric.transpose([x2,y2]) ]);
+	$.plot($("#graphPlaceholder"), [ numeric.transpose([x2,y2]) ]);
 
 }
-
