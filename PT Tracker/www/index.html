@@ -78,6 +78,12 @@
 			
 			<div data-role="content" data-fullscreen="true">
 				<div id="loader" style="visibility: hidden">
+					<div id="closeButton">
+						<a href="javascript:document.getElementById('loader').style.visibility = 'hidden';">
+							<img src="jquery/images/close.png">
+						</a>
+					</div>
+					
 					<div id="processStatus">
 						<p>Process is running
 						<br><img src="jquery/images/bar-loader.gif"></p>
@@ -99,7 +105,9 @@
 				<span id="dbResetStatus"></span>
 				
 				<h2 style="margin-top: 0;">Path fitting</h2>
-				<a data-role="button" href="javascript:pathFit()">Fit</a>
+				<div data-role="controlgroup" data-type="horizontal">
+					<a href="javascript:pathFit();" data-role="button" data-icon="">Fit</a>
+				</div>
 				<div id="graphPlaceholder" style="width:280px;height:300px;display:none;"></div>
 				
 				<h2>Debugging Access</h2>
@@ -112,7 +120,7 @@
 							<a data-role="button" href="javascript:clearDiv('alertsConsoleLog')">Clear</a>
 						</div>
 						
-						<div id="alertsConsoleLog">Waiting for a retrieve request...</div>
+						<div id="alertsConsoleLog">Waiting...</div>
                     </div>
 					
                     <div data-role="collapsible" data-collapsed="true">
@@ -124,7 +132,7 @@
 							<a data-role="button" href="javascript:clearDiv('geolocation')">Clear</a>
 						</div>
 							
-						<div id="geolocation">Waiting for GPS to start...</div>
+						<div id="geolocation">Waiting...</div>
                     </div>
 					
 					<div data-role="collapsible" data-collapsed="true">
@@ -147,7 +155,7 @@
 							<a data-role="button" href="javascript:clearDiv('acceleration')">Clear</a>
 						</div>
 						
-						<div id="acceleration">Waiting for accelerometer start...</div>
+						<div id="acceleration">Waiting...</div>
                     </div>
 					
 					<div data-role="collapsible" data-collapsed="true">
@@ -159,7 +167,7 @@
 							<a data-role="button" href="javascript:clearDiv('compass')">Clear</a>
 						</div>
 						
-						<div id="compass">Waiting for compass start...</div>
+						<div id="compass">Waiting...</div>
                     </div>
                     
                     <div data-role="collapsible" data-collapsed="true">
@@ -171,7 +179,7 @@
 							<a data-role="button" href="javascript:clearDiv('gyroscope')">Clear</a>
 						</div>
 						
-						<div id="gyroscope">Waiting for gyroscope start...</div>
+						<div id="gyroscope">Waiting...</div>
                     </div>
 					
 					<div data-role="collapsible" data-collapsed="true">

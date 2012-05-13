@@ -35,6 +35,13 @@ body {
 	padding: 5px;
 }
 
+#closeButton {
+	z-index: 101;
+	position: fixed;
+	left: 91.5%;
+	top: 10%;
+}
+
 #alertsConsole {
 	font-weight: normal;
 	font-size: 15px;
