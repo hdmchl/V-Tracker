@@ -21,6 +21,23 @@ function notifications_showAlert() {
 								 );
 }
 
+function notifications_test() {
+	var d = new Date();
+	d = d.getTime() + 3*1000; //60 seconds from now
+	d = new Date(d);
+	plugins.localNotification.add({
+								  date: d,
+								  repeat:'daily',
+								  message: 'This just fired after a minute!',
+								  hasAction: true,
+								  badge: 1,
+								  id: '123',
+								  sound:'horn.caf',
+								  background:'app.background()',
+								  foreground:'app.running()'
+								  });
+}
+
 // Beep 
 function notifications_playBeep() {
 	navigator.notification.beep(1); //iOS will ignore the beep number

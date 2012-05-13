@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F064747155F3D55005CEA6C /* LocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F064746155F3D55005CEA6C /* LocalNotification.m */; };
 		0F2DF1BE154ACFC90022BA94 /* Databases.db in Resources */ = {isa = PBXBuildFile; fileRef = 0F2DF1BD154ACFC90022BA94 /* Databases.db */; };
 		0F2DF1C2154AD2440022BA94 /* 0000000000000001.db in Resources */ = {isa = PBXBuildFile; fileRef = 0F2DF1C1154AD2440022BA94 /* 0000000000000001.db */; };
 		0F4D8785153FD84E000601BA /* Cordova.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F4D8784153FD84E000601BA /* Cordova.framework */; };
@@ -42,6 +43,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0F064745155F3D55005CEA6C /* LocalNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalNotification.h; sourceTree = "<group>"; };
+		0F064746155F3D55005CEA6C /* LocalNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalNotification.m; sourceTree = "<group>"; };
 		0F2DF1BD154ACFC90022BA94 /* Databases.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = Databases.db; sourceTree = "<group>"; };
 		0F2DF1C1154AD2440022BA94 /* 0000000000000001.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0000000000000001.db; sourceTree = "<group>"; };
 		0F4D8784153FD84E000601BA /* Cordova.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cordova.framework; sourceTree = "<group>"; };
@@ -241,6 +244,8 @@
 		0F92F5C214FCD07700F344D6 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				0F064745155F3D55005CEA6C /* LocalNotification.h */,
+				0F064746155F3D55005CEA6C /* LocalNotification.m */,
 				0F92F5C314FCD07700F344D6 /* README */,
 			);
 			name = Plugins;
@@ -344,6 +349,7 @@
 				0F92F59C14FCD07700F344D6 /* main.m in Sources */,
 				0F92F5BC14FCD07700F344D6 /* AppDelegate.m in Sources */,
 				0F92F5BF14FCD07700F344D6 /* MainViewController.m in Sources */,
+				0F064747155F3D55005CEA6C /* LocalNotification.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

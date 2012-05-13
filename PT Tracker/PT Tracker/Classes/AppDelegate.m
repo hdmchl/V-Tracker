@@ -212,4 +212,36 @@
 	[super dealloc];
 }
 
+/////////////////////////////////////////////////// NON STANDARD CODE - added by Hadi ////////////
+// ADD NOTIFICATION CODE
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification 
+{
+	UIApplicationState state = [application applicationState];
+	if (state == UIApplicationStateInactive) {
+		// WAS IN BG
+		//NSLog(@"I was in the background");
+		
+		NSString *notCB = [notification.userInfo objectForKey:@"background"];
+		NSString * jsCallBack = [NSString 
+								 stringWithFormat:@"%@", notCB]; 
+		[self.viewController.webView stringByEvaluatingJavaScriptFromString:jsCallBack];         
+		
+		application.applicationIconBadgeNumber = 0;
+		
+	}
+	else {
+		// WAS RUNNING
+		//NSLog(@"I was currently active");
+		
+		NSString *notCB = [notification.userInfo objectForKey:@"forground"];
+		NSString * jsCallBack = [NSString 
+								 stringWithFormat:@"%@", notCB]; 
+		
+		
+		[self.viewController.webView  stringByEvaluatingJavaScriptFromString:jsCallBack];
+		
+		application.applicationIconBadgeNumber = 0;
+	}                 
+}
+/////////////////////////////////////////////////// END NON-STANDARD CODE ////////////
 @end
