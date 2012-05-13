@@ -163,7 +163,7 @@
 			[fileManager removeItemAtPath:databaseFile error:nil];
 			[fileManager removeItemAtPath:masterFile error:nil]; 
 		} else {
-			NSLog ( @"db-integration was not required!");
+			NSLog ( @"db-integration was not requested! resetDB: %d", resetDB);
 			return;
 		}
 	}
