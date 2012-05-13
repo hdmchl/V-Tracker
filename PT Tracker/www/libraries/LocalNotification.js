@@ -6,7 +6,7 @@
 	MIT Licensed
 
 	Usage:
-	plugins.localNotification.add({ date: new Date(), message: 'This is a notification', badge: 1, id: 123, sound:'sub.caf',background:'app.background()',foreground:'app.running()' });
+	plugins.localNotification.add({ date: new Date(), message: 'This is a notification', badge: 1, id: 123, sound:'sub.caf', background:'app.background()', foreground:'app.running()' });
 	plugins.localNotification.cancel(123);
 	plugins.localNotification.cancelAll();
 **/

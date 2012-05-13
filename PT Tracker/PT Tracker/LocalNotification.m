@@ -47,7 +47,7 @@
     notif.userInfo = userDict;
 	
 	[[UIApplication sharedApplication] scheduleLocalNotification:notif];
-	NSLog(@"Notification Set: %@ (ID: %@, Badge: %i, sound: %@,callback: %@)", date, notificationId, badge, sound,bg);
+	NSLog(@"Local notification Set: %@ (ID: %@, Badge: %i, sound: %@,callback: %@)", date, notificationId, badge, sound,bg);
 	//[notif release];
 }
 
@@ -57,17 +57,16 @@
 	for (UILocalNotification *notification in notifications) {
 		NSString *notId = [notification.userInfo objectForKey:@"notificationId"];
 		if ([notificationId isEqualToString:notId]) {
-			NSLog(@"Notification Canceled: %@", notificationId);
+			//NSLog(@"Notification Canceled: %@", notificationId);
 			[[UIApplication sharedApplication] cancelLocalNotification:notification];
 		}
 	}
 }
 
 - (void)cancelAllNotifications:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
-	NSLog(@"All Notifications cancelled");
+	//NSLog(@"All Notifications cancelled");
 	[[UIApplication sharedApplication] cancelAllLocalNotifications];
+	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 }
-
-
 
 @end

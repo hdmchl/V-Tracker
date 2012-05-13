@@ -20,6 +20,7 @@
 		<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="styles/ipad.css" type="text/css" />		
 		<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="styles/iphone.css" type="text/css" />
 		
+		<!-- js files: you would NEVER have so many separate files if you were serving the app through the internet! -->
 		<!-- js helper scripts -->
 		<script type="text/javascript" charset="utf-8" src="scripts/scripts.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/compatibility.js"></script>
@@ -32,7 +33,7 @@
 		<script type="text/javascript" charset="utf-8" src="scripts/localisation.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/pathfit.js"></script>
 			
-		<!-- cordova dependancies -->
+		<!-- cordova dependancies + plugins -->
 		<script type="text/javascript" charset="utf-8" src="libraries/cordova-1.6.1.js"></script>
 		<script type="text/javascript" charset="utf-8" src="libraries/LocalNotification.js"></script>
 	
@@ -49,7 +50,7 @@
 		<!-- jQuery.flot dependancies -->
 		<script type="text/javascript" src="libraries/flot/jquery.flot.js"></script>
 			
-		<!-- load scripts -->	
+		<!-- onLoad scripts -->	
 		<script type="text/javascript">
 			function onBodyLoad() {		
 				document.addEventListener("deviceready", onDeviceReady, false);
@@ -118,8 +119,8 @@
                         <h3>GeoLocation</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:geoLocation_startWatching()">Watch</a>
-							<a data-role="button" href="javascript:geoLocation_stopWatching()">Stop</a>
+							<a data-role="button" href="javascript:geoLocation.startWatching()">Watch</a>
+							<a data-role="button" href="javascript:geoLocation.stopWatching()">Stop</a>
 							<a data-role="button" href="javascript:clearDiv('geolocation')">Clear</a>
 						</div>
 							
@@ -141,8 +142,8 @@
                         <h3>Acceleration</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:accelerometer_startWatching()">Watch</a>
-							<a data-role="button" href="javascript:accelerometer_stopWatching()">Stop</a>
+							<a data-role="button" href="javascript:accelerometer.startWatching()">Watch</a>
+							<a data-role="button" href="javascript:accelerometer.stopWatching()">Stop</a>
 							<a data-role="button" href="javascript:clearDiv('acceleration')">Clear</a>
 						</div>
 						
@@ -153,8 +154,8 @@
                         <h3>Compass</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:compass_startWatching()">Watch</a>
-							<a data-role="button" href="javascript:compass_stopWatching()">Stop</a>
+							<a data-role="button" href="javascript:compass.startWatching()">Watch</a>
+							<a data-role="button" href="javascript:compass.stopWatching()">Stop</a>
 							<a data-role="button" href="javascript:clearDiv('compass')">Clear</a>
 						</div>
 						
@@ -165,8 +166,8 @@
                         <h3>Gyroscope</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:gyroscope_startWatching()">Watch</a>
-							<a data-role="button" href="javascript:gyroscope_stopWatching()">Stop</a>
+							<a data-role="button" href="javascript:gyroscope.startWatching()">Watch</a>
+							<a data-role="button" href="javascript:gyroscope.stopWatching()">Stop</a>
 							<a data-role="button" href="javascript:clearDiv('gyroscope')">Clear</a>
 						</div>
 						
@@ -189,9 +190,11 @@
                         <h3>User Notifications</h3>
 						
 						<div data-role="controlgroup" data-type="vertical">
-							<a href="#" onclick="notifications_test(); return false;" data-role="button">Show Alert</a>
-							<a href="#" onclick="notifications_playBeep(); return false;" data-role="button">Play Beep</a>
-							<a href="#" onclick="notifications_vibrate(); return false;" data-role="button">Vibrate</a>
+							<a href="#" onclick="notifications.showAlert('Hello!','Game Over!','Damn'); return false;" data-role="button">Show Alert</a>
+							<a href="#" onclick="notifications.localTimedAlert(5000); return false;" data-role="button">Show Alert in 5s</a>
+							<a href="#" onclick="notifications.playBeep(3000); return false;" data-role="button">Play Beep</a>
+							<a href="#" onclick="notifications.vibrate(); return false;" data-role="button">Vibrate</a>
+							<a href="#" onclick="notifications.clear(); return false;" data-role="button">Clear All</a>
 						</div>
                     </div>
                 </div>

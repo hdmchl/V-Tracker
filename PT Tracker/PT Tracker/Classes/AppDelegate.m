@@ -60,7 +60,7 @@
  * This is main kick off after the app inits, the views and Settings are setup here. (preferred - iOS4 and up)
  */
 - (BOOL) application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
-{    
+{   
     NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
     NSString* invokeString = nil;
     
@@ -222,8 +222,8 @@
 		//NSLog(@"I was in the background");
 		
 		NSString *notCB = [notification.userInfo objectForKey:@"background"];
-		NSString * jsCallBack = [NSString 
-								 stringWithFormat:@"%@", notCB]; 
+		NSString * jsCallBack = [NSString stringWithFormat:@"%@", notCB];
+		
 		[self.viewController.webView stringByEvaluatingJavaScriptFromString:jsCallBack];         
 		
 		application.applicationIconBadgeNumber = 0;
@@ -234,9 +234,7 @@
 		//NSLog(@"I was currently active");
 		
 		NSString *notCB = [notification.userInfo objectForKey:@"forground"];
-		NSString * jsCallBack = [NSString 
-								 stringWithFormat:@"%@", notCB]; 
-		
+		NSString * jsCallBack = [NSString stringWithFormat:@"%@", notCB];
 		
 		[self.viewController.webView  stringByEvaluatingJavaScriptFromString:jsCallBack];
 		
