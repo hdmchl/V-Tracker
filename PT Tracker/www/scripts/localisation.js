@@ -7,8 +7,8 @@
 var localisation = {
 	readyFlag: false,
 	
-	userLongitude: false,
-	userLatitude: false,
+	userLongitude: null,
+	userLatitude: null,
 	
 	stationNames: [],
 	stationLongitudes: [],
@@ -43,12 +43,12 @@ var localisation = {
 			document.getElementById('localisation').innerHTML = 'must initialise';
 			//could include code here to automatically initialise: localisation.init();
 		} else {
-			if (!localisation.userLongitude || !localisation.userLatitude){
+			if (localisation.userLongitude == null || !localisation.userLatitude == null){
 				document.getElementById('localisation').innerHTML = 'must watch geolocation';
 			} else {
 				var userDist = -1;
 			
-				for (i=0;i<localisation_stationNames.length;i++) {
+				for (i=0;i<localisation.stationNames.length;i++) {
 					var a = localisation.userLongitude - localisation.stationLongitudes[i];
 					var b = localisation.userLatitude - localisation.stationLatitudes[i];
 					

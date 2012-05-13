@@ -73,6 +73,7 @@ var notifications = {
 	},
 	
 	clear:function(){
+		consoleLog('All notifications cancelled.')
 		plugins.localNotification.cancelAll();
 	},
 }
