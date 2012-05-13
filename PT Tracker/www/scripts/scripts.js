@@ -18,7 +18,7 @@ function clearDiv(divId) {
 //console logging for alerts
 var alertsConsoleLog = [];
 function consoleLog(message) {
-	updateConsoleLogTable(message); //update SQL and console.log
+	updateTable.consoleLog(message); //update SQL and console.log
 	
 	alertsConsoleLog[alertsConsoleLog.length] = alertsConsoleLog.length + ') ' + message + '<br />'; //add message to the array
 		
@@ -35,47 +35,6 @@ function consoleLog(message) {
 	}
 }
 
-//Data-collection
-function initDataCollection() {
-	storage_clear(); //clear database in preparation for data collection
-	
-	//clear alerts console
-	alertsConsoleLog.length = 0;
-	clearDiv('alertsConsole');
-	
-	//clear dom
-	clearDiv('alertsConsoleLog');
-	clearDiv('geolocation');
-	clearDiv('acceleration');
-	clearDiv('compass');
-	clearDiv('databases');
-	
-	//alert the user
-	consoleLog('Data Collection Reset!');
-	document.getElementById('dbResetStatus').innerText = 'Data Collection Reset';
-}
-
-function startDataCollection() {
-	document.getElementById('loader').style.visibility = 'visible';
-	showRealtimeData = false;
-	clearDiv('dbResetStatus');
-	
-	//start watching sensors
-	geoLocation_startWatching();
-	accelerometer_startWatching();
-	compass_startWatching();	
-}
-
-function stopDataCollection() {
-	//stop watching sensors
-	geoLocation_stopWatching();	
-	accelerometer_stopWatching();
-	compass_stopWatching();
-	
-	showRealtimeData = true;
-	document.getElementById('loader').style.visibility = 'hidden';
-}
-
 //Debugging Access
 function displayAlertsConsoleLog() {
 	var buffer = '';
@@ -90,3 +49,48 @@ function displayAlertsConsoleLog() {
 	document.getElementById('alertsConsoleLog').innerHTML = buffer;
 }
 //*********************************** END HELPER SCRIPTS **********************************//
+
+//************************************* DATA COLLECTION SCRIPTS ************************************//
+//Data-collection
+var dataCollection = {
+	init:function() {
+		storage.reset(); //reset database in preparation for data collection
+	
+		//clear alerts console
+		alertsConsoleLog.length = 0;
+		clearDiv('alertsConsole');
+		
+		//clear dom
+		clearDiv('alertsConsoleLog');
+		clearDiv('geolocation');
+		clearDiv('acceleration');
+		clearDiv('compass');
+		clearDiv('databases');
+		
+		//alert the user
+		document.getElementById('dbResetStatus').innerText = 'Data Collection Reset';	
+	},
+	
+	start:function() {
+		document.getElementById('loader').style.visibility = 'visible';
+		showRealtimeData = false;
+		clearDiv('dbResetStatus');
+		
+		//start watching sensors
+		geoLocation.startWatching();
+		accelerometer.startWatching();
+		compass.startWatching();	
+		gyroscope.startWatching();
+	},
+	
+	stop:function() {
+		//stop watching sensors
+		geoLocation.stopWatching();	
+		accelerometer.stopWatching();
+		compass.stopWatching();
+		gyroscope.stopWatching();
+		
+		showRealtimeData = true;
+		document.getElementById('loader').style.visibility = 'hidden';
+	}
+}
