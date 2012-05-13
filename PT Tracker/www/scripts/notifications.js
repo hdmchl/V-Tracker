@@ -6,11 +6,7 @@
  */
 
 //********************************** DEMO NOTIFICATIONS ***********************************//
-var notifications = {
-	init:function(){
-		//do something
-	},
-	
+var notifications = {	
 	// alert dialog dismissed
  	alertDismissed:function() {
 		//do something
