@@ -59,7 +59,7 @@
 			function onDeviceReady() {
 				//We're ready to roll
 				checkBrowserCompatibilities();
-				storage_init();
+				storage.init();
 			}
 		</script>
 			
@@ -178,8 +178,8 @@
                         <h3>Databases</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:storage_clear()">Reset</a>
-							<a data-role="button" href="javascript:storage_show()">Show</a>
+							<a data-role="button" href="javascript:storage.reset()">Reset</a>
+							<a data-role="button" href="javascript:storage.getDBTables()">Show</a>
 							<a data-role="button" href="javascript:clearDiv('databases')">Clear</a>
 						</div>
 						
