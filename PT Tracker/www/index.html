@@ -84,7 +84,7 @@
 					</div>
 					
 					<div data-role="controlgroup" data-type="horizontal">
-						<a data-role="button" data-icon="check" href="javascript:stopDataCollection();">Done</a>
+						<a data-role="button" data-icon="check" href="javascript:dataCollection.stop();">Stop DC</a>
 					</div>
 					
 					<p>Received messages</p>
@@ -93,8 +93,8 @@
 				
 				<h2 style="margin-top: 0;">Data-Collection</h2>					
 				<div data-role="controlgroup" data-type="horizontal">
-					<a href="javascript:initDataCollection();" data-role="button" data-icon="">Reset</a>
-					<a href="javascript:startDataCollection();" data-role="button" data-icon="arrow-r">Collect Data</a>
+					<a href="javascript:dataCollection.init();" data-role="button" data-icon="">Init</a>
+					<a href="javascript:dataCollection.start();" data-role="button" data-icon="arrow-r">Collect Data</a>
 				</div>
 				<span id="dbResetStatus"></span>
 				
@@ -131,8 +131,8 @@
                         <h3>Localise</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:localisation_init()">Initialise</a>
-							<a data-role="button" href="javascript:localisation_findStation()">Find Nearest Station</a>
+							<a data-role="button" href="javascript:localisation.init()">Initialise</a>
+							<a data-role="button" href="javascript:localisation.findNearestStation()">Find Nearest Station</a>
 						</div>
 						
 						<div id="localisation">Waiting...</div>
@@ -191,10 +191,10 @@
 						
 						<div data-role="controlgroup" data-type="vertical">
 							<a href="#" onclick="notifications.showAlert('Hello!','Game Over!','Damn'); return false;" data-role="button">Show Alert</a>
-							<a href="#" onclick="notifications.localTimedAlert(5000); return false;" data-role="button">Show Alert in 5s</a>
+							<a href="#" onclick="notifications.localTimedAlert(10000); return false;" data-role="button">Show Notification in 10s</a>
 							<a href="#" onclick="notifications.playBeep(3000); return false;" data-role="button">Play Beep</a>
 							<a href="#" onclick="notifications.vibrate(); return false;" data-role="button">Vibrate</a>
-							<a href="#" onclick="notifications.clear(); return false;" data-role="button">Clear All</a>
+							<a href="#" onclick="notifications.clear(); return false;" data-role="button">Clear All Notifications</a>
 						</div>
                     </div>
                 </div>
