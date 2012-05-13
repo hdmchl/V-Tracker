@@ -4,10 +4,7 @@
  * Faculty of Engineering, Monash University (Australia)
  *
  */
-
 var db = null; //declare database object
-var dbTables = []; //declare array of database tables
-
 var storage = {
 	//********************************** INITIALISE STORAGE ***********************************//
 	init:function() {
@@ -64,6 +61,7 @@ var storage = {
 	
 	//****************************** RETRIEVING ALL DATA FROM DB ******************************//	
 	queryCounter: 0,
+	dbTables: [], //declare array of database tables
 	
 	getDBTables:function() {
 		document.getElementById('databases').innerHTML = 'loading...';
@@ -72,7 +70,7 @@ var storage = {
 		
 		db.transaction(function (tx) {
 					   tx.executeSql('SELECT * FROM sqlite_master WHERE type=\'table\'', [], function (tx, results) {
-									 for (var i=1; i<results.rows.length; i++) {dbTables[i] = results.rows.item(i).name;}
+									 for (var i=1; i<results.rows.length; i++) {storage.dbTables[i] = results.rows.item(i).name;}
 									 }, this.errorCB);
 					   }, this.errorCB, this.getTableLengths);
 	},
@@ -82,16 +80,16 @@ var storage = {
 		
 		storage.queryCounter++;
 		
-		if (storage.queryCounter < dbTables.length) {
-			//console.log(storage.queryCounter + "/" + dbTables.length + ": " + dbTables[storage.queryCounter]);
+		if (storage.queryCounter < storage.dbTables.length) {
+			//console.log(storage.queryCounter + "/" + storage.dbTables.length + ": " + storage.dbTables[storage.queryCounter]);
 			
-			if (dbTables[storage.queryCounter] == "__WebKitDatabaseInfoTable__") {
+			if (storage.dbTables[storage.queryCounter] == "__WebKitDatabaseInfoTable__") {
 				storage.getTableLengths();
 				return;
 			}
 			
-			var tableQuery = 'SELECT * FROM ' + dbTables[storage.queryCounter];
-			storage.getTableLengthsQuery(dbTables[storage.queryCounter], tableQuery);
+			var tableQuery = 'SELECT * FROM ' + storage.dbTables[storage.queryCounter];
+			storage.getTableLengthsQuery(storage.dbTables[storage.queryCounter], tableQuery);
 		}
 		else {
 			document.getElementById('databases').innerHTML = document.getElementById('databases').innerHTML + '<p>finished...</p>';
