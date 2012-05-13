@@ -5,16 +5,26 @@
  *
  */
 
-function gyroscope_startWatching() {
-	window.addEventListener("deviceorientation", updateOrientation);
-}
+var gyroscope = {
+	startWatching:function() {
+		window.addEventListener("deviceorientation", gyroscope.updateOrientation);
+		
+		consoleLog("gyroscope.watch started");
+	},
+	
+	stopWatching:function() {
+		window.removeEventListener("deviceorientation", gyroscope.updateOrientation);
+		consoleLog("gyroscope.watch stopped");
+	},
 
-function updateOrientation(orientation) {
-	document.getElementById('gyroscope').innerHTML = 	'<p>Alpha: ' + orientation.alpha +
-														'<br>Beta: ' + orientation.beta +
-														'<br>Gamma: ' + orientation.gamma + '</p>'
-}
-
-function gyroscope_stopWatching() {
-	window.removeEventListener("deviceorientation",updateOrientation);
+	updateOrientation:function(gyroscopeOrientation) {
+		//display results in real-time
+		if (showRealtimeData) {
+			var element = document.getElementById('gyroscope');
+			
+			element.innerHTML = 	'Alpha: '  + gyroscopeOrientation.alpha +
+									'<br>Beta: '  + gyroscopeOrientation.beta  +
+									'<br>Gamma: ' + gyroscopeOrientation.gamma;
+		}
+	}
 }

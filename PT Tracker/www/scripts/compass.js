@@ -5,39 +5,39 @@
  *
  */
 
-var compass_watchID = null;
+var compass = {
+	watchID: null,
+	options: { frequency: 1000 }, //Set frequency for compass in milliseconds
 
-// Start watching the acceleration
-function compass_startWatching() {	
-	var options = { frequency: 300 }; //Update acceleration every xxx milliseconds
+	// Start watching the compass
+	startWatching:function() {	
+		compass.watchID = navigator.compass.watchHeading(compass.onSuccess, compass.onError, compass.options);
+		
+		consoleLog("compass.watch started, ID: " + compass.watchID);
+	},
 	
-	compass_watchID = navigator.compass.watchHeading(compass_onSuccess, compass_onError, options);
+	// Stop watching the compass
+	stopWatching:function() {
+		if (compass.watchID) {
+			navigator.compass.clearWatch(compass.watchID);
+			consoleLog("compass.watch stopped");	
+		}
+	},
 	
-	consoleLog("compass_watch started");
-}
-
-// Stop watching the acceleration
-function compass_stopWatching() {
-	if (compass_watchID) {
-		navigator.compass.clearWatch(compass_watchID);
-		compass_watchID = null;
-		consoleLog("compass_watchID stopped");	
+	// onSuccess: display a snapshot of the current heading
+	onSuccess:function(compassHeading) {
+		updateCompassTable(compassHeading); //update SQL
+		
+		//display results in real-time
+		if (showRealtimeData) {
+			var element = document.getElementById('compass');
+		
+			element.innerHTML = 'Heading: ' + compassHeading.magneticHeading;
+		}
+	},
+	
+	// onError: Failed to get the compass heading
+	onError:function(compassError) {
+		consoleLog('Could not get compass data! Error: ' + compassError.code);
 	}
-}
-
-// onSuccess: Get a snapshot of the current heading
-function compass_onSuccess(heading) {
-	updateCompassTable(heading); //update SQL
-	
-	//display results in real-time
-	if (showRealtimeData) {
-		var element = document.getElementById('compass');
-	
-		element.innerHTML = 'Heading: ' + heading.magneticHeading;
-	}
-}
-
-// onError: Failed to get the acceleration
-function compass_onError(compassError) {
-	consoleLog('Could not get compass data! Error: ' + compassError.code);
 }
