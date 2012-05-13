@@ -39,11 +39,11 @@ var accelerometer = {
 		var kFilteringFactor = 0.96;
 		
 		// Subtract the low-pass value from the current value to get a simplified high-pass filter
-	    accelerometer.accelX = acceleration.x - ( (acceleration.x * kFilteringFactor) + (accelerometer.accelX * (1.0 - kFilteringFactor)) );
-	    accelerometer.accelY = acceleration.y - ( (acceleration.y * kFilteringFactor) + (accelerometer.accelY * (1.0 - kFilteringFactor)) );
-	    accelerometer.accelZ = acceleration.z - ( (acceleration.z * kFilteringFactor) + (accelerometer.accelZ * (1.0 - kFilteringFactor)) );
+	    this.accelX = acceleration.x - ( (acceleration.x * kFilteringFactor) + (this.accelX * (1.0 - kFilteringFactor)) );
+	    this.accelY = acceleration.y - ( (acceleration.y * kFilteringFactor) + (this.accelY * (1.0 - kFilteringFactor)) );
+	    this.accelZ = acceleration.z - ( (acceleration.z * kFilteringFactor) + (this.accelZ * (1.0 - kFilteringFactor)) );
 		
-		var filtered = accelerometer.accelX + ' || ' + accelerometer.accelY + ' || ' + accelerometer.accelZ; 
+		var filtered = this.accelX + ' || ' + this.accelY + ' || ' + this.accelZ; 
 		
 		return filtered;
 	},
@@ -65,7 +65,7 @@ var accelerometer = {
 	
 	// onSuccess: Get a snapshot of the current acceleration
 	onSuccess:function(acceleration) {
-		updateAccelerometerTable(acceleration); //update SQL
+		updateTable.accelerometer(acceleration); //update SQL
 			
 		//display results in real-time
 		if (showRealtimeData) {

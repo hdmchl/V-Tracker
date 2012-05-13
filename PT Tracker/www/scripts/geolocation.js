@@ -24,12 +24,11 @@ var geoLocation = {
 	},
 	
 	get:function() {
-		navigator.geolocation.getCurrentPosition(geoLocation.onSuccess, geoLocation.onError);
+		return navigator.geolocation.getCurrentPosition(function(position) {}, geoLocation.onError);
 	},
 	
 	onSuccess:function(position) {	
-		updateGeoLocationTable(position); //update SQL
-		localisation_setUserLocation(position); //set localise data
+		updateTable.geoLocation(position); //update SQL
 		
 		if (position.coords.speed >=0) {var speedINkph = position.coords.speed * (60*60/1000);} else {var speedINkph = -1;} //calculate speed in km/hr
 		

@@ -26,7 +26,7 @@ var compass = {
 	
 	// onSuccess: display a snapshot of the current heading
 	onSuccess:function(compassHeading) {
-		updateCompassTable(compassHeading); //update SQL
+		updateTable.compass(compassHeading); //update SQL
 		
 		//display results in real-time
 		if (showRealtimeData) {
