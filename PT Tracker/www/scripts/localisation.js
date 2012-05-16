@@ -7,21 +7,16 @@
 var localisation = {
 	readyFlag: false,
 	
-	userLongitude: null,
-	userLatitude: null,
-	
 	stationNames: [],
 	stationLongitudes: [],
 	stationLatitudes: [],
 	
-	userStation: null,
+	currentNearestStation: null,
 	
 	//******************************** RETRIEVING DATA FROM DB ********************************//
 	init:function() {
-		//load localisation data
+		//load localisation database into arrays
 		db.transaction(function (tx) {tx.executeSql('SELECT * FROM train_locations', [], localisation.stationsSQLSelected, storage.errorCB)},storage.errorCB);
-		
-		document.getElementById('localisation').innerHTML = 'ready...';
 	},
 
 	stationsSQLSelected:function(tx, results) {	
@@ -33,34 +28,37 @@ var localisation = {
 			localisation.stationLatitudes[i] = results.rows.item(i).latitude;
 		}
 		
-		consoleLog("Number of stations loaded: " + len);
+		consoleLog("Number of train stations loaded: " + len);
 		localisation.readyFlag = true;
+		
+		document.getElementById('localisation').innerHTML = 'ready...';
+		
 	},				   
 	//****************************** END RETRIEVING DATA FROM DB ********************************//
 	
 	findNearestStation:function() {
-		if(!localisation.readyFlag) {
-			document.getElementById('localisation').innerHTML = 'must initialise';
-			//could include code here to automatically initialise: localisation.init();
+		if(!this.readyFlag) {
+			document.getElementById('localisation').innerHTML = 'must initialise first';
+			//could include code here to automatically initialise: this.init();
 		} else {
-			if (localisation.userLongitude == null || !localisation.userLatitude == null){
-				document.getElementById('localisation').innerHTML = 'must watch geolocation';
+			if (geolocationObj.data.longitude == null || geolocationObj.data.latitude == null){
+				document.getElementById('localisation').innerHTML = 'must start watching geolocation';
 			} else {
 				var userDist = -1;
 			
-				for (i=0;i<localisation.stationNames.length;i++) {
-					var a = localisation.userLongitude - localisation.stationLongitudes[i];
-					var b = localisation.userLatitude - localisation.stationLatitudes[i];
+				for (i=0;i<this.stationNames.length;i++) {
+					var a = geolocationObj.data.longitude - this.stationLongitudes[i];
+					var b = geolocationObj.data.latitude - this.stationLatitudes[i];
 					
 					var distanceToStation = Math.sqrt(Math.pow(a,2)+Math.pow(b,2));
 					
 					if (distanceToStation <= userDist || userDist == -1){
 						userDist = distanceToStation;
-						localisation.userStation = localisation.stationNames[i];
+						this.userStation = this.stationNames[i];
 					}
 				}
 				
-				document.getElementById('localisation').innerHTML = "Your nearest station is: " + localisation.userStation;
+				document.getElementById('localisation').innerHTML = "Your nearest station is: " + this.userStation;
 			}
 		}	
 	}

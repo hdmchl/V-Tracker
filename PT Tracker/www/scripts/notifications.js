@@ -5,7 +5,6 @@
  *
  */
 
-//********************************** DEMO NOTIFICATIONS ***********************************//
 var notifications = {	
 	// alert dialog dismissed
  	alertDismissed:function() {

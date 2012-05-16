@@ -4,40 +4,45 @@
  * Faculty of Engineering, Monash University (Australia)
  *
  */
-var gyroscope = {
+var gyroscopeObj = {	
 	timer: null,
 	
-	orientation: {alpha: null, beta: null, gamma: null},
+	options: { frequency: 1000 }, //Set update interval in milliseconds
+	
+	data: {alpha: null, beta: null, gamma: null},
 	
 	startWatching:function() {
-		window.addEventListener("deviceorientation", gyroscope.updateOrientation);
-		gyroscope.timer = setTimeout(gyroscope.sample(),1000);
+		window.addEventListener("deviceorientation", this.onSuccess);
+		this.timer = setTimeout(this.sample(),this.options.frequency);
 		consoleLog("gyroscope.watch started");
 	},
 	
 	stopWatching:function() {
-		window.removeEventListener("deviceorientation", gyroscope.updateOrientation);
-		clearTimeout(gyroscope.timer);
+		window.removeEventListener("deviceorientation", this.onSuccess);
+		clearTimeout(this.timer);
 		consoleLog("gyroscope.watch stopped");
 	},
 	
 	sample:function() {
-		updateTable.gyroscope(this.orientation); //update SQL
-		gyroscope.timer = setTimeout(function() {gyroscope.sample();}, 1000);
+		updateTable.gyroscope(this.data); //update SQL
+		this.timer = setTimeout(function() {this.sample();}, this.options.frequency); //restart timer
 	},
-
-	updateOrientation:function(orientation) {
-		gyroscope.orientation.alpha = orientation.alpha;
-		gyroscope.orientation.beta = orientation.beta;
-		gyroscope.orientation.gamma = orientation.gamma;
+	
+	// onSuccess: take a snapshot of the orientation - can't use "this." in here...
+	onSuccess:function(orientation) {
+		gyroscopeObj.data.alpha = orientation.alpha;
+		gyroscopeObj.data.beta = orientation.beta;
+		gyroscopeObj.data.gamma = orientation.gamma;
 		
-		//display results in real-time
-		if (showRealtimeData) {
-			var element = document.getElementById('gyroscope');
+		if (showRealtimeData) {gyroscopeObj.updateDisplay();}
+	},
+	
+	//display results in real-time
+	updateDisplay:function() {
+		var element = document.getElementById('gyroscope');
 			
-			element.innerHTML = 	'Alpha: '  + orientation.alpha +
-									'<br>Beta: '  + orientation.beta  +
-									'<br>Gamma: ' + orientation.gamma;
-		}
+			element.innerHTML = 	'Alpha (yaw): '  	+ this.data.alpha + '<br />' +
+									'Beta (pitch): '  	+ this.data.beta  + '<br />' +
+									'Gamma (roll): ' 	+ this.data.gamma;
 	}
 }
