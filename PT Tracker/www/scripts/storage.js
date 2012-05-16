@@ -173,7 +173,7 @@ var updateTable = {
 	},
 	
 	//geolocation table
-	geoLocation:function(position) {	
+	geolocation:function(position) {	
 		var toStore =	'"' + new Date(position.timestamp)       + '",' +
 						'"' + position.coords.latitude          + '",' +
 						'"' + position.coords.longitude         + '",' +
