@@ -7,13 +7,13 @@
 var gyroscopeObj = {	
 	timer: null,
 	
-	options: { frequency: 1000 }, //Set update interval in milliseconds
+	options: { frequency: 500 }, //Set update interval in milliseconds
 	
 	data: {alpha: null, beta: null, gamma: null},
 	
 	startWatching:function() {
 		window.addEventListener("deviceorientation", this.onSuccess);
-		this.timer = setTimeout(this.sample(),this.options.frequency);
+		this.timer = setTimeout("gyroscopeObj.sample()", this.options.frequency);
 		consoleLog("gyroscope.watch started");
 	},
 	
@@ -25,7 +25,7 @@ var gyroscopeObj = {
 	
 	sample:function() {
 		updateTable.gyroscope(this.data); //update SQL
-		this.timer = setTimeout(function() {this.sample();}, this.options.frequency); //restart timer
+		this.timer = setTimeout("gyroscopeObj.sample()", this.options.frequency);
 	},
 	
 	// onSuccess: take a snapshot of the orientation - can't use "this." in here...
