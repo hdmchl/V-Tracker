@@ -15,45 +15,6 @@ function clearDiv(divId) {
 	document.getElementById(divId).innerHTML = '';
 }
 
-//console logging for alerts
-var consoleLog = {
-	alertsConsoleLog: [],
-	
-	add:function(message) {
-		storage.updateSQLTable.consoleLog(message); //update SQL 
-		
-		console.log(message); //display message in output console
-		
-		/*alertsConsoleLog[alertsConsoleLog.length] = alertsConsoleLog.length + ') ' + message + '<br />'; //add message to the array
-			
-		if progress window is open, then display latest alerts in window
-		if (!showRealtimeData) {
-			var buffer = ''
-			for(i=5;i>0;i--) {
-				if (alertsConsoleLog[alertsConsoleLog.length-i]) {
-					buffer = buffer + alertsConsoleLog[alertsConsoleLog.length-i];
-				}
-			}
-			
-			document.getElementById('alertsConsole').innerHTML = buffer;
-		}*/
-	}
-}
-
-//Debugging Access
-function displayAlertsConsoleLog() {
-	var buffer = '';
-	
-	//extract the log from the array
-	for(i=0;i<alertsConsoleLog.length;i++) {
-		if (alertsConsoleLog[i]) {
-			buffer = buffer + alertsConsoleLog[i];
-		}
-	}
-
-	document.getElementById('alertsConsoleLog').innerHTML = buffer;
-}
-
 function formatDate(timestamp) {
 	//console.log(timestamp);
 	var date = new Date(timestamp);
@@ -64,6 +25,47 @@ function formatDate(timestamp) {
 }
 //*********************************** END HELPER SCRIPTS *********************************//
 
+//************************************ CONSOLE SCRIPTS ************************************//
+//console logging for alerts
+var consoleLog = {
+	alertsConsoleLog: [],
+	
+	add:function(message) {
+		storage.updateSQLTable.consoleLog(message); //update SQL 
+		
+		console.log(message); //display message in output console
+		
+		this.alertsConsoleLog[this.alertsConsoleLog.length] = this.alertsConsoleLog.length + ') ' + message + '<br />'; //add message to the session array
+			
+		//if progress window is open, then display latest alerts in window
+		if (document.getElementById('loader').style.visibility == 'visible') {
+			var buffer = ''
+			for(i=5;i>0;i--) {
+				if (this.alertsConsoleLog[this.alertsConsoleLog.length-i]) {
+					buffer = buffer + this.alertsConsoleLog[this.alertsConsoleLog.length-i];
+				}
+			}
+			
+			document.getElementById('alertsConsole').innerHTML = buffer;
+		}
+	},
+	
+	retrieve:function() {
+		var buffer = ''; //clear buffer
+		
+		//extract the log from the array
+		for(i=0;i<this.alertsConsoleLog.length;i++) {
+			if (this.alertsConsoleLog[i]) {
+				buffer = buffer + this.alertsConsoleLog[i];
+			}
+		}
+		
+		//display
+		document.getElementById('alertsConsoleLog').innerHTML = buffer;
+	}
+}
+//********************************** END CONSOLE SCRIPTS **********************************//
+
 //************************************* DATA COLLECTION SCRIPTS ************************************//
 //Data-collection
 var dataCollection = {
@@ -71,7 +73,7 @@ var dataCollection = {
 		storage.reset(); //reset database in preparation for data collection
 	
 		//clear alerts console
-		alertsConsoleLog.length = 0;
+		consoleLog.alertsConsoleLog.length = 0;
 		clearDiv('alertsConsole');
 		
 		//clear dom
@@ -91,18 +93,18 @@ var dataCollection = {
 		clearDiv('dbResetStatus');
 		
 		//start watching sensors
-		geoLocation.startWatching();
-		accelerometer.startWatching();
-		compass.startWatching();	
-		gyroscope.startWatching();
+		geolocationObj.startWatching();
+		accelerometerObj.startWatching();
+		compassObj.startWatching();	
+		gyroscopeObj.startWatching();
 	},
 	
 	stop:function() {
 		//stop watching sensors
-		geoLocation.stopWatching();	
-		accelerometer.stopWatching();
-		compass.stopWatching();
-		gyroscope.stopWatching();
+		geolocationObj.stopWatching();	
+		accelerometerObj.stopWatching();
+		compassObj.stopWatching();
+		gyroscopeObj.stopWatching();
 		
 		showRealtimeData = true;
 		document.getElementById('loader').style.visibility = 'hidden';
