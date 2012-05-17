@@ -40,7 +40,7 @@ var consoleLog = {
 		//if progress window is open, then display latest alerts in window
 		if (document.getElementById('loader').style.visibility == 'visible') {
 			var buffer = ''
-			for(i=5;i>0;i--) {
+			for(i=10;i>0;i--) {
 				if (this.alertsConsoleLog[this.alertsConsoleLog.length-i]) {
 					buffer = buffer + this.alertsConsoleLog[this.alertsConsoleLog.length-i];
 				}
