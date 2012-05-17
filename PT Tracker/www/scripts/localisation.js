@@ -5,7 +5,7 @@
  *
  */
 var localisation = {
-	readyFlag: false,
+	ready: false,
 	
 	stationNames: [],
 	stationLongitudes: [],
@@ -29,7 +29,7 @@ var localisation = {
 		}
 		
 		consoleLog("Number of train stations loaded: " + len);
-		localisation.readyFlag = true;
+		localisation.ready = true;
 		
 		document.getElementById('localisation').innerHTML = 'ready...';
 		
@@ -37,7 +37,7 @@ var localisation = {
 	//****************************** END RETRIEVING DATA FROM DB ********************************//
 	
 	findNearestStation:function() {
-		if(!this.readyFlag) {
+		if(!this.ready) {
 			document.getElementById('localisation').innerHTML = 'must initialise first';
 			//could include code here to automatically initialise: this.init();
 		} else {
