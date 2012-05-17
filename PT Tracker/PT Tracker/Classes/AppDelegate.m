@@ -183,7 +183,7 @@
 	// Copy the Databases.db from the package to the appropriate place 
 	[fileManager copyItemAtPath:masterPathFromApp toPath:masterFile error:nil]; 
 	
-	NSLog ( @"db-initialisation complete. Database were copied accross.");
+	NSLog ( @"db-initialisation complete. Database was copied accross.");
 	
 	[fileManager release]; 
 } 
