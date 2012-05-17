@@ -10,37 +10,37 @@ var accelerometerObj = {
 	
 	options: { frequency: 200 }, //Set update interval in milliseconds - check wiki if you're unsure of values
 	
-	data: {x: 0, y: 0, z: 0, timestamp: null},
+	data: {x: null, y: null, z: null, timestamp: null},
 	
 	// Start watching the acceleration
 	startWatching:function() {
 		this.watchID = navigator.accelerometer.watchAcceleration(this.onSuccess, this.onError, this.options);
-		consoleLog("accelerometer.watch started, ID: " + this.watchID);
+		consoleLog.add("accelerometer.watch started, ID: " + this.watchID);
 	},
 	
 	// Stop watching the acceleration
 	stopWatching:function() {
 		if (this.watchID) {
 			navigator.accelerometer.clearWatch(this.watchID);
-			consoleLog("accelerometer.watch stopped");	
+			consoleLog.add("accelerometer.watch stopped");	
 		}
 	},
 	
 	// onSuccess: take a snapshot of the current acceleration - can't use "this." in here...
 	onSuccess:function(accelerationData) {
-		updateTable.accelerometer(accelerationData); //update SQL
+		storage.updateSQLTable.accelerometer(accelerationData); //update SQL
 		
 		accelerometerObj.data.x = accelerationData.x;
 		accelerometerObj.data.y = accelerationData.y;
 		accelerometerObj.data.z = accelerationData.z;
 		accelerometerObj.data.timestamp = accelerationData.timestamp;
 		
-		if (showRealtimeData) {accelerometerObj.updateDisplay('tet');}
+		if (showRealtimeData) {accelerometerObj.updateDisplay();}
 	},
 	
 	// onError: Failed to get the acceleration
 	onError:function() {
-		consoleLog('Error: Could not get accelerometer data!');
+		consoleLog.add('Error: Could not get accelerometer data!');
 	},
 	
 	//display results in real-time
@@ -50,7 +50,7 @@ var accelerometerObj = {
 		element.innerHTML = 'Acceleration X: ' + Math.round(100000*parseFloat(this.data.x))/100000 + '<br />' +
 							'Acceleration Y: ' + Math.round(100000*parseFloat(this.data.y))/100000 + '<br />' +
 							'Acceleration Z: ' + Math.round(100000*parseFloat(this.data.z))/100000 + '<br />' +
-							'Timestamp: '      + new Date(this.data.timestamp) + '<br />' +
+							'Timestamp: '      + formatDate(this.data.timestamp) + '<br />' +
 															
 							this.calculateRP();
 	},

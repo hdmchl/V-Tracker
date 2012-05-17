@@ -25,13 +25,13 @@ var geolocationObj = {
 	// Start watching the geolocation
 	startWatching:function() {
 		this.watchID = navigator.geolocation.watchPosition(this.onSuccess, this.onError, this.options);	
-		consoleLog("geoLocation watch started, ID: " + this.watchID);
+		consoleLog.add("geoLocation watch started, ID: " + this.watchID);
 	},
 	
 	// Stop watching the geolocation
 	stopWatching:function() {
 		navigator.geolocation.clearWatch(this.watchID);
-		consoleLog("geoLocation watch stopped");
+		consoleLog.add("geoLocation watch stopped");
 	},
 	
 	// get geolocation
@@ -41,7 +41,7 @@ var geolocationObj = {
 	
 	// onSuccess: take a snapshot of the current location - can't use "this." in here...
 	onSuccess:function(position) {	
-		updateTable.geolocation(position); //update SQL
+		storage.updateSQLTable.geolocation(position); //update SQL
 
 		geolocationObj.data.latitude = position.coords.latitude;
 		geolocationObj.data.longitude = position.coords.longitude;
@@ -57,7 +57,7 @@ var geolocationObj = {
 	
 	// onError Callback receives a PositionError object
 	onError:function(error) {
-		consoleLog('geoLocation error, code: ' + error.code + ' & Message: ' + error.message);
+		consoleLog.add('geoLocation error, code: ' + error.code + ' & Message: ' + error.message);
 	},
 	
 	// display results in real-time
@@ -73,6 +73,6 @@ var geolocationObj = {
 							'Altitude Accuracy: ' + this.data.altitudeAccuracy  + '<br />' +
 							'Heading: '           + this.data.heading           + '<br />' +
 							'Speed: '             + this.data.speed + ' || ' + speedINkph + '<br />' +
-							'Timestamp: '         + new Date(this.data.timestamp)      + '<br />';
+							'Timestamp: '         + formatDate(this.data.timestamp)       + '<br />';
 	}
 }

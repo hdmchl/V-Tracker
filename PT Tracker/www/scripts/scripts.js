@@ -16,22 +16,27 @@ function clearDiv(divId) {
 }
 
 //console logging for alerts
-var alertsConsoleLog = [];
-function consoleLog(message) {
-	updateTable.consoleLog(message); //update SQL and console.log
+var consoleLog = {
+	alertsConsoleLog: [],
 	
-	alertsConsoleLog[alertsConsoleLog.length] = alertsConsoleLog.length + ') ' + message + '<br />'; //add message to the array
+	add:function(message) {
+		storage.updateSQLTable.consoleLog(message); //update SQL 
 		
-	//if we are collecting data, then display latest alerts in window
-	if (!showRealtimeData) {
-		var buffer = ''
-		for(i=5;i>0;i--) {
-			if (alertsConsoleLog[alertsConsoleLog.length-i]) {
-				buffer = buffer + alertsConsoleLog[alertsConsoleLog.length-i];
+		console.log(message); //display message in output console
+		
+		/*alertsConsoleLog[alertsConsoleLog.length] = alertsConsoleLog.length + ') ' + message + '<br />'; //add message to the array
+			
+		if progress window is open, then display latest alerts in window
+		if (!showRealtimeData) {
+			var buffer = ''
+			for(i=5;i>0;i--) {
+				if (alertsConsoleLog[alertsConsoleLog.length-i]) {
+					buffer = buffer + alertsConsoleLog[alertsConsoleLog.length-i];
+				}
 			}
-		}
-		
-		document.getElementById('alertsConsole').innerHTML = buffer;
+			
+			document.getElementById('alertsConsole').innerHTML = buffer;
+		}*/
 	}
 }
 
@@ -48,7 +53,16 @@ function displayAlertsConsoleLog() {
 
 	document.getElementById('alertsConsoleLog').innerHTML = buffer;
 }
-//*********************************** END HELPER SCRIPTS **********************************//
+
+function formatDate(timestamp) {
+	//console.log(timestamp);
+	var date = new Date(timestamp);
+	
+	var month = parseFloat(date.getMonth()) + 1;
+	
+	return	date.getDate() + "/" + month + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
+}
+//*********************************** END HELPER SCRIPTS *********************************//
 
 //************************************* DATA COLLECTION SCRIPTS ************************************//
 //Data-collection
@@ -94,3 +108,4 @@ var dataCollection = {
 		document.getElementById('loader').style.visibility = 'hidden';
 	}
 }
+//************************************* DATA COLLECTION SCRIPTS ************************************//

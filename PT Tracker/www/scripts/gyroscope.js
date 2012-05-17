@@ -5,27 +5,27 @@
  *
  */
 var gyroscopeObj = {	
-	timer: null,
+	watchID: null,
 	
 	options: { frequency: 500 }, //Set update interval in milliseconds
 	
-	data: {alpha: null, beta: null, gamma: null},
+	data: {alpha: null, beta: null, gamma: null, timestamp: null},
 	
 	startWatching:function() {
 		window.addEventListener("deviceorientation", this.onSuccess);
-		this.timer = setTimeout("gyroscopeObj.sample()", this.options.frequency);
-		consoleLog("gyroscope.watch started");
+		this.watchID = setTimeout("gyroscopeObj.sample()", this.options.frequency);
+		consoleLog.add("gyroscope.watch started");
 	},
 	
 	stopWatching:function() {
 		window.removeEventListener("deviceorientation", this.onSuccess);
-		clearTimeout(this.timer);
-		consoleLog("gyroscope.watch stopped");
+		clearTimeout(this.watchID);
+		consoleLog.add("gyroscope.watch stopped");
 	},
 	
 	sample:function() {
-		updateTable.gyroscope(this.data); //update SQL
-		this.timer = setTimeout("gyroscopeObj.sample()", this.options.frequency);
+		storage.updateSQLTable.gyroscope(this.data); //update SQL
+		this.watchID = setTimeout("gyroscopeObj.sample()", this.options.frequency);
 	},
 	
 	// onSuccess: take a snapshot of the orientation - can't use "this." in here...
@@ -33,6 +33,7 @@ var gyroscopeObj = {
 		gyroscopeObj.data.alpha = orientation.alpha;
 		gyroscopeObj.data.beta = orientation.beta;
 		gyroscopeObj.data.gamma = orientation.gamma;
+		gyroscopeObj.data.timestamp = new Date().getTime();
 		
 		if (showRealtimeData) {gyroscopeObj.updateDisplay();}
 	},
@@ -43,6 +44,7 @@ var gyroscopeObj = {
 			
 			element.innerHTML = 	'Alpha (yaw): '  	+ this.data.alpha + '<br />' +
 									'Beta (pitch): '  	+ this.data.beta  + '<br />' +
-									'Gamma (roll): ' 	+ this.data.gamma;
+									'Gamma (roll): ' 	+ this.data.gamma + '<br />' +
+									'Timestamp: '       + formatDate(this.data.timestamp);
 	}
 }
