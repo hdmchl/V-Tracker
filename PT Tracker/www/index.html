@@ -52,7 +52,7 @@
 			
 		<!-- onLoad scripts -->	
 		<script type="text/javascript">
-			function onBodyLoad() {		
+			function onBodyLoad() {	
 				document.addEventListener("deviceready", onDeviceReady, false);
 			}
 			
@@ -60,6 +60,19 @@
 				//We're ready to roll
 				checkBrowserCompatibilities();
 				storage.init();
+				
+				document.addEventListener("pause", onPause, false);
+				document.addEventListener("resume", onResume, false);
+			}
+			
+			function onPause() {
+				console.log("Device paused!");
+				if (geolocationObj.watchID) {notifications.localTimedAlert(7000);}
+			}
+			
+			function onResume() {
+				console.log("Device resumed!");
+				notifications.clear();
 			}
 		</script>
 			

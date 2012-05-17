@@ -61,7 +61,7 @@ var notifications = {
 		plugins.localNotification.add({
 			date: d,
 			repeat:'daily',
-			message: 'This went off just as expected!',
+			message: 'The GPS is still being watched!',
 			hasAction: true,
 			badge: 1,
 			id: '1',
@@ -72,7 +72,7 @@ var notifications = {
 	},
 	
 	clear:function(){
-		consoleLog('All notifications cancelled.')
+		consoleLog.add('All notifications cancelled.')
 		plugins.localNotification.cancelAll();
 	},
 }

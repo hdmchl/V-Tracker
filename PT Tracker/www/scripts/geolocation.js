@@ -32,6 +32,7 @@ var geolocationObj = {
 	stopWatching:function() {
 		navigator.geolocation.clearWatch(this.watchID);
 		consoleLog.add("geoLocation watch stopped");
+		this.watchID = null;
 	},
 	
 	// get geolocation
