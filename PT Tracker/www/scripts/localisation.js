@@ -28,7 +28,7 @@ var localisation = {
 			localisation.stationLatitudes[i] = results.rows.item(i).latitude;
 		}
 		
-		consoleLog("Number of train stations loaded: " + len);
+		consoleLog.add("Number of train stations loaded: " + len);
 		localisation.ready = true;
 		
 		document.getElementById('localisation').innerHTML = 'ready...';
