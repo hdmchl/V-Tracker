@@ -63,10 +63,10 @@
 		0F92F58F14FCD07700F344D6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0F92F59114FCD07700F344D6 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		0F92F59314FCD07700F344D6 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		0F92F59714FCD07700F344D6 /* V-Tracker-Info.plist */ = {isa = PBXFileReference; path = "V-Tracker-Info.plist"; sourceTree = "<group>"; };
+		0F92F59714FCD07700F344D6 /* V-Tracker-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "V-Tracker-Info.plist"; sourceTree = "<group>"; };
 		0F92F59914FCD07700F344D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0F92F59B14FCD07700F344D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		0F92F59D14FCD07700F344D6 /* V-Tracker-Prefix.pch */ = {isa = PBXFileReference; path = "V-Tracker-Prefix.pch"; sourceTree = "<group>"; };
+		0F92F59D14FCD07700F344D6 /* V-Tracker-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "V-Tracker-Prefix.pch"; sourceTree = "<group>"; };
 		0F92F5A314FCD07700F344D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0F92F5A714FCD07700F344D6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Resources/es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0F92F5AA14FCD07700F344D6 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = Resources/icons/icon.png; sourceTree = "<group>"; };
@@ -123,7 +123,7 @@
 				0F59D0F4155B4F2F002C669D /* README.md */,
 				0F4D8784153FD84E000601BA /* Cordova.framework */,
 				0F92F5CD14FCD0BA00F344D6 /* www */,
-				0F92F59514FCD07700F344D6 /* PT Tracker */,
+				0F92F59514FCD07700F344D6 /* V-Tracker */,
 				0F92F57A14FCD07700F344D6 /* Frameworks */,
 				0F92F57814FCD07700F344D6 /* Products */,
 			);
@@ -157,7 +157,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0F92F59514FCD07700F344D6 /* PT Tracker */ = {
+		0F92F59514FCD07700F344D6 /* V-Tracker */ = {
 			isa = PBXGroup;
 			children = (
 				0F92F5A014FCD07700F344D6 /* Resources */,
@@ -165,6 +165,7 @@
 				0F92F5C214FCD07700F344D6 /* Plugins */,
 				0F92F59614FCD07700F344D6 /* Supporting Files */,
 			);
+			name = "V-Tracker";
 			path = "PT Tracker";
 			sourceTree = "<group>";
 		};
