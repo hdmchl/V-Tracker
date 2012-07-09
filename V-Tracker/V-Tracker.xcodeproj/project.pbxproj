@@ -49,7 +49,7 @@
 		0F2DF1C1154AD2440022BA94 /* 0000000000000001.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0000000000000001.db; sourceTree = "<group>"; };
 		0F4D8784153FD84E000601BA /* Cordova.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cordova.framework; sourceTree = "<group>"; };
 		0F59D0F4155B4F2F002C669D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		0F92F57714FCD07700F344D6 /* PT Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PT Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0F92F57714FCD07700F344D6 /* V-Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "V-Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F92F57B14FCD07700F344D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0F92F57D14FCD07700F344D6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0F92F57F14FCD07700F344D6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -63,10 +63,10 @@
 		0F92F58F14FCD07700F344D6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0F92F59114FCD07700F344D6 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		0F92F59314FCD07700F344D6 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		0F92F59714FCD07700F344D6 /* PT Tracker-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PT Tracker-Info.plist"; sourceTree = "<group>"; };
+		0F92F59714FCD07700F344D6 /* V-Tracker-Info.plist */ = {isa = PBXFileReference; path = "V-Tracker-Info.plist"; sourceTree = "<group>"; };
 		0F92F59914FCD07700F344D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0F92F59B14FCD07700F344D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		0F92F59D14FCD07700F344D6 /* PT Tracker-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PT Tracker-Prefix.pch"; sourceTree = "<group>"; };
+		0F92F59D14FCD07700F344D6 /* V-Tracker-Prefix.pch */ = {isa = PBXFileReference; path = "V-Tracker-Prefix.pch"; sourceTree = "<group>"; };
 		0F92F5A314FCD07700F344D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0F92F5A714FCD07700F344D6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Resources/es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0F92F5AA14FCD07700F344D6 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = Resources/icons/icon.png; sourceTree = "<group>"; };
@@ -132,7 +132,7 @@
 		0F92F57814FCD07700F344D6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0F92F57714FCD07700F344D6 /* PT Tracker.app */,
+				0F92F57714FCD07700F344D6 /* V-Tracker.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -171,10 +171,10 @@
 		0F92F59614FCD07700F344D6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				0F92F59714FCD07700F344D6 /* PT Tracker-Info.plist */,
+				0F92F59714FCD07700F344D6 /* V-Tracker-Info.plist */,
 				0F92F59814FCD07700F344D6 /* InfoPlist.strings */,
 				0F92F59B14FCD07700F344D6 /* main.m */,
-				0F92F59D14FCD07700F344D6 /* PT Tracker-Prefix.pch */,
+				0F92F59D14FCD07700F344D6 /* V-Tracker-Prefix.pch */,
 				0F92F5B714FCD07700F344D6 /* Cordova.plist */,
 				0F92F5C014FCD07700F344D6 /* MainViewController.xib */,
 			);
@@ -254,9 +254,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0F92F57614FCD07700F344D6 /* PT Tracker */ = {
+		0F92F57614FCD07700F344D6 /* V-Tracker */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0F92F5C614FCD07700F344D6 /* Build configuration list for PBXNativeTarget "PT Tracker" */;
+			buildConfigurationList = 0F92F5C614FCD07700F344D6 /* Build configuration list for PBXNativeTarget "V-Tracker" */;
 			buildPhases = (
 				0F92F57014FCD07700F344D6 /* Sources */,
 				0F92F57114FCD07700F344D6 /* Frameworks */,
@@ -269,9 +269,9 @@
 			);
 			dependencies = (
 			);
-			name = "PT Tracker";
+			name = "V-Tracker";
 			productName = "PT Tracker";
-			productReference = 0F92F57714FCD07700F344D6 /* PT Tracker.app */;
+			productReference = 0F92F57714FCD07700F344D6 /* V-Tracker.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -282,7 +282,7 @@
 			attributes = {
 				LastUpgradeCheck = 0430;
 			};
-			buildConfigurationList = 0F92F56E14FCD07700F344D6 /* Build configuration list for PBXProject "PT Tracker" */;
+			buildConfigurationList = 0F92F56E14FCD07700F344D6 /* Build configuration list for PBXProject "V-Tracker" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -295,7 +295,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0F92F57614FCD07700F344D6 /* PT Tracker */,
+				0F92F57614FCD07700F344D6 /* V-Tracker */,
 			);
 		};
 /* End PBXProject section */
@@ -445,10 +445,10 @@
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PT Tracker/PT Tracker-Prefix.pch";
+				GCC_PREFIX_HEADER = "PT Tracker/V-Tracker-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "CORDOVA_FRAMEWORK=YES";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "PT Tracker/PT Tracker-Info.plist";
+				INFOPLIST_FILE = "PT Tracker/V-Tracker-Info.plist";
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
@@ -459,7 +459,7 @@
 					"-weak_library",
 					/usr/lib/libSystem.B.dylib,
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "V-Tracker";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -476,10 +476,10 @@
 					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PT Tracker/PT Tracker-Prefix.pch";
+				GCC_PREFIX_HEADER = "PT Tracker/V-Tracker-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "CORDOVA_FRAMEWORK=YES";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "PT Tracker/PT Tracker-Info.plist";
+				INFOPLIST_FILE = "PT Tracker/V-Tracker-Info.plist";
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
@@ -490,7 +490,7 @@
 					"-weak_library",
 					/usr/lib/libSystem.B.dylib,
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "V-Tracker";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
@@ -500,7 +500,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0F92F56E14FCD07700F344D6 /* Build configuration list for PBXProject "PT Tracker" */ = {
+		0F92F56E14FCD07700F344D6 /* Build configuration list for PBXProject "V-Tracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0F92F5C414FCD07700F344D6 /* Debug */,
@@ -509,7 +509,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0F92F5C614FCD07700F344D6 /* Build configuration list for PBXNativeTarget "PT Tracker" */ = {
+		0F92F5C614FCD07700F344D6 /* Build configuration list for PBXNativeTarget "V-Tracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0F92F5C714FCD07700F344D6 /* Debug */,
