@@ -165,7 +165,6 @@
 				0F92F5C214FCD07700F344D6 /* Plugins */,
 				0F92F59614FCD07700F344D6 /* Supporting Files */,
 			);
-			name = "V-Tracker";
 			path = "V-Tracker";
 			sourceTree = "<group>";
 		};
@@ -450,6 +449,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "CORDOVA_FRAMEWORK=YES";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "V-Tracker/V-Tracker-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
@@ -481,6 +481,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "CORDOVA_FRAMEWORK=YES";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "V-Tracker/V-Tracker-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
