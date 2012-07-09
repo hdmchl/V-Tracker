@@ -166,7 +166,7 @@
 				0F92F59614FCD07700F344D6 /* Supporting Files */,
 			);
 			name = "V-Tracker";
-			path = "PT Tracker";
+			path = "V-Tracker";
 			sourceTree = "<group>";
 		};
 		0F92F59614FCD07700F344D6 /* Supporting Files */ = {
@@ -271,7 +271,7 @@
 			dependencies = (
 			);
 			name = "V-Tracker";
-			productName = "PT Tracker";
+			productName = "V-Tracker";
 			productReference = 0F92F57714FCD07700F344D6 /* V-Tracker.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -446,10 +446,10 @@
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PT Tracker/V-Tracker-Prefix.pch";
+				GCC_PREFIX_HEADER = "V-Tracker/V-Tracker-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "CORDOVA_FRAMEWORK=YES";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "PT Tracker/V-Tracker-Info.plist";
+				INFOPLIST_FILE = "V-Tracker/V-Tracker-Info.plist";
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
@@ -477,10 +477,10 @@
 					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PT Tracker/V-Tracker-Prefix.pch";
+				GCC_PREFIX_HEADER = "V-Tracker/V-Tracker-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "CORDOVA_FRAMEWORK=YES";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "PT Tracker/V-Tracker-Info.plist";
+				INFOPLIST_FILE = "V-Tracker/V-Tracker-Info.plist";
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
