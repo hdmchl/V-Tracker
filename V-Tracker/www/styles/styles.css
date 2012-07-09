@@ -1,0 +1,51 @@
+body {
+
+}
+
+.text p {
+	width: 98%;
+	margin: auto;
+	text-align: justify;
+}
+
+#data-controller {
+	margin: auto;
+	text-align: center;
+	line-height: 20px;
+}
+
+/*********************** LOADER  **********************/
+#loader {
+	z-index: 100;
+    -webkit-border-radius: 10px;
+    background-color: rgba(0,0,0,.7);
+    color: #FFF;
+    font-size: 18px;
+    text-shadow: none;
+    text-align: center;
+    font-weight: bold;
+    position: fixed;
+    height: auto;
+    max-height: 380px;
+    min-width: 230px;
+    width: 90%;
+    left: 3.5%;
+	top: 12%;
+    margin: auto;
+	padding: 5px;
+}
+
+#closeButton {
+	z-index: 101;
+	position: fixed;
+	left: 91.5%;
+	top: 10%;
+}
+
+#alertsConsole {
+	font-weight: normal;
+	font-size: 15px;
+	height: 150px;
+	overflow: scroll;
+}
+/******************************************************/
