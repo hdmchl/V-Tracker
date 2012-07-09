@@ -1,8 +1,8 @@
-Vehicle Tracker (V Tracker)
+Vehicle Tracker (V-Tracker)
 ===============
-'V Tracker' is part of a research project in the Department of Electrical and Computer Systems Engineering (ECSE) at Monash University, Australia. For more information, please refer to the project's [wiki](https://github.com/hadimichael/PT-Tracker/wiki "Wiki").
+'V-Tracker' is part of a research project in the Department of Electrical and Computer Systems Engineering (ECSE) at Monash University, Australia. For more information, please refer to the project's [wiki](https://github.com/hadimichael/V-Tracker/wiki "Wiki").
 
-## (work in progress)
+## !!work in progress!!
 
 The code in this repository is incomplete and is a work-in-progress.
 
