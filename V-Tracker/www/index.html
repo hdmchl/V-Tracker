@@ -66,6 +66,7 @@
 			}
 			
 			function onPause() {
+				//tell the user if GPS is still ON when the application is paused
 				console.log("Device paused!");
 				if (geolocationObj.watchID) {notifications.localTimedAlert(7000);}
 			}
@@ -117,7 +118,7 @@
 				</div>
 				<span id="dbResetStatus"></span>
 				
-				<h2 style="margin-top: 0;">Path fitting</h2>
+				<h2 style="margin-top: 0;">Route learning</h2>
 				<div data-role="controlgroup" data-type="horizontal">
 					<a href="javascript:pathFit();" data-role="button" data-icon="">Fit</a>
 				</div>
