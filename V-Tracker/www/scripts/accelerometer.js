@@ -56,6 +56,7 @@ var accelerometerObj = {
 	},
 	
 	calculateRP:function() {
+		//calculate roll and pitch
 		var gravity = -10.05;
 		
 		var x = -parseFloat(this.data.x);
