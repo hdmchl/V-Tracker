@@ -13,6 +13,7 @@ var storage = {
 	//********************************** INITIALISE STORAGE ***********************************//
 	init:function() {
 		db = window.openDatabase("VTracker_db", "1.00", "V-Tracker DB", 2 * 1024*1024); //open a 2MBs database
+		storage.getDBTables();
 		storage.ready = true;
 		console.log("Database opened. Storage initiated. Storage ready: " + storage.ready);
 	},
@@ -107,7 +108,7 @@ var storage = {
 	queryCounter: 0,
 	getDBTableLengths:function() {
 		//if this is the first run, then set the output window
-		if (storage.queryCounter == 0) {$('#databases').append('<p>started...</p>');}
+		if (storage.queryCounter == 0) {$('#databases').empty();$('#databases').append('<p>started...</p>');}
 		
 		if (storage.queryCounter < storage.dbTables.length) {
 			//if the next table to be queried is the infoTable, then skip
