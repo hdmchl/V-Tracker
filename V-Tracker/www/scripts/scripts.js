@@ -38,8 +38,7 @@ var consoleLog = {
 		this.alertsConsoleLog[this.alertsConsoleLog.length] = this.alertsConsoleLog.length + ') ' + message + '<br />'; //add message to the session array
 			
 		//if progress window is open, then display latest alerts in window
-		if (document.getElementById('loader').style.visibility == 'visible') {
-			var buffer = ''
+		var buffer = ''
 			for(i=10;i>0;i--) {
 				if (this.alertsConsoleLog[this.alertsConsoleLog.length-i]) {
 					buffer = buffer + this.alertsConsoleLog[this.alertsConsoleLog.length-i];
@@ -47,7 +46,6 @@ var consoleLog = {
 			}
 			
 			document.getElementById('alertsConsole').innerHTML = buffer;
-		}
 	},
 	
 	retrieve:function() {
@@ -88,7 +86,9 @@ var dataCollection = {
 	},
 	
 	start:function() {
-		document.getElementById('loader').style.visibility = 'visible';
+		//document.getElementById('loader').style.visibility = 'visible';
+		$.mobile.changePage('#loaderdialog', {transition: 'none'});
+		
 		showRealtimeData = false;
 		clearDiv('dbResetStatus');
 		
@@ -107,7 +107,6 @@ var dataCollection = {
 		gyroscopeObj.stopWatching();
 		
 		showRealtimeData = true;
-		document.getElementById('loader').style.visibility = 'hidden';
 	}
 }
 //************************************* DATA COLLECTION SCRIPTS ************************************//

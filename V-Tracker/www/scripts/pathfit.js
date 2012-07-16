@@ -5,15 +5,45 @@
  *
  */
 
+var route = {
+	learnNew:function() {
+		$.mobile.changePage('#newroutedialog', {transition: 'none'});
+	},
+	
+	track:function() {
+		var myOptions = {
+			center: new google.maps.LatLng(-37.813649, 144.963226),
+			zoom: 14,
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			streetViewControl: false,
+			mapTypeControl: false
+		};
+		var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+		
+		$.mobile.changePage('#trackingpage', {transition: 'none'});
+	}
+}
+
+function findNearbyRoutes() {
+	$.mobile.changePage('#routesdialog', {transition: 'none'});
+}
+
 function pathFit() {
 	
 	//var y1 = [0, -3, -5, -2, -8, -40];
 	//var x1 = [0, 25, 50, 75, 100, 125];
 	//var s1 = numeric.spline(x1,y1);
 	
-	var x1 = [0, 1, 3, 5, 6, 9, 8.7, 9.2, 9, 8.9, 9.1, 10, 11, 13, 14, 16];
-	var y1 = [1, 1.1, 0.9, 1.3, 1, 0.8, 1.3, 2, 3, 4, 5, 5.1, 4.9, 5.3, 5, 4.8];
+	//var x1 = [0, 1, 3, 5, 6, 9, 8.7, 9.2, 9, 8.9, 9.1, 10, 11, 13, 14, 16];
+	//var y1 = [1, 1.1, 0.9, 1.3, 1, 0.8, 1.3, 2, 3, 4, 5, 5.1, 4.9, 5.3, 5, 4.8];
+
+	var y1  = [-37.87987868, -37.87988714, -37.87960072, -37.87907971, -37.87884432, -37.87868005, -37.87834756, -37.87799408, -37.87777795, -37.87766307, -37.87745488, -37.87719215, -37.87704192, -37.87697702, -37.87694183];
+	var x1 = [145.0712806, 145.0716531, 145.071721, 145.0716395, 145.0715778, 145.0713973, 145.0709932, 145.0705674, 145.0702829, 145.0701131, 145.0697767, 145.0692266, 145.0689114, 145.06862, 145.068405];
 	
+	for (var i=0;i<y1.length;i++) {
+		y1[i] = y1[i]-y1[0];
+		x1[i] = x1[i]-x1[0];
+	}
 	
 	var xM = []; 
 	var yM = [];
@@ -43,6 +73,8 @@ function pathFit() {
 		RMSE[i] = Math.sqrt(error.avg()); //check RMSE at that stage
 		console.log("RMSE at model " + i + " is " + RMSE[i]);
 		
+		if (xD.length == x1.length) {cutoff = i;break;}
+		
 		//if change in RMSE is > xx, break
 		var maxChange = 0.2;
 		if (Math.abs(RMSE[i]-RMSE[i-1]) > maxChange)
@@ -57,14 +89,17 @@ function pathFit() {
 	y2 = y1.slice(0,cutoff);
 	
 	M2 = findLineByLeastSquares(x2,y2);
+	var s1 = numeric.spline(x2,y2);
 	console.log(M2);
 
 	var maxX = Math.round(x2[x2.length-1]);
 	var x3 = numeric.linspace(0, maxX, 2*maxX);
 	var y3 = [];
+	var sy3 = [];
 	
 	for (var i=0;i<x3.length;i++) {
 		y3[i] = M2[0]*x3[i] + M2[1];
+		sy3[i] = s1.at(x3[i]);
 	}
 	
 	var options = {
@@ -78,7 +113,7 @@ function pathFit() {
 		}
 	};
 	
-	$.plot($("#graphPlaceholder"), [ numeric.transpose([x1,y1]), numeric.transpose([x3,y3]) ], options);
+	$.plot($("#graphPlaceholder"), [ numeric.transpose([x3,sy3]), numeric.transpose([x3,y3]) ], options);
 	//$.plot($("#graphPlaceholder"), [ numeric.transpose([x3,y3]) ], options);
 	
 	document.getElementById('graphPlaceholder').style.display = 'block';
