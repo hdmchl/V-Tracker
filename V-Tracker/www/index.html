@@ -4,9 +4,9 @@
 	<head>
 		
 		<title>Vehicle Tracker</title>
-  
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+		
 		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
 		
 		<!-- set apple mobile settings for quicker debugging -->
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -42,13 +42,15 @@
 		<script type="text/javascript" charset="utf-8" src="libraries/numeric-1.0.2.js"></script>
 		
 		<!-- jQuery.mobile dependancies -->		
-		<link rel="stylesheet" href="jquery/jquery.mobile-1.1.0-rc.1.css" type="text/css" />
-		<script type="text/javascript" src="jquery/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="jquery/jquery.mobile-1.1.1.css" type="text/css" />
+		<script type="text/javascript" src="jquery/jquery-1.7.2.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/jquery-mods.js"></script>
-		<script type="text/javascript" src="jquery/jquery.mobile-1.1.0-rc.1.js"></script>
-			
+		<script type="text/javascript" src="jquery/jquery.mobile-1.1.1.js"></script>			
 		<!-- jQuery.flot dependancies -->
 		<script type="text/javascript" src="libraries/flot/jquery.flot.js"></script>
+		
+		<!-- Google Maps dependancies -->
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAmcxvwNRTOiviRdsJgGkdkOnnBMjd2BVY&sensor=true"></script>	
 			
 		<!-- onLoad scripts -->	
 		<script type="text/javascript">
@@ -81,83 +83,55 @@
 
 	<body onload="onBodyLoad()">
 		
-		<!-- Start of journeypage -->
-		<div data-role="page" id="journeypage" data-theme="c">
+		<!-- Start of startpage -->
+		<div data-role="page" id="startpage" data-theme="c">
 			
+			<!-- header -->
 			<div data-role="header" data-position="fixed">
-				<!--<a data-icon="refresh" data-theme="a" onClick="window.location.reload();" style="visibility: hidden;">Reload</a>-->
 				<h1>Vehicle Tracker</h1>
-				
-				<!-- navbar -->
 				<div data-role="navbar">
-				<ul> 
-					<li><a href="#journeypage" data-transition="none" class="ui-btn-active ui-state-persist" data-prefetch>Start</a></li>
-					<li><a href="#debugpage" data-transition="none" data-prefetch>Debug</a></li>
-					<li><a href="#infopage" data-transition="none" data-prefetch>Info</a></li>
-				</ul>
-				</div><!-- /navbar -->
+					<ul> 
+						<li><a href="#startpage" class="ui-btn-active ui-state-persist" data-prefetch="true">Start</a></li>
+						<li><a href="#debugpage" data-prefetch="true">Debug</a></li>
+						<li><a href="#infopage" data-prefetch="true">Info</a></li>
+					</ul>
+				</div>
 			</div><!-- /header -->
 			
-			<div data-role="content" data-fullscreen="true">
-				
+			<div data-role="content">				
+				<h3>What would you like to do?</h3>
+				<a data-role="button" href="javascript:route.learnNew();" data-theme="b" data-icon="plus">Learn a new route</a>
+				<a data-role="button" href="javascript:findNearbyRoutes();" data-icon="search">Find nearby routes</a>
 			</div>
 			
-		</div>
+		</div><!-- /startpage -->
 		
 		<!-- Start of debugpage -->
 		<div data-role="page" id="debugpage" data-theme="c">
 			
 			<!-- header -->
 			<div data-role="header" data-position="fixed">
-				<!--<a data-icon="refresh" data-theme="a" onClick="window.location.reload();" style="visibility: hidden;">Reload</a>-->
 				<h1>Vehicle Tracker</h1>
-				
-				<!-- navbar -->
 				<div data-role="navbar">
-				<ul> 
-					<li><a href="#journeypage" data-transition="none" data-prefetch>Start</a></li>
-					<li><a href="#debugpage" data-transition="none" class="ui-btn-active ui-state-persist" data-prefetch>Debug</a></li>
-					<li><a href="#infopage" data-transition="none" data-prefetch>Info</a></li>
-				</ul>
-				</div><!-- /navbar -->
+					<ul> 
+						<li><a href="#startpage" data-prefetch="true">Start</a></li>
+						<li><a href="#debugpage" class="ui-btn-active ui-state-persist" data-prefetch="true">Debug</a></li>
+						<li><a href="#infopage" data-prefetch="true">Info</a></li>
+					</ul>
+				</div>
 			</div><!-- /header -->
 			
 			<!-- content -->
 			<div data-role="content" data-fullscreen="true">
-				<div id="loader" style="visibility: hidden">
-					<div id="closeButton">
-						<a href="javascript:document.getElementById('loader').style.visibility = 'hidden';">
-							<img src="jquery/images/close.png">
-						</a>
-					</div>
-					
-					<div id="processStatus">
-						<p>Process is running
-						<br><img src="jquery/images/bar-loader.gif"></p>
-					</div>
-					
-					<div data-role="controlgroup" data-type="horizontal">
-						<a data-role="button" data-icon="check" href="javascript:dataCollection.stop();">Stop DC</a>
-					</div>
-					
-					<p>Received messages</p>
-					<div id="alertsConsole"></div>
-				</div>
-				
-				<h2 style="margin-top: 0;">Data-Collection</h2>					
+				<h3 style="margin-top: 0;">Data Collection</h3>					
 				<div data-role="controlgroup" data-type="horizontal">
 					<a href="javascript:dataCollection.init();" data-role="button" data-icon="">Init</a>
-					<a href="javascript:dataCollection.start();" data-role="button" data-icon="arrow-r">Collect Data</a>
+					<a href="javascript:dataCollection.start();" data-role="button" data-icon="arrow-r">Collect</a>
+					<a href="javascript:dataCollection.stop();" data-role="button" data-icon="delete" >Stop</a>
 				</div>
 				<span id="dbResetStatus"></span>
 				
-				<h2 style="margin-top: 0;">Route learning</h2>
-				<div data-role="controlgroup" data-type="horizontal">
-					<a href="javascript:pathFit();" data-role="button" data-icon="">Fit</a>
-				</div>
-				<div id="graphPlaceholder" style="width:280px;height:300px;display:none;"></div>
-				
-				<h2>Debugging Access</h2>
+				<h3>API Access</h3>
 				<div data-role="collapsible-set">
 					<div data-role="collapsible" data-collapsed="true">
                         <h3>Alerts Console Log</h3>
@@ -262,28 +236,25 @@
 			
 			<!-- header -->
 			<div data-role="header" data-position="fixed">
-				<!--<a data-icon="refresh" data-theme="a" onClick="window.location.reload();" style="visibility: hidden;">Reload</a>-->
 				<h1>Vehicle Tracker</h1>
-				
-				<!-- navbar -->
 				<div data-role="navbar">
-				<ul> 
-					<li><a href="#journeypage" data-transition="none" data-prefetch>Start</a></li>
-					<li><a href="#debugpage" data-transition="none" data-prefetch>Debug</a></li>
-					<li><a href="#infopage" data-transition="none" class="ui-btn-active ui-state-persist" data-prefetch>Info</a></li>
-				</ul>
-				</div><!-- /navbar -->
+					<ul> 
+						<li><a href="#startpage" data-prefetch="true">Start</a></li>
+						<li><a href="#debugpage" data-prefetch="true">Debug</a></li>
+						<li><a href="#infopage" class="ui-btn-active ui-state-persist" data-prefetch="true">Info</a></li>
+					</ul>
+				</div>
 			</div><!-- /header -->
 			
 			<!-- content -->
 			<div data-role="content" data-fullscreen="true" class="content">
 				<div class="text">
-					<h2>Vehicle Tracker</h2>
-					<p>‘Realtime route learning and vehicle tracking using web-technologies on a mobile device’</p>
+					<h2 style="margin-top: 0;">Project info</h2>
+					<p>Vehicle Tracker (V-Tracker) is a mobile application for ‘Realtime route learning and vehicle tracking using web-technologies on a mobile device’.</p>
 		
-					<br><p>'V-Tracker' is part of a research project in the Deparment of Electrical and Computer Systems Engineering (ECSE) at Monash University, Australia.</p>
+					<br><p>V-Tracker is part of a research project in the Deparment of Electrical and Computer Systems Engineering (ECSE) at <a href="http://www.monash.edu" target="_blank">Monash University</a>, Australia.</p>
 				
-					<br><p>Check out the online repository and wiki <a href="http://www.github.com/hadimichael/V-Tracker" target="_blank">here</a>.</p>			
+					<br><p>The software is open source. Check out the code repository and project wiki <a href="http://www.github.com/hadimichael/V-Tracker" target="_blank">here</a>.</p>			
 				
 					<h3>LICENSE (Apache 2.0)</h3>
 					<p>Copyright (C) 2012 Hadi Michael</p>
@@ -301,6 +272,73 @@
 			</div><!-- /content -->
 		
 		</div><!-- /infopage -->
+		
+		<!-- Start of trackingpage -->
+		<div data-role="page" id="trackingpage" data-theme="c">
+			<div data-role="header" data-position="fixed">
+				<h1>Tracking</h1>
+				<a href="#startpage" data-icon="check" data-theme="b" data-transition="none" class="ui-btn-right">Done</a>
+			</div>
+			
+			<div data-role="content" class="ui-body">
+				<span id="routeName"><h3>Route name</h3></span>
+				
+				<div id="map_canvas" style="width:100%; height:300px"></div>
+			</div>
+		</div><!-- /trackingpage -->
+		
+		<!-- Start of newroutedialog -->
+		<div data-role="dialog" id="newroutedialog" data-theme="c">
+			<div data-role="header" data-theme="d">
+				<h1>New Route</h1>
+			</div>
+			
+			<div data-role="content" class="ui-body">
+				<label for="newRouteName">New route name:</label>
+				<input type="text" id="newRouteName" placeholder="insert route name" value="" />				
+				<a href="#" data-role="button" data-theme="b" data-transition="none">Start learning now</a> 
+				<a href="#" data-role="button" data-rel="back" data-theme="c"data-transition="none">Cancel</a> 
+			</div>
+		</div><!-- /newroutedialog -->
+		
+		<!-- Start of routesdialog -->
+		<div data-role="dialog" id="routesdialog" data-theme="c">
+			<div data-role="header" data-theme="d">
+				<h1>Routes nearby</h1>
+			</div>
+			
+			<div data-role="content" class="ui-body">
+				<fieldset data-role="controlgroup" id="routesNearby">
+					<legend>Choose a route:</legend>
+					<input type="radio" name="radio-choice" id="radio-choice-1" value="choice-1" checked="checked" />
+					<label for="radio-choice-1">Route 1</label>
+					
+					<input type="radio" name="radio-choice" id="radio-choice-2" value="choice-2"  />
+					<label for="radio-choice-2">Route 2</label>
+					
+					<input type="radio" name="radio-choice" id="radio-choice-3" value="choice-3"  />
+					<label for="radio-choice-3">Route 3</label>
+				</fieldset>
+				
+				<a href="javascript:route.track();" data-role="button" data-theme="b" data-transition="none">Track me on route</a>
+				<a href="#" data-role="button" data-theme="b" data-transition="none">Update route</a> 
+				<a href="#" data-role="button" data-rel="back" data-theme="c"data-transition="none">Cancel</a>    
+			</div>
+		</div><!-- /routesdialog -->
+		
+		<!-- Start of loaderdialog -->
+		<div data-role="dialog" id="loaderdialog" data-theme="c">
+			<div data-role="header" data-theme="d">
+				<h1>Working...</h1>
+			</div>
+			
+			<div data-role="content" class="ui-body">
+				<span id="stickyMessages"></span>
+				
+				<h2>Received messages</h2>
+				<div id="alertsConsole"></div>
+			</div>
+		</div><!-- /loaderdialog -->
 		
 	</body>
 	
