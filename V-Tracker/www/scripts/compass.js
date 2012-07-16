@@ -10,7 +10,7 @@ var compassObj = {
 	
 	options: { frequency: 1000 }, //Set update interval in milliseconds
 	
-	data: {magneticHeading: null, trueHeading: null, headingAccuracy: null, timestamp:null},
+	data: {timestamp:null, magneticHeading: null, trueHeading: null, headingAccuracy: null},
 
 	// Start watching the compass
 	startWatching:function() {	

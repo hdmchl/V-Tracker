@@ -10,7 +10,7 @@ var accelerometerObj = {
 	
 	options: { frequency: 200 }, //Set update interval in milliseconds - check wiki if you're unsure of values
 	
-	data: {x: null, y: null, z: null, timestamp: null},
+	data: {timestamp: null, x: null, y: null, z: null},
 	
 	// Start watching the acceleration
 	startWatching:function() {

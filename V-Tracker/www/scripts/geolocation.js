@@ -13,14 +13,14 @@ var geolocationObj = {
 				timeout: 5000, 		//max time between call and receipt
 				enableHighAccuracy: true },
 				
-	data: {	latitude: null,
+	data: {	timestamp: null,
+			latitude: null,
 			longitude: null,
-			accuracy: null,
 			altitude: null,
+			accuracy: null,
 			altitudeAccuracy: null,
 			heading: null,
-			speed: null,
-			timestamp: null},
+			speed: null },
 	
 	// Start watching the geolocation
 	startWatching:function() {
@@ -42,7 +42,7 @@ var geolocationObj = {
 	
 	// onSuccess: take a snapshot of the current location - can't use "this." in here...
 	onSuccess:function(position) {	
-		storage.updateSQLTable.geolocation(position); //update SQL
+		//storage.insertInTable(geolocation(position); //update SQL
 
 		geolocationObj.data.latitude = position.coords.latitude;
 		geolocationObj.data.longitude = position.coords.longitude;

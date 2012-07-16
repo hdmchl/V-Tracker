@@ -9,7 +9,7 @@ var gyroscopeObj = {
 	
 	options: { frequency: 500 }, //Set update interval in milliseconds
 	
-	data: {alpha: null, beta: null, gamma: null, timestamp: null},
+	data: {timestamp: null, alpha: null, beta: null, gamma: null},
 	
 	startWatching:function() {
 		window.addEventListener("deviceorientation", this.onSuccess);
