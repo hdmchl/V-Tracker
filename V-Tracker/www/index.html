@@ -8,7 +8,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
 		
-		<!-- set apple mobile settings for quicker debugging -->
+		<!-- set apple mobile settings for quicker debugging using Safari -->
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-touch-fullscreen" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -32,6 +32,7 @@
 		<script type="text/javascript" charset="utf-8" src="scripts/notifications.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/localisation.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/pathfit.js"></script>
+		<script type="text/javascript" charset="utf-8" src="scripts/constructors.js"></script>
 			
 		<!-- cordova dependancies + plugins -->
 		<script type="text/javascript" charset="utf-8" src="libraries/cordova-1.6.1.js"></script>
@@ -77,6 +78,7 @@
 				console.log("Device resumed!");
 				notifications.clear();
 			}
+
 		</script>
 			
 	</head>
@@ -208,7 +210,7 @@
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 							<a data-role="button" href="javascript:storage.reset()">Reset</a>
-							<a data-role="button" href="javascript:storage.getDBTables()">Show</a>
+							<a data-role="button" href="javascript:storage.getDBTableLengths()">Show</a>
 							<a data-role="button" href="javascript:clearDiv('databases')">Clear</a>
 						</div>
 						
