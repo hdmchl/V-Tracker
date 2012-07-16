@@ -25,45 +25,6 @@ function formatDate(timestamp) {
 }
 //*********************************** END HELPER SCRIPTS *********************************//
 
-//************************************ CONSOLE SCRIPTS ************************************//
-//console logging for alerts
-var consoleLog = {
-	alertsConsoleLog: [],
-	
-	add:function(message) {
-		storage.updateSQLTable.consoleLog(message); //update SQL 
-		
-		console.log(message); //display message in output console
-		
-		this.alertsConsoleLog[this.alertsConsoleLog.length] = this.alertsConsoleLog.length + ') ' + message + '<br />'; //add message to the session array
-			
-		//if progress window is open, then display latest alerts in window
-		var buffer = ''
-			for(i=10;i>0;i--) {
-				if (this.alertsConsoleLog[this.alertsConsoleLog.length-i]) {
-					buffer = buffer + this.alertsConsoleLog[this.alertsConsoleLog.length-i];
-				}
-			}
-			
-			document.getElementById('alertsConsole').innerHTML = buffer;
-	},
-	
-	retrieve:function() {
-		var buffer = ''; //clear buffer
-		
-		//extract the log from the array
-		for(i=0;i<this.alertsConsoleLog.length;i++) {
-			if (this.alertsConsoleLog[i]) {
-				buffer = buffer + this.alertsConsoleLog[i];
-			}
-		}
-		
-		//display
-		document.getElementById('alertsConsoleLog').innerHTML = buffer;
-	}
-}
-//********************************** END CONSOLE SCRIPTS **********************************//
-
 //************************************* DATA COLLECTION SCRIPTS ************************************//
 //Data-collection
 var dataCollection = {
@@ -88,6 +49,11 @@ var dataCollection = {
 	start:function() {
 		//document.getElementById('loader').style.visibility = 'visible';
 		$.mobile.changePage('#loaderdialog', {transition: 'none'});
+		
+		storage.createTable('geolocation','GEOLOCATION');
+		storage.createTable('compass','COMPASS');
+		storage.createTable('accelerometer','ACCELEROMETER');
+		storage.createTable('gyroscope','GYROSCOPE');
 		
 		showRealtimeData = false;
 		clearDiv('dbResetStatus');
