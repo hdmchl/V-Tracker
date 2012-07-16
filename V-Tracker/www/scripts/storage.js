@@ -12,41 +12,82 @@ var storage = {
 	
 	//********************************** INITIALISE STORAGE ***********************************//
 	init:function() {
-		document.getElementById('databases').innerHTML = '';
+		db = window.openDatabase("VTracker_db", "1.00", "V-Tracker DB", 2 * 1024*1024); //open a 2MBs database
+
+		storage.createTable('consolelog','CONSOLELOG');
 		
-		db = window.openDatabase("PTTracker_db", "1.00", "PT Tracker DB", 2 * 1024*1024); //open a 2MBs database
-		
-		//create tables
-		db.transaction(function (tx) {
-					   tx.executeSql('CREATE TABLE IF NOT EXISTS GEOLOCATION (id unique, Timestamp, Latitude, Longitude, Altitude, Accuracy, AltitudeAccuracy, Heading, Speed);');
-					   tx.executeSql('CREATE TABLE IF NOT EXISTS ACCELEROMETER (id unique, Timestamp, AccelerationX, AccelerationY, AccelerationZ);');
-					   tx.executeSql('CREATE TABLE IF NOT EXISTS COMPASS (id unique, Timestamp, MagneticNorth, TrueHeading, HeadingAccuracy);');
-					   tx.executeSql('CREATE TABLE IF NOT EXISTS GYROSCOPE (id unique, Timestamp, Alpha, Beta, Gamma);');
-					   tx.executeSql('CREATE TABLE IF NOT EXISTS CONSOLELOG (id, Timestamp, Message);');
-					   }, this.errorCB, this.successCB);
-		
-		this.ready = true;
-		consoleLog.add("Database opened. Storage initiated. Storage ready: " + this.ready);
+		storage.ready = true;
+		consoleLog.add("Database opened. Storage initiated. Storage ready: " + storage.ready);
 	},
 	//******************************** END INITIALISE STORAGE *********************************//
 	
 	//************************************ RESET DATABASES ************************************//
 	reset:function() {
-		this.ready = false;
-		document.getElementById('databases').innerHTML = '';
+		storage.ready = false;
+		storage.dropTable(storage.dbTables)	
 		
-		db.transaction(function (tx) {
-					   //drop existing tables
-					   tx.executeSql('DROP TABLE IF EXISTS GEOLOCATION;');
-					   tx.executeSql('DROP TABLE IF EXISTS ACCELEROMETER;');
-					   tx.executeSql('DROP TABLE IF EXISTS COMPASS;');
-					   tx.executeSql('DROP TABLE IF EXISTS GYROSCOPE;');
-					   tx.executeSql('DROP TABLE IF EXISTS CONSOLELOG;');
-					   }, this.errorCB, this.init);
+		console.log("Database tables reset! Storage ready: " + storage.ready);
 		
-		console.log("Database tables reset! Storage ready: " + this.ready);
+		storage.init();
 	},
 	//********************************** END RESET DATABASES **********************************//
+	
+	//************************************* CREATE TABLE **************************************//
+	createTable:function(type, tableName) {
+		var dbFields = "id unique";
+		
+		switch(type) {
+			case "geolocation":
+				for (var i in geolocationObj.data) {
+				  	dbFields = dbFields + "," + i;
+				}
+				break;
+				
+			case "compass":
+				for (var i in compassObj.data) {
+				  	dbFields = dbFields + "," + i;
+				}
+				break;	
+			
+			case "accelerometer":
+				for (var i in accelerometer.data) {
+				  	dbFields = dbFields + "," + i;
+				}
+				break;
+				
+			case "gyroscope":
+				for (var i in gyroscopeObj.data) {
+				  	dbFields = dbFields + "," + i;
+				}
+				break;
+				
+			case "consolelog":
+				dbFields = "id, Timestamp, Message";
+				break;
+			
+			default:
+				console.log("db table: \'" + tableName + "\' could not be created");
+				return
+		}
+		
+		db.transaction(function (tx) {
+					   tx.executeSql('CREATE TABLE IF NOT EXISTS ' + tableName + ' (' + dbFields + ');');
+					   }, storage.errorCB, storage.successCB);
+		
+		storage.getDBTables();				   		   
+	},
+	
+	//*********************************** END CREATE TABLE ************************************//
+	
+	//************************************** DROP TABLE ***************************************//
+	dropTable:function(tableNames) {
+		db.transaction(function (tx) {for (var i=0;i<tableNames.length;i++) {
+											tx.executeSql('DROP TABLE IF EXISTS ' + tableNames[i] + ';');
+											}
+									  }, [], storage.errorCB, storage.init);
+		storage.getDBTables();
+	},
+	//************************************ END DROP TABLE *************************************//
 	
 	//************************************ ERROR HANDLING *************************************//
 	errorCB:function(error) {
@@ -54,10 +95,9 @@ var storage = {
 	},
 	
 	successCB:function(toStore) {
-		/*do not call the consoleLog object in here, because you'll get an infinite loop on success*/
+		//=== do not call the consoleLog object in here, because you'll get an infinite loop on success ===//
 	    
 		//console.log("SQL processed successfully!");
-		//if (toStore) {console.log("stored: " + toStore)};
 	},
 	//********************************** END ERROR HANDLING ***********************************//
 	
@@ -69,6 +109,15 @@ var storage = {
 		gyroscopeTable: 0,
 		geolocationTable: 0
 	},
+	
+	updateTable:function(tableName, data) {
+		db.transaction(function (tx){
+	  					 tx.executeSql('SELECT name, sql FROM sqlite_master WHERE type="table" AND name = "' + tableName + '";', [], function (tx, results) {
+							  var columnParts = results.rows.item(0).sql.replace(/^[^\(]+\(([^\)]+)\)/g, '$1').split(',');
+							  console.log(columnParts);
+									 }, storage.errorCB);
+					   }, storage.errorCB, storage.successCB);
+	},	
 	
 	//can't use this. in here...
 	updateSQLTable: {
@@ -144,46 +193,43 @@ var storage = {
 	},
 	//****************************** END INSERT DATA INTO TABLES ******************************//
 	
-	//*************************** RETRIEVING TABLE LENGTHS FROM DB ****************************//	
+	//************************ RETRIEVING TABLES AND LENGTHS FROM DB **************************//	
 	queryCounter: 0,
 	dbTables: [], //declare array of database tables
 	
 	getDBTables:function() {
-		document.getElementById('databases').innerHTML = 'loading...';
-		
-		document.getElementById('loader').style.visibility = 'visible';
-		
+		storage.dbTables = []; //clear arry
+
 		// get a list of all the available tables and load into the dbTables array - when completed, getTableLengths
 		db.transaction(function (tx) {
 					   tx.executeSql('SELECT * FROM sqlite_master WHERE type=\'table\'', [], function (tx, results) {
-									 for (var i=1; i<results.rows.length; i++) {storage.dbTables[i] = results.rows.item(i).name;}
-									 }, this.errorCB);
-					   }, this.errorCB, this.getTableLengths);
+							   				 if (results.rows.length != 0) {
+							   				 	for (var i=1; i<results.rows.length; i++) {storage.dbTables[i-1] = results.rows.item(i).name;}
+							   				 }
+									 }, storage.errorCB);
+					   }, storage.errorCB, function() {console.log("dbTables updated: " + storage.dbTables)});
 	},
 	
-	//this is a callback, can't use this.
-	getTableLengths:function() {
-		//if this is a clean run, then empty the output window
-		if (storage.queryCounter == 0) {document.getElementById('databases').innerHTML = '';}
-		
-		storage.queryCounter++;
+	getDBTableLengths:function() {
+		//if this is the first run, then set the output window
+		if (storage.queryCounter == 0) {$('#databases').append('<p>started...</p>');}
 		
 		if (storage.queryCounter < storage.dbTables.length) {
 			//if the next table to be queried is the infoTable, then skip
 			if (storage.dbTables[storage.queryCounter] == "__WebKitDatabaseInfoTable__") {
-				storage.getTableLengths();
+				storage.getDBTableLengths();
 				return;
 			}
 			
 			//otherwise, select everything in that table and put in a query for its length...
 			var tableQuery = 'SELECT * FROM ' + storage.dbTables[storage.queryCounter];
 			storage.getTableLengthsQuery(storage.dbTables[storage.queryCounter], tableQuery);
+			storage.queryCounter++;
 		}
 		else {
 			//if we're done, then post 'finished...' and hide the progress window
-			document.getElementById('databases').innerHTML = document.getElementById('databases').innerHTML + '<p>finished...</p>';
-			document.getElementById('loader').style.visibility = 'hidden';
 			storage.queryCounter = 0;
+			$('#databases').append('<p>finished!</p>');
 		}
 	},
 	
@@ -191,10 +237,9 @@ var storage = {
 		//display the table's length, then call getTableLengths when done
 		db.transaction(function (tx){
 						   tx.executeSql(tableQuery, [], function (tx, results) {
-									 	var buffer = '<p>' + tableName + ' length: ' + results.rows.length + '</p>';
-										document.getElementById('databases').innerHTML = document.getElementById('databases').innerHTML + buffer;
+									 	$('#databases').append('<p>' + tableName + ' length: ' + results.rows.length + '</p>');
 									 }, this.errorCB);
-						   }, this.errorCB, this.getTableLengths);	
+						   }, this.errorCB, this.getDBTableLengths);	
 	}
-	//************************* END RETRIEVING TABLE LENGTHS FROM DB **************************//	
+	//********************** END RETRIEVING TABLES AND LENGTHS FROM DB ************************//		
 }
