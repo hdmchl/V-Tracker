@@ -81,15 +81,48 @@
 
 	<body onload="onBodyLoad()">
 		
-		<!-- Start of homepage -->
-		<div data-role="page" id="homepage" data-theme="c">
+		<!-- Start of journeypage -->
+		<div data-role="page" id="journeypage" data-theme="c">
 			
 			<div data-role="header" data-position="fixed">
-				<a data-icon="refresh" data-theme="a" onClick="window.location.reload();" style="visibility: hidden;">Reload</a>
+				<!--<a data-icon="refresh" data-theme="a" onClick="window.location.reload();" style="visibility: hidden;">Reload</a>-->
 				<h1>Vehicle Tracker</h1>
-				<a data-icon="info" data-theme="b" href="info.html" data-transition="slide" class="ui-btn-right" data-prefetch>Info</a>
+				
+				<!-- navbar -->
+				<div data-role="navbar">
+				<ul> 
+					<li><a href="#journeypage" data-transition="none" class="ui-btn-active ui-state-persist" data-prefetch>Start</a></li>
+					<li><a href="#debugpage" data-transition="none" data-prefetch>Debug</a></li>
+					<li><a href="#infopage" data-transition="none" data-prefetch>Info</a></li>
+				</ul>
+				</div><!-- /navbar -->
 			</div><!-- /header -->
 			
+			<div data-role="content" data-fullscreen="true">
+				
+			</div>
+			
+		</div>
+		
+		<!-- Start of debugpage -->
+		<div data-role="page" id="debugpage" data-theme="c">
+			
+			<!-- header -->
+			<div data-role="header" data-position="fixed">
+				<!--<a data-icon="refresh" data-theme="a" onClick="window.location.reload();" style="visibility: hidden;">Reload</a>-->
+				<h1>Vehicle Tracker</h1>
+				
+				<!-- navbar -->
+				<div data-role="navbar">
+				<ul> 
+					<li><a href="#journeypage" data-transition="none" data-prefetch>Start</a></li>
+					<li><a href="#debugpage" data-transition="none" class="ui-btn-active ui-state-persist" data-prefetch>Debug</a></li>
+					<li><a href="#infopage" data-transition="none" data-prefetch>Info</a></li>
+				</ul>
+				</div><!-- /navbar -->
+			</div><!-- /header -->
+			
+			<!-- content -->
 			<div data-role="content" data-fullscreen="true">
 				<div id="loader" style="visibility: hidden">
 					<div id="closeButton">
@@ -222,8 +255,53 @@
                 </div>
 			</div><!-- /content -->
 			
-		</div><!-- /homepage -->
-
+		</div><!-- /debugpage -->
+		
+		<!-- start of info page -->
+		<div data-role="page" id="infopage" data-theme="c">
+			
+			<!-- header -->
+			<div data-role="header" data-position="fixed">
+				<!--<a data-icon="refresh" data-theme="a" onClick="window.location.reload();" style="visibility: hidden;">Reload</a>-->
+				<h1>Vehicle Tracker</h1>
+				
+				<!-- navbar -->
+				<div data-role="navbar">
+				<ul> 
+					<li><a href="#journeypage" data-transition="none" data-prefetch>Start</a></li>
+					<li><a href="#debugpage" data-transition="none" data-prefetch>Debug</a></li>
+					<li><a href="#infopage" data-transition="none" class="ui-btn-active ui-state-persist" data-prefetch>Info</a></li>
+				</ul>
+				</div><!-- /navbar -->
+			</div><!-- /header -->
+			
+			<!-- content -->
+			<div data-role="content" data-fullscreen="true" class="content">
+				<div class="text">
+					<h2>Vehicle Tracker</h2>
+					<p>‘Realtime route learning and vehicle tracking using web-technologies on a mobile device’</p>
+		
+					<br><p>'V-Tracker' is part of a research project in the Deparment of Electrical and Computer Systems Engineering (ECSE) at Monash University, Australia.</p>
+				
+					<br><p>Check out the online repository and wiki <a href="http://www.github.com/hadimichael/V-Tracker" target="_blank">here</a>.</p>			
+				
+					<h3>LICENSE (Apache 2.0)</h3>
+					<p>Copyright (C) 2012 Hadi Michael</p>
+		
+					<br><p>Licensed under the Apache License, Version 2.0 (the "License");
+					   you may not use this file except in compliance with the License.
+					   You may obtain a copy of the License <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">here</a>.</p>
+					
+					<br><p>Unless required by applicable law or agreed to in writing, software
+					   distributed under the License is distributed on an "AS IS" BASIS,
+					   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+					   See the License for the specific language governing permissions and
+					   limitations under the License.</p>	
+			   </div>
+			</div><!-- /content -->
+		
+		</div><!-- /infopage -->
+		
 	</body>
 	
 </html>
