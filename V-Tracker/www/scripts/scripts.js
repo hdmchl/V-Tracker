@@ -9,10 +9,8 @@
 function formatDate(timestamp) {
 	//console.log(timestamp);
 	var date = new Date(timestamp);
-	
 	var month = parseFloat(date.getMonth()) + 1;
-	
-	return	date.getDate() + "/" + month + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
+	return date.getDate() + "/" + month + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
 }
 
 //use modernizr to test the browser compatibility
@@ -41,7 +39,7 @@ function checkBrowserCompatibilities() {
 }
 //*********************************** END HELPER SCRIPTS *********************************//
 
-//************************************* DATA COLLECTION SCRIPTS ************************************//
+/************************************ DATA COLLECTION SCRIPTS ************************************
 //Data-collection
 var dataCollection = {
 	init:function() {
@@ -86,4 +84,4 @@ var dataCollection = {
 		showRealtimeData = true;
 	}
 }
-//************************************* DATA COLLECTION SCRIPTS ************************************//
+//************************************* DATA COLLECTION SCRIPTS ************************************/
