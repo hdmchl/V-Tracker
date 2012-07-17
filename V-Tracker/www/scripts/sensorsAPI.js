@@ -33,14 +33,17 @@ var geolocationAPI = {
 	
 	// Stop watching the geolocation
 	stopWatching:function() {
-		navigator.geolocation.clearWatch(geolocationAPI.watchID);
-		console.log("geoLocation watch stopped");
-		geolocationAPI.watchID = null; //reset the watch id
+		if (geolocationAPI.watchID) {
+			navigator.geolocation.clearWatch(geolocationAPI.watchID);
+			console.log("geoLocation watch stopped");
+			geolocationAPI.watchID = null; //reset the watch id
+		}
 	},
 	
 	// get geolocation
 	get:function() {
 		navigator.geolocation.getCurrentPosition(geolocationAPI.onSuccess, geolocationAPI.onError);
+		console.log("geoLocation requested);
 	},
 	
 	// onSuccess: take a snapshot of the current location - can't use "this." in here...
@@ -95,3 +98,70 @@ var geolocationAPI = {
 	}
 }
 //*********************************** END geolocationAPI **********************************//
+
+//*************************************** compassAPI **************************************//
+var compassAPI = {
+	watchID: null,
+	
+	options: { frequency: 1000 }, //Set update interval in milliseconds
+	
+	data: {	timestamp:null, 
+			magneticHeading: null, 
+			trueHeading: null,
+			headingAccuracy: null },
+			
+	successCBs: [], //this is an array of functions that get called "onSuccess"
+
+	// Start watching the compass
+	startWatching:function() {	
+		compassAPI.watchID = navigator.compass.watchHeading(compassAPI.onSuccess, compassAPI.onError, compassAPI.options);
+		console.log("compass.watch started, ID: " + compassAPI.watchID);
+	},
+	
+	// Stop watching the compass
+	stopWatching:function() {
+		if (compassAPI.watchID) {
+			navigator.compass.clearWatch(compassAPI.watchID);
+			console.log("compass.watch stopped");	
+			compassAPI.watchID = null; //reset the watch id
+		}
+	},
+	
+	onSuccess:function(compassHeading) {
+		compassAPI.data.magneticHeading = compassHeading.magneticHeading;
+		compassAPI.data.trueHeading = compassHeading.trueHeading;
+		compassAPI.data.headingAccuracy = compassHeading.headingAccuracy;
+		compassAPI.data.timestamp = compassHeading.timestamp;
+
+		//execute onSuccess callback functions
+		for(i=0;i<compassAPI.successCBs.length;i++) {
+			compassAPI.successCBs[i](compassHeading);
+		}
+	},
+	
+	// onError: Failed to get the compass heading
+	onError:function(compassError) {
+		console.log('Could not get compass data. Error: ' + compassError.code);
+	},
+	
+	// return HTML formatted compass data
+	formatDataForHTML:function(compassData) {
+		var formattedData = 	'Magnetic heading: ' 	+ Math.round(100000*parseFloat(compassData.magneticHeading))/100000 + '<br />' +
+								'True heading: ' 		+ Math.round(100000*parseFloat(compassData.trueHeading))/100000 + '<br />' +
+								'Heading accuracy: ' 	+ compassData.headingAccuracy + '<br />' +
+								'Timestamp: '			+ formatDate(compassData.timestamp);
+		return formattedData;
+	},
+	
+	// return SQL formatted compass data
+	formatDataForSQL:function(compassData) {
+		//this variable can be created dynamically using the "compassAPI.data" array property
+		var formattedData = 	'"' + new Date(compassHeading.timestamp)  + '",' +               
+								'"' + compassHeading.magneticHeading      + '",' + 
+								'"' + compassHeading.trueHeading    	  + '",' + 
+								'"' + compassHeading.headingAccuracy      + '"';
+		
+		return formattedData;
+	}
+}
+//************************************* END compassAPI ************************************//
