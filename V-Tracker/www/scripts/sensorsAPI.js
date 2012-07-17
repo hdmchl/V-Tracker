@@ -157,10 +157,110 @@ var compassAPI = {
 		//this variable can be created dynamically using the "compassAPI.data" array property
 		var formattedData = 	'"' + new Date(compassData.timestamp)  + '",' +               
 								'"' + compassData.magneticHeading      + '",' + 
-								'"' + compassData.trueHeading    	  + '",' + 
+								'"' + compassData.trueHeading    	   + '",' + 
 								'"' + compassData.headingAccuracy      + '"';
-		
 		return formattedData;
 	}
 }
 //************************************* END compassAPI ************************************//
+
+//************************************ accelerometerAPI ***********************************//
+var accelerometerAPI = {
+	watchID: null,
+	
+	options: { frequency: 200 }, //Set update interval in milliseconds - check wiki if you're unsure of values
+	
+	data: {	timestamp: null,
+			x: null,
+			y: null,
+			z: null },
+	
+	successCBs: [], //this is an array of functions that get called "onSuccess"
+	
+	// Start watching the acceleration
+	startWatching:function() {
+		accelerometerAPI.watchID = navigator.accelerometer.watchAcceleration(accelerometerAPI.onSuccess, accelerometerAPI.onError, accelerometerAPI.options);
+		console.log("accelerometer.watch started, ID: " + accelerometerAPI.watchID);
+	},
+	
+	// Stop watching the acceleration
+	stopWatching:function() {
+		if (accelerometerAPI.watchID) {
+			navigator.accelerometer.clearWatch(accelerometerAPI.watchID);
+			console.log("accelerometer.watch stopped");	
+		}
+	},
+	
+	// onSuccess: take a snapshot of the current acceleration - can't use "this." in here...
+	onSuccess:function(accelerationData) {
+		accelerometerAPI.data.timestamp = accelerometerAPI.timestamp;
+		accelerometerAPI.data.x = accelerometerAPI.x;
+		accelerometerAPI.data.y = accelerometerAPI.y;
+		accelerometerAPI.data.z = accelerometerAPI.z;
+		
+		//execute onSuccess callback functions
+		for(i=0;i<accelerometerAPI.successCBs.length;i++) {
+			accelerometerAPI.successCBs[i](accelerationData);
+		}
+	},
+	
+	// onError: Failed to get the acceleration
+	onError:function() {
+		console.log('Error: Could not get accelerometer data!');
+	},
+	
+	// return HTML formatted accelerometer data
+	formatDataForHTML:function(accelerationData) {
+		var formattedData = 	'Acceleration X: ' + Math.round(100000*parseFloat(accelerationData.x))/100000 + '<br />' +
+								'Acceleration Y: ' + Math.round(100000*parseFloat(accelerationData.y))/100000 + '<br />' +
+								'Acceleration Z: ' + Math.round(100000*parseFloat(accelerationData.z))/100000 + '<br />' +
+								'Timestamp: '      + formatDate(accelerationData.timestamp);
+		return formattedData;
+	},
+	
+	// return SQL formatted accelerometer data
+	formatDataForSQL:function(accelerationData) {
+		//this variable can be created dynamically using the "accelerometerAPI.data" array property
+		var formattedData = 	'"' + new Date(accelerationData.timestamp) + '",' +
+								'"' + accelerationData.x          + '",' +
+								'"' + accelerationData.y          + '",' +
+								'"' + accelerationData.z          + '"';
+		return formattedData;
+	}
+}
+	
+	/*calculateRP:function() {
+		//calculate roll and pitch
+		var gravity = -10.05;
+		
+		var x = -parseFloat(this.data.x);
+		var y = -parseFloat(this.data.y);
+		var z = -parseFloat(this.data.z);
+		
+		var r1 = Math.atan2(z,x);
+		var r2 = Math.asin( Math.max(gravity / Math.sqrt(Math.pow(x,2)+Math.pow(z,2)), -1) );
+		var roll = (r1 - r2) * 180/Math.PI;
+		
+		var p1 = Math.asin( Math.max(gravity / Math.sqrt(Math.pow(y,2)+Math.pow(z,2)), -1) );
+		var p2 = Math.atan2(z,y); 
+		var pitch = (p1 - p2) * 180/Math.PI;
+		
+		var ret =   'Roll: '  + Math.round(100*roll)/100 + '<br />' +
+					'Pitch: ' + Math.round(100*pitch)/100 + '<br />';
+		
+		return ret;
+	},
+
+	highPassFilter:function() {
+		var kFilteringFactor = 0.96;
+		
+		// Subtract the low-pass value from the current value to get a simplified high-pass filter
+	    this.accelX = acceleration.x - ( (acceleration.x * kFilteringFactor) + (this.accelX * (1.0 - kFilteringFactor)) );
+	    this.accelY = acceleration.y - ( (acceleration.y * kFilteringFactor) + (this.accelY * (1.0 - kFilteringFactor)) );
+	    this.accelZ = acceleration.z - ( (acceleration.z * kFilteringFactor) + (this.accelZ * (1.0 - kFilteringFactor)) );
+		
+		var filtered = 'Filtered: ' + this.accelX + ' || ' + this.accelY + ' || ' + this.accelZ; 
+		
+		return filtered;
+	}*/
+//********************************** END accelerometerAPI *********************************//
