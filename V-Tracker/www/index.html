@@ -24,14 +24,9 @@
 		<!-- js helper scripts -->
 		<script type="text/javascript" charset="utf-8" src="scripts/scripts.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/compatibility.js"></script>
-		<script type="text/javascript" charset="utf-8" src="scripts/geolocation.js"></script>
-		<script type="text/javascript" charset="utf-8" src="scripts/accelerometer.js"></script>
-		<script type="text/javascript" charset="utf-8" src="scripts/compass.js"></script>
-		<script type="text/javascript" charset="utf-8" src="scripts/gyroscope.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/notifications.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/localisation.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/pathfit.js"></script>
-		
 		<script type="text/javascript" charset="utf-8" src="scripts/constructors.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/storageAPI.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/sensorsAPI.js"></script>
@@ -210,8 +205,8 @@
                         <h3>Databases</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:storage.reset()">Reset</a>
-							<a data-role="button" href="javascript:storage.getDBTableLengths()">Show</a>
+							<a data-role="button" href="javascript:storageAPI.reset()">Reset</a>
+							<a data-role="button" href="javascript:storageAPI.getDBTableLengths()">Show</a>
 							<a data-role="button" href="javascript:clearDiv('databases')">Clear</a>
 						</div>
 						
