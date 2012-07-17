@@ -264,3 +264,66 @@ var accelerometerAPI = {
 		return filtered;
 	}*/
 //********************************** END accelerometerAPI *********************************//
+
+//************************************** gyroscopeAPI *************************************//
+var gyroscopeAPI = {	
+	watchID: null,
+	
+	options: { frequency: 500 }, //Set update interval in milliseconds
+	
+	data: {	timestamp: null,
+			alpha: null,
+			beta: null,
+			gamma: null },
+	
+	successCBs: [], //this is an array of functions that get called "onSuccess"
+	
+	startWatching:function() {
+		window.addEventListener("deviceorientation", this.onSuccess);
+		gyroscopeAPI.watchID = setTimeout("gyroscopeObj.sample()", gyroscopeAPI.options.frequency);
+		consoleLog.add("gyroscope.watch started");
+	},
+	
+	stopWatching:function() {
+		window.removeEventListener("deviceorientation", gyroscopeAPI.onSuccess);
+		clearTimeout(gyroscopeAPI.watchID);
+		consoleLog.add("gyroscope.watch stopped");
+	},
+	
+	sample:function() {
+		gyroscopeAPI.watchID = setTimeout("gyroscopeObj.sample()", gyroscopeAPI.options.frequency);
+	},
+	
+	// onSuccess: take a snapshot of the orientation - can't use "this." in here...
+	onSuccess:function(orientation) {
+		gyroscopeAPI.data.timestamp = new Date().getTime();
+		gyroscopeAPI.data.alpha = orientation.alpha;
+		gyroscopeAPI.data.beta = orientation.beta;
+		gyroscopeAPI.data.gamma = orientation.gamma;
+		
+		//execute onSuccess callback functions
+		for(i=0;i<gyroscopeAPI.successCBs.length;i++) {
+			gyroscopeAPI.successCBs[i](gyroscopeAPI.data);
+		}
+	},
+	
+	// return HTML formatted gyro data
+	formatDataForHTML:function(orientationData) {
+		var formattedData = 	'Alpha (yaw): '  	+ orientationData.alpha + '<br />' +
+								'Beta (pitch): '  	+ orientationData.beta  + '<br />' +
+								'Gamma (roll): ' 	+ orientationData.gamma + '<br />' +
+								'Timestamp: '       + formatDate(orientationData.timestamp);
+		return formattedData;
+	},
+	
+	// return SQL formatted gyro data
+	formatDataForSQL:function(orientationData) {
+		//this variable can be created dynamically using the "gyroscopeAPI.data" array property
+		var formattedData = 	'"' + new Date(orientationData.timestamp) 	+ '",' +               
+								'"' + orientationData.alpha    	+ '",' +
+								'"' + orientationData.beta     	+ '",' +
+								'"' + orientationData.gamma    	+ '"';
+		return formattedData;
+	}
+}
+//************************************ END gyroscopeAPI ***********************************//
