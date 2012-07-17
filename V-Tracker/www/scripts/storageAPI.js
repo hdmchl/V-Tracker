@@ -1,4 +1,4 @@
-/* storage.js
+/* storageAPI.js
  * 
  * Written by Hadi Michael in 2012
  * Faculty of Engineering, Monash University (Australia)
@@ -7,21 +7,22 @@
 
 var db = null; //declare a global database object
 
-var storage = {
+var storageAPI = {
 	ready: false, //status flag
 	
 	//********************************** INITIALISE STORAGE ***********************************//
-	init:function() {
-		db = window.openDatabase("VTracker_db", "1.00", "V-Tracker DB", 2 * 1024*1024); //open a 2MBs database
-		storage.getDBTables();
-		storage.ready = true;
-		console.log("Database opened. Storage initiated. Storage ready: " + storage.ready);
+	init:function(database_name, database_version, database_displayname, database_size) {
+		db = window.openDatabase(database_name, database_version, database_displayname, database_size); //open a database
+		
+		storageAPI.getDBTables();
+		storageAPI.ready = true;
+		console.log("Database opened. Storage initiated. Storage ready: " + storageAPI.ready);
 	},
 	//******************************** END INITIALISE STORAGE *********************************//
 	
 	//************************************** RESET TABLES *************************************//
 	reset:function() {
-		storage.dropTable(storage.dbTables); //drop all tables we know about at this stage
+		storageAPI.dropTable(storageAPI.dbTables); //drop all tables we know about at this stage
 		console.log("Database tables reset.");
 	},
 	//************************************ END RESET TABLES ***********************************//
@@ -38,29 +39,29 @@ var storage = {
 		//create table
 		db.transaction(function (tx) {
 					   tx.executeSql('CREATE TABLE IF NOT EXISTS ' + tableName + ' (' + tableFields + ');');
-					   }, storage.errorCB, storage.successCB);
+					   }, storageAPI.errorCB, storageAPI.successCB);
 		
-		storage.getDBTables();
+		storageAPI.getDBTables();
 	},
 	
 	//*********************************** END CREATE TABLE ************************************//
 	
 	//************************************** DROP TABLE ***************************************//
-	dropTable:function(tableNames) {
-		db.transaction(function (tx) { for (var i=0;i<tableNames.length;i++) {
-						   if(tableNames[i] == "sqlite_sequence") {continue;}
-						   tx.executeSql('DROP TABLE IF EXISTS ' + tableNames[i] + ';');
+	dropTable:function(tableNamesAry) {
+		db.transaction(function (tx) { for (var i=0;i<tableNamesAry.length;i++) {
+						   if(tableNamesAry[i] == "sqlite_sequence") {continue;}
+						   tx.executeSql('DROP TABLE IF EXISTS ' + tableNamesAry[i] + ';');
 						   }
-						   }, storage.errorCB, function(){storage.ready = true;});
+						   }, storageAPI.errorCB, function(){storageAPI.ready = true;});
 
-		storage.getDBTables();
+		storageAPI.getDBTables();
 	},
 	//************************************ END DROP TABLE *************************************//
 	
 	//******************************** INSERT DATA INTO TABLES ********************************//
 	insertIntoTable:function(tableName, data) {	
 		db.transaction(function (tx) {tx.executeSql('INSERT INTO ' + tableName + ' VALUES (null,' + data + ');');
-									 }, storage.errorCB, storage.successCB);				
+									 }, storageAPI.errorCB, storageAPI.successCB);				
 	},
 	//****************************** END INSERT DATA INTO TABLES ******************************//
 	
@@ -82,8 +83,8 @@ var storage = {
 							  columnParts = results.rows.item(0).sql.replace(/^[^\(]+\(([^\)]+)\)/g, '$1').split(',');
 							  console.log(columnParts);
 							  //if necessary, do more stuff here...
-						}, storage.errorCB);
-		}, storage.errorCB, storage.successCB);
+						}, storageAPI.errorCB);
+		}, storageAPI.errorCB, storageAPI.successCB);
 	},
 	//********************************* END GET TABLE COLUMNS *********************************//
 	
@@ -91,16 +92,16 @@ var storage = {
 	dbTables: [], //declare array of database tables
 
 	getDBTables:function() {
-		storage.dbTables = []; //clear array
+		storageAPI.dbTables = []; //clear array
 
 		// get a list of all the available tables and load into the dbTables array - when completed, getTableLengths
 		db.transaction(function (tx) {
 					   tx.executeSql('SELECT * FROM sqlite_master WHERE type=\'table\'', [], function (tx, results) {
 							   				 if (results.rows.length != 0) {
-							   				 	for (var i=1; i<results.rows.length; i++) {storage.dbTables[i-1] = results.rows.item(i).name;}
+							   				 	for (var i=1; i<results.rows.length; i++) {storageAPI.dbTables[i-1] = results.rows.item(i).name;}
 							   				 }
-									 }, storage.errorCB);
-					   }, storage.errorCB, function() {console.log("dbTables was updated: " + storage.dbTables)});
+									 }, storageAPI.errorCB);
+					   }, storageAPI.errorCB, function() {console.log("detDBTables() returned: " + storageAPI.dbTables)});
 	},
 	//****************************** END GET LIST OF TABLES IN DB *****************************//
 	
@@ -108,23 +109,23 @@ var storage = {
 	queryCounter: 0,
 	getDBTableLengths:function() {
 		//if this is the first run, then set the output window
-		if (storage.queryCounter == 0) {$('#databases').empty();$('#databases').append('<p>started...</p>');}
+		if (storageAPI.queryCounter == 0) {$('#databases').empty();$('#databases').append('<p>started...</p>');}
 		
-		if (storage.queryCounter < storage.dbTables.length) {
+		if (storageAPI.queryCounter < storageAPI.dbTables.length) {
 			//if the next table to be queried is the infoTable, then skip
-			if (storage.dbTables[storage.queryCounter] == "__WebKitDatabaseInfoTable__") {
-				storage.getDBTableLengths();
+			if (storageAPI.dbTables[storageAPI.queryCounter] == "__WebKitDatabaseInfoTable__") {
+				storageAPI.getDBTableLengths();
 				return;
 			}
 			
 			//otherwise, select everything in that table and put in a query for its length...
-			var tableQuery = 'SELECT * FROM ' + storage.dbTables[storage.queryCounter];
-			storage.getTableLengthsQuery(storage.dbTables[storage.queryCounter], tableQuery);
-			storage.queryCounter++;
+			var tableQuery = 'SELECT * FROM ' + storageAPI.dbTables[storageAPI.queryCounter];
+			storageAPI.getTableLengthsQuery(storageAPI.dbTables[storageAPI.queryCounter], tableQuery);
+			storageAPI.queryCounter++;
 		}
 		else {
 			//if we're done, then post 'finished...' and hide the progress window
-			storage.queryCounter = 0;
+			storageAPI.queryCounter = 0;
 			$('#databases').append('<p>finished!</p>');
 		}
 	},
@@ -134,8 +135,8 @@ var storage = {
 		db.transaction(function (tx){
 						   tx.executeSql(tableQuery, [], function (tx, results) {
 									 	$('#databases').append('<p>' + tableName + ' length: ' + results.rows.length + '</p>');
-									 }, storage.errorCB);
-						   }, storage.errorCB, storage.getDBTableLengths);	
+									 }, storageAPI.errorCB);
+						   }, storageAPI.errorCB, storageAPI.getDBTableLengths);	
 	}
 	//***************************** END GET LENGTH OF TABLES IN DB ****************************//		
 }
