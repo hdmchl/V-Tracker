@@ -5,16 +5,7 @@
  *
  */
 
-//********************************** DECLARE GLOBAL VARS **********************************//
-var showRealtimeData = true;
-//******************************** END DECLARE GLOBAL VARS ********************************//
-
 //************************************* HELPER SCRIPTS ************************************//
-//clear a div on request
-function clearDiv(divId) {
-	document.getElementById(divId).innerHTML = '';
-}
-
 function formatDate(timestamp) {
 	//console.log(timestamp);
 	var date = new Date(timestamp);
@@ -22,6 +13,31 @@ function formatDate(timestamp) {
 	var month = parseFloat(date.getMonth()) + 1;
 	
 	return	date.getDate() + "/" + month + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
+}
+
+//use modernizr to test the browser compatibility
+function checkBrowserCompatibilities() {
+	var incompatibilities = '';
+	
+	//check local storage
+	if (Modernizr.localstorage) {
+		// window.localStorage is available!
+	} else {
+		// no native support for local storage :(
+		incompatibilities = incompatibilities + 'localstorage, ';
+	}
+	
+	if (Modernizr.geolocation) {
+		// let's find out where you are!
+	} else {
+		// no native geolocation support available :(
+		incompatibilities = incompatibilities + 'geolocation, ';
+	}
+	
+	// display an alert if there are any incompatibilities
+	if (incompatibilities != '') {
+		alert('Your browser is not fully compatible with PT Tracker.' + '\n' + 'The services lacking are: ' + incompatibilities);
+	}
 }
 //*********************************** END HELPER SCRIPTS *********************************//
 
@@ -49,11 +65,6 @@ var dataCollection = {
 	start:function() {
 		//document.getElementById('loader').style.visibility = 'visible';
 		$.mobile.changePage('#loaderdialog', {transition: 'none'});
-		
-		storage.createTable('geolocation','GEOLOCATION');
-		storage.createTable('compass','COMPASS');
-		storage.createTable('accelerometer','ACCELEROMETER');
-		storage.createTable('gyroscope','GYROSCOPE');
 		
 		showRealtimeData = false;
 		clearDiv('dbResetStatus');
