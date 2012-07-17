@@ -68,12 +68,15 @@
 			function onPause() {
 				//tell the user if GPS is still ON when the application is paused
 				console.log("Device paused!");
-				if (geolocationObj.watchID) {notifications.localTimedAlert(7000);}
+				if (geolocationAPI.watchID) {
+					var geoNot = new notificationObj();
+					geoNot.push(notificationsAPI.getTimeAfter(7000),"The GPS radio is still on","",false,"GPSON");
+				}
 			}
 			
 			function onResume() {
 				console.log("Device resumed!");
-				notifications.clear();
+				notificationsAPI.clearAll();
 			}
 		</script>
 			
