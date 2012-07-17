@@ -26,6 +26,6 @@ function checkBrowserCompatibilities() {
 	
 	// display an alert if there are any incompatibilities
 	if (incompatibilities != '') {
-		consoleLog('Your browser is not fully compatible with PT Tracker.' + '\n' + 'The services lacking are: ' + incompatibilities);
+		alert('Your browser is not fully compatible with PT Tracker.' + '\n' + 'The services lacking are: ' + incompatibilities);
 	}
 }
