@@ -12,7 +12,9 @@ var storageAPI = {
 	
 	//********************************** INITIALISE STORAGE ***********************************//
 	init:function(database_name, database_version, database_displayname, database_size) {
-		db = window.openDatabase(database_name, database_version, database_displayname, database_size); //open a database
+		//open a database, create it if it doesn't exist - don't need a constructor, because I 
+		//   shouldn't be using more than one db
+		db = window.openDatabase(database_name, database_version, database_displayname, database_size);
 		
 		storageAPI.getDBTables();
 		storageAPI.ready = true;
@@ -59,7 +61,7 @@ var storageAPI = {
 	//************************************ END DROP TABLE *************************************//
 	
 	//******************************** INSERT DATA INTO TABLES ********************************//
-	insertIntoTable:function(tableName, data) {	
+	insertIntoTable:function(tableName, data) {
 		db.transaction(function (tx) {tx.executeSql('INSERT INTO ' + tableName + ' VALUES (null,' + data + ');');
 									 }, storageAPI.errorCB, storageAPI.successCB);				
 	},
