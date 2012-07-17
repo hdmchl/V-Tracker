@@ -43,7 +43,7 @@ var geolocationAPI = {
 	// get geolocation
 	get:function() {
 		navigator.geolocation.getCurrentPosition(geolocationAPI.onSuccess, geolocationAPI.onError);
-		console.log("geoLocation requested);
+		console.log("geoLocation requested");
 	},
 	
 	// onSuccess: take a snapshot of the current location - can't use "this." in here...
@@ -83,7 +83,6 @@ var geolocationAPI = {
 		return formattedData;
 	},
 	
-	// return SQL formatted geolocation data
 	formatDataForSQL:function(geolocationData) {
 		//this variable can be created dynamically using the "geolocationAPI.data" array property
 		var formattedData = '"' + new Date(geolocationData.timestamp)      + '",' +
@@ -156,10 +155,10 @@ var compassAPI = {
 	// return SQL formatted compass data
 	formatDataForSQL:function(compassData) {
 		//this variable can be created dynamically using the "compassAPI.data" array property
-		var formattedData = 	'"' + new Date(compassHeading.timestamp)  + '",' +               
-								'"' + compassHeading.magneticHeading      + '",' + 
-								'"' + compassHeading.trueHeading    	  + '",' + 
-								'"' + compassHeading.headingAccuracy      + '"';
+		var formattedData = 	'"' + new Date(compassData.timestamp)  + '",' +               
+								'"' + compassData.magneticHeading      + '",' + 
+								'"' + compassData.trueHeading    	  + '",' + 
+								'"' + compassData.headingAccuracy      + '"';
 		
 		return formattedData;
 	}
