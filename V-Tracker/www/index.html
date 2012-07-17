@@ -28,11 +28,13 @@
 		<script type="text/javascript" charset="utf-8" src="scripts/accelerometer.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/compass.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/gyroscope.js"></script>
-		<script type="text/javascript" charset="utf-8" src="scripts/storage.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/notifications.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/localisation.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/pathfit.js"></script>
+		
 		<script type="text/javascript" charset="utf-8" src="scripts/constructors.js"></script>
+		<script type="text/javascript" charset="utf-8" src="scripts/storageAPI.js"></script>
+		<script type="text/javascript" charset="utf-8" src="scripts/sensorsAPI.js"></script>
 			
 		<!-- cordova dependancies + plugins -->
 		<script type="text/javascript" charset="utf-8" src="libraries/cordova-1.6.1.js"></script>
@@ -62,7 +64,7 @@
 			function onDeviceReady() {
 				//We're ready to roll
 				checkBrowserCompatibilities();
-				storage.init();
+				storageAPI.init("VTracker_db", "1.00", "V-Tracker DB", 2 * 1024*1024);
 				
 				document.addEventListener("pause", onPause, false);
 				document.addEventListener("resume", onResume, false);
@@ -78,7 +80,6 @@
 				console.log("Device resumed!");
 				notifications.clear();
 			}
-
 		</script>
 			
 	</head>
