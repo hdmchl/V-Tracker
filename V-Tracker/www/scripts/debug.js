@@ -104,7 +104,7 @@ var debug = {
 		if (debug.liveMonitor) {
 			displayMeasurements = function(data) {
 				var toHTML = compassAPI.formatDataForHTML(data);		
-				$('#debug-compassWatch').html(toHTML);
+				$('#debug-compass').html(toHTML);
 			};
 			compassAPI.successCBs.push(displayMeasurements);
 		}
@@ -143,7 +143,7 @@ var debug = {
 		if (debug.liveMonitor) {
 			displayMeasurements = function(data) {
 				var toHTML = accelerometerAPI.formatDataForHTML(data);		
-				$('#debug-accelerometerWatch').html(toHTML);
+				$('#debug-accelerometer').html(toHTML);
 			};
 			accelerometerAPI.successCBs.push(displayMeasurements);
 		}
@@ -182,7 +182,7 @@ var debug = {
 		if (debug.liveMonitor) {
 			displayMeasurements = function(data) {
 				var toHTML = gyroscopeAPI.formatDataForHTML(data);		
-				$('#debug-gyroscopeWatch').html(toHTML);
+				$('#debug-gyroscope').html(toHTML);
 			};
 			gyroscopeAPI.successCBs.push(displayMeasurements);
 		}
