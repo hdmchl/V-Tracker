@@ -27,6 +27,15 @@ function formatDate(timestamp) {
 	return date.getDate() + "/" + month + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
 }
 
+function validObjName(name) {
+	if (name == null || name == "") {
+		console.log("Invalid object name at declaration!");
+		return false;
+	} else {
+		return true;
+	}
+}
+
 //use modernizr to test the browser compatibility
 function checkBrowserCompatibilities() {
 	var incompatibilities = '';
