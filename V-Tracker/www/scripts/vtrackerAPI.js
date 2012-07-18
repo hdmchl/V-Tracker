@@ -46,23 +46,17 @@ function route(name) {
 		me.routeAlerts.add("Update no. " + me.learnCounter + " started for route: " + me.name);
 	}
 	
-	this.endLearn = function() {
-		geolocationAPI.successCBs = []; //clear call backs on API
+	this.end = function() {
+		geolocationAPI.successCBs = []; //clear callbacks on API
 		geolocationAPI.stopWatching();
 		
 		me.routeAlerts.add("Route learning complete.");
-		
-		$("#loaderDialog-top").empty();
-		$("#loaderDialog-alertsConsole").empty();
-		$("#loaderDialog-bottom").empty();
-		
-		me.save();
-		
-		$.mobile.changePage('#startpage', 'none', true, true);
 	}
 	
 	this.save = function() {
 		//TO DO: save to localstorage
+		
+		console.log("Route " + me.name + " was saved.");
 	}
 	
 	this.exportToDB = function() {

@@ -5,8 +5,8 @@
  *
  */
 
+//************************************** APP SCRIPTS **************************************//
 var newRoute; //TO DO: don't use a global variable
-
 function startLearningNow() {
 	//new route
 	var routeName = $('#newRouteName').val(); //get route name
@@ -18,7 +18,7 @@ function startLearningNow() {
 	newRoute.alertOps.divId("#loaderDialog-alertsConsole");
 	newRoute.learn(); //start updating the object
 	
-	//prepare learning dialog
+	//prepare loading dialog
 	$("#loaderDialog-header").html("<h1>Learning...</h1>");
 	$("#loaderDialog-top").html(
 		"<a href=\"javascript:newRoute.endLearn()\" data-role=\"button\" " +
@@ -26,6 +26,17 @@ function startLearningNow() {
 
 	$.mobile.changePage('#loaderDialog', 'none', true, true);
 }
+
+function endLearning() {
+	newRoute.end();
+	
+	$("#loaderDialog-top").empty();
+	$("#loaderDialog-alertsConsole").empty();
+	$("#loaderDialog-bottom").empty();
+	
+	$.mobile.changePage('#startpage', 'none', true, true);
+}
+//************************************ END APP SCRIPTS ************************************//
 
 //************************************* HELPER SCRIPTS ************************************//
 function onPause() {
