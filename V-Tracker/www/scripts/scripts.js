@@ -11,7 +11,7 @@ function onPause() {
 	//tell the user if GPS is still ON when the application is paused
 	if (geolocationAPI.watchID) {
 		var geoNotification = new notificationObj();
-		geoNotification.push(notificationsAPI.getTimeAfter(7000),"The GPS radio is still on!","",false,"GPSON");
+		geoNotification.pushNot(notificationsAPI.getTimeAfter(7000),"The GPS radio is still on!","",false,"GPSON");
 	}
 }
 
