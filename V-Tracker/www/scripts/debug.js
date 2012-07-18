@@ -15,14 +15,16 @@ var debug = {
 	//DATA COLLECTION
 	DCinit:function() {
 		debug.liveMonitor = false;
+		//select storage for all
 		$('#debug-geoStoreFlag').prop("checked", true);
 		$('#debug-compassStoreFlag').prop("checked", true);
 		$('#debug-accelerometerStoreFlag').prop("checked", true);
 		$('#debug-gyroscopeStoreFlag').prop("checked", true);
+		$("input[type='checkbox']").prop("checked",true).checkboxradio("refresh"); //refresh visual state
 		
 		storageAPI.reset();
 		
-		$('#debug-DC').html("<p>Initialised</p>");
+		$('#debug-DC').html("<p>Initialised. Will store all data.</p>");
 	},
 	
 	DCcollect:function() {
@@ -243,5 +245,31 @@ var debug = {
 		$('#debug-databases').empty();
 	},
 	//END STORAGE
+	
+	//NOTIFICATIONS
+	notificationsShowAlert:function() {
+		var noti = new notificationObj();
+		noti.alert("title","message","button");
+	},
+	
+	notificationsPlayBeep:function() {
+		var noti = new notificationObj();
+		noti.beep(1);
+	},
+	
+	notificationsVibrate:function() {
+		var noti = new notificationObj();
+		noti.vibrate(1);
+	},
+	
+	notificationsNotifyIn5:function() {
+		var noti = new notificationObj();
+		noti.pushNot(notificationsAPI.getTimeAfter(5000),"Look ma! A Notification","",false,"demo");
+	},
+	
+	notificationsClearAll:function() {
+		notificationsAPI.clearAll();
+	},
+	//END NOTIFICATIONS
 }
 //*********************************** END debug methods ***********************************//
