@@ -43,7 +43,7 @@ var debug = {
 		debug.gyroscopeStop();
 		
 		debug.liveMonitor = true;
-		$('#debug-DC').html("<p>Stoped</p>");
+		$('#debug-DC').html("<p>Stopped</p>");
 	},
 	//END DATA COLLECTION
 	
