@@ -105,40 +105,5 @@ var storageAPI = {
 									 }, storageAPI.errorCB);
 					   }, storageAPI.errorCB, function() {console.log("detDBTables() returned: " + storageAPI.dbTables)});
 	},
-	//****************************** END GET LIST OF TABLES IN DB *****************************//
-	
-	//******************************* GET LENGTH OF TABLES IN DB ******************************//
-	queryCounter: 0,
-	getDBTableLengths:function() {
-		//if this is the first run, then set the output window
-		if (storageAPI.queryCounter == 0) {$('#databases').empty();$('#databases').append('<p>started...</p>');}
-		
-		if (storageAPI.queryCounter < storageAPI.dbTables.length) {
-			//if the next table to be queried is the infoTable, then skip
-			if (storageAPI.dbTables[storageAPI.queryCounter] == "__WebKitDatabaseInfoTable__") {
-				storageAPI.getDBTableLengths();
-				return;
-			}
-			
-			//otherwise, select everything in that table and put in a query for its length...
-			var tableQuery = 'SELECT * FROM ' + storageAPI.dbTables[storageAPI.queryCounter];
-			storageAPI.getTableLengthsQuery(storageAPI.dbTables[storageAPI.queryCounter], tableQuery);
-			storageAPI.queryCounter++;
-		}
-		else {
-			//if we're done, then post 'finished...' and hide the progress window
-			storageAPI.queryCounter = 0;
-			$('#databases').append('<p>finished!</p>');
-		}
-	},
-	
-	getTableLengthsQuery:function(tableName, tableQuery) {
-		//display the table's length, then call getTableLengths when done
-		db.transaction(function (tx){
-						   tx.executeSql(tableQuery, [], function (tx, results) {
-									 	$('#databases').append('<p>' + tableName + ' length: ' + results.rows.length + '</p>');
-									 }, storageAPI.errorCB);
-						   }, storageAPI.errorCB, storageAPI.getDBTableLengths);	
-	}
-	//***************************** END GET LENGTH OF TABLES IN DB ****************************//		
+	//****************************** END GET LIST OF TABLES IN DB *****************************//		
 }
