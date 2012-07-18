@@ -23,14 +23,11 @@
 		<!-- js files: you would NEVER have so many separate files if you were serving the app through the internet! -->
 		<!-- js helper scripts -->
 		<script type="text/javascript" charset="utf-8" src="scripts/scripts.js"></script>
-		<script type="text/javascript" charset="utf-8" src="scripts/compatibility.js"></script>
-		<script type="text/javascript" charset="utf-8" src="scripts/notifications.js"></script>
-		<script type="text/javascript" charset="utf-8" src="scripts/localisation.js"></script>
-		<script type="text/javascript" charset="utf-8" src="scripts/pathfit.js"></script>
-		<script type="text/javascript" charset="utf-8" src="scripts/constructors.js"></script>
+		<script type="text/javascript" charset="utf-8" src="scripts/debug.js"></script>		
+		<script type="text/javascript" charset="utf-8" src="scripts/notificationsAPI.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/storageAPI.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/sensorsAPI.js"></script>
-			
+					
 		<!-- cordova dependancies + plugins -->
 		<script type="text/javascript" charset="utf-8" src="libraries/cordova-1.6.1.js"></script>
 		<script type="text/javascript" charset="utf-8" src="libraries/LocalNotification.js"></script>
@@ -59,24 +56,11 @@
 			function onDeviceReady() {
 				//We're ready to roll
 				checkBrowserCompatibilities();
+				//initialise database, the API restrict db use to one db
 				storageAPI.init("VTracker_db", "1.00", "V-Tracker DB", 2 * 1024*1024);
-				
+				//listen to device pause or resume
 				document.addEventListener("pause", onPause, false);
 				document.addEventListener("resume", onResume, false);
-			}
-			
-			function onPause() {
-				//tell the user if GPS is still ON when the application is paused
-				console.log("Device paused!");
-				if (geolocationAPI.watchID) {
-					var geoNot = new notificationObj();
-					geoNot.push(notificationsAPI.getTimeAfter(7000),"The GPS radio is still on","",false,"GPSON");
-				}
-			}
-			
-			function onResume() {
-				console.log("Device resumed!");
-				notificationsAPI.clearAll();
 			}
 		</script>
 			
@@ -101,8 +85,9 @@
 			
 			<div data-role="content">				
 				<h3>What would you like to do?</h3>
-				<a data-role="button" href="javascript:route.learnNew();" data-theme="b" data-icon="plus">Learn a new route</a>
-				<a data-role="button" href="javascript:findNearbyRoutes();" data-icon="search">Find nearby routes</a>
+				<a data-role="button" href="javascript:" data-theme="b" data-icon="plus">Learn a new route</a>
+				<a data-role="button" href="javascript:" data-icon="search">Find nearby routes</a>
+				<a data-role="button" href="javascript:" data-icon="grid">Manage routes</a>
 			</div>
 			
 		</div><!-- /startpage -->
@@ -126,105 +111,87 @@
 			<div data-role="content" data-fullscreen="true">
 				<h3 style="margin-top: 0;">Data Collection</h3>					
 				<div data-role="controlgroup" data-type="horizontal">
-					<a href="javascript:dataCollection.init();" data-role="button" data-icon="">Init</a>
-					<a href="javascript:dataCollection.start();" data-role="button" data-icon="arrow-r">Collect</a>
-					<a href="javascript:dataCollection.stop();" data-role="button" data-icon="delete" >Stop</a>
+					<a href="javascript:debug.DCinit();" data-role="button" data-icon="">Init</a>
+					<a href="javascript:debug.DCcollect();" data-role="button" data-icon="arrow-r">Collect</a>
+					<a href="javascript:debug.DCstop();" data-role="button" data-icon="delete" >Stop</a>
 				</div>
-				<span id="dbResetStatus"></span>
+				<div id="debug-DC"></div>
 				
 				<h3>API Access</h3>
-				<div data-role="collapsible-set">
-					<div data-role="collapsible" data-collapsed="true">
-                        <h3>Alerts Console Log</h3>
-						
-						<div data-role="controlgroup" data-type="horizontal">
-							<a data-role="button" href="javascript:consoleLog.retrieve()">Retrieve</a>
-							<a data-role="button" href="javascript:clearDiv('alertsConsoleLog')">Clear</a>
-						</div>
-						
-						<div id="alertsConsoleLog">Ready...</div>
-                    </div>
-					
+				<div data-role="collapsible-set">					
                     <div data-role="collapsible" data-collapsed="true">
                         <h3>Geolocation</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:geolocationObj.startWatching()">Watch</a>
-							<a data-role="button" href="javascript:geolocationObj.stopWatching()">Stop</a>
-							<a data-role="button" href="javascript:clearDiv('geolocation')">Clear</a>
+							<input type="checkbox" name="debug-geoStoreFlag" id="debug-geoStoreFlag" checked/><label for="debug-geoStoreFlag">Store</label>
+							<a id="debug-geoWatch" class="" data-role="button" href="javascript:debug.geolocationWatch()">Watch</a>
+							<a data-role="button" href="javascript:debug.geolocationStop()">Stop</a>
+							<a data-role="button" href="javascript:debug.geolocationClear()">Clear</a>
 						</div>
 							
-						<div id="geolocation">Ready...</div>
+						<div id="debug-geolocation">Ready...</div>
                     </div>
-					
-					<div data-role="collapsible" data-collapsed="true">
-                        <h3>Localise</h3>
-						
-						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:localisation.init()">Initialise</a>
-							<a data-role="button" href="javascript:localisation.findNearestStation()">Find Nearest Station</a>
-						</div>
-						
-						<div id="localisation">Ready...</div>
-                    </div>
-					
-					<div data-role="collapsible" data-collapsed="true">
-                        <h3>Accelerometer</h3>
-						
-						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:accelerometerObj.startWatching()">Watch</a>
-							<a data-role="button" href="javascript:accelerometerObj.stopWatching()">Stop</a>
-							<a data-role="button" href="javascript:clearDiv('acceleration')">Clear</a>
-						</div>
-						
-						<div id="acceleration">Ready...</div>
-                    </div>
-					
-					<div data-role="collapsible" data-collapsed="true">
+                    
+                    <div data-role="collapsible" data-collapsed="true">
                         <h3>Compass</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:compassObj.startWatching()">Watch</a>
-							<a data-role="button" href="javascript:compassObj.stopWatching()">Stop</a>
-							<a data-role="button" href="javascript:clearDiv('compass')">Clear</a>
+							<input type="checkbox" name="debug-compassStoreFlag" id="debug-compassStoreFlag" checked/><label for="debug-compassStoreFlag">Store</label>
+							<a id="debug-compassWatch" class="" data-role="button" href="javascript:debug.compassWatch()">Watch</a>
+							<a data-role="button" href="javascript:debug.compassStop()">Stop</a>
+							<a data-role="button" href="javascript:debug.compassClear()">Clear</a>
 						</div>
+							
+						<div id="debug-compass">Ready...</div>
+                    </div>
+                    
+                    <div data-role="collapsible" data-collapsed="true">
+                        <h3>Accelerometer</h3>
 						
-						<div id="compass">Ready...</div>
+						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+							<input type="checkbox" name="debug-accelerometerStoreFlag" id="debug-accelerometerStoreFlag" checked/><label for="debug-accelerometerStoreFlag">Store</label>
+							<a id="debug-accelerometerWatch" class="" data-role="button" href="javascript:debug.accelerometerWatch()">Watch</a>
+							<a data-role="button" href="javascript:debug.accelerometerStop()">Stop</a>
+							<a data-role="button" href="javascript:debug.accelerometerClear()">Clear</a>
+						</div>
+							
+						<div id="debug-accelerometer">Ready...</div>
                     </div>
                     
                     <div data-role="collapsible" data-collapsed="true">
                         <h3>Gyroscope</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:gyroscopeObj.startWatching()">Watch</a>
-							<a data-role="button" href="javascript:gyroscopeObj.stopWatching()">Stop</a>
-							<a data-role="button" href="javascript:clearDiv('gyroscope')">Clear</a>
+							<input type="checkbox" name="debug-gyroscopeStoreFlag" id="debug-gyroscopeStoreFlag" checked/><label for="debug-gyroscopeStoreFlag">Store</label>
+							<a id="debug-gyroscopeWatch" class="" data-role="button" href="javascript:debug.gyroscopeWatch()">Watch</a>
+							<a data-role="button" href="javascript:debug.gyroscopeStop()">Stop</a>
+							<a data-role="button" href="javascript:debug.gyroscopeClear()">Clear</a>
 						</div>
-						
-						<div id="gyroscope">Ready...</div>
+							
+						<div id="debug-gyroscope">Ready...</div>
                     </div>
 					
 					<div data-role="collapsible" data-collapsed="true">
-                        <h3>Databases</h3>
+                        <h3>Storage</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:storageAPI.reset()">Reset</a>
-							<a data-role="button" href="javascript:storageAPI.getDBTableLengths()">Show</a>
-							<a data-role="button" href="javascript:clearDiv('databases')">Clear</a>
+							<a data-role="button" href="javascript:debug.storageReset();">Reset</a>
+							<a data-role="button" href="javascript:debug.storageGetDBTableLengths()">Table Lengths</a>
+							<a data-role="button" href="javascript:debug.storageClear();">Clear</a>
 						</div>
 						
-						<div id="databases"></div>
+						<div id="debug-databases">Ready...</div>
                     </div>
 					
 					<div data-role="collapsible" data-collapsed="true">
-                        <h3>User Notifications</h3>
+                        <h3>Notifications</h3>
 						
 						<div data-role="controlgroup" data-type="vertical">
-							<a href="#" onclick="notifications.showAlert('Hello!','Game Over!','Damn'); return false;" data-role="button">Show Alert</a>
-							<a href="#" onclick="notifications.localTimedAlert(10000); return false;" data-role="button">Show Notification in 10s</a>
-							<a href="#" onclick="notifications.playBeep(3000); return false;" data-role="button">Play Beep</a>
-							<a href="#" onclick="notifications.vibrate(); return false;" data-role="button">Vibrate</a>
-							<a href="#" onclick="notifications.clear(); return false;" data-role="button">Clear All Notifications</a>
+							<a data-role="button">Show Alert</a>
+							<a data-role="button">Show Notification in 10s</a>
+							<a data-role="button">Play Beep</a>
+							<a data-role="button">Vibrate</a>
+							<a data-role="button">Clear All Notifications</a>
 						</div>
                     </div>
                 </div>
@@ -334,7 +301,7 @@
 			</div>
 			
 			<div data-role="content" class="ui-body">
-				<span id="stickyMessages"></span>
+				<div id="stickyMessages"></div>
 				
 				<h2>Received messages</h2>
 				<div id="alertsConsole"></div>
