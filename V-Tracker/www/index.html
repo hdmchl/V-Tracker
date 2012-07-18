@@ -24,7 +24,7 @@
 		<!-- js scripts -->
 		<script type="text/javascript" charset="utf-8" src="scripts/scripts.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/debug.js"></script>	
-		<script type="text/javascript" charset="utf-8" src="scripts/vtracker.js"></script>			
+		<script type="text/javascript" charset="utf-8" src="scripts/vtrackerAPI.js"></script>			
 		<script type="text/javascript" charset="utf-8" src="scripts/notificationsAPI.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/storageAPI.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/sensorsAPI.js"></script>
@@ -263,8 +263,7 @@
 			</div>
 			
 			<div data-role="content" class="ui-body">
-				<label for="newRouteName">New route name:</label>
-				<input type="text" id="newRouteName" placeholder="insert route name" value="" />				
+				<input type="text" id="newRouteName" placeholder="enter route name here" value="" />				
 				<a href="javascript:startLearningNow();" data-role="button" data-theme="b" data-transition="none">Start learning now</a> 
 				<a href="#" data-role="button" data-rel="back" data-theme="c"data-transition="none">Cancel</a> 
 			</div>
@@ -297,7 +296,7 @@
 		
 		<!-- Start of loaderdialog -->
 		<div data-role="dialog" id="loaderDialog" data-theme="c">
-			<div data-role="header" data-theme="d">
+			<div data-role="header" id="loaderDialog-header" data-theme="d">
 				<h1>Working...</h1>
 			</div>
 			
