@@ -6,11 +6,11 @@
  */
 
 //************************************* notification **************************************//
+//constructor for notification objects
 function notificationObj() {
 	if (name == null) {throw "you must give the object a name";} //make sure they name the object
 	
 	this.alert = function(title,message,buttonText) {
-		console.log("dsaf")
 		navigator.notification.alert(message,notificationsAPI.alertDismissed(),title,buttonText);
 	}
 	
