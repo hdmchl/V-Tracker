@@ -21,13 +21,13 @@ function startLearningNow() {
 	//prepare loading dialog
 	$("#loaderDialog-header").html("<h1>Learning...</h1>");
 	$("#loaderDialog-top").html(
-		"<a href=\"javascript:newRoute.endLearn()\" data-role=\"button\" " +
+		"<a href=\"javascript:destinationReached()\" data-role=\"button\" " +
 		"data-theme=\"b\" data-transition=\"none\">Destination reached</a>")
 
 	$.mobile.changePage('#loaderDialog', 'none', true, true);
 }
 
-function endLearning() {
+function destinationReached() {
 	newRoute.end();
 	
 	$("#loaderDialog-top").empty();
