@@ -279,19 +279,23 @@ var gyroscopeAPI = {
 	successCBs: [], //this is an array of functions that get called "onSuccess"
 	
 	startWatching:function() {
-		window.addEventListener("deviceorientation", this.onSuccess);
-		gyroscopeAPI.watchID = setTimeout("gyroscopeObj.sample()", gyroscopeAPI.options.frequency);
-		consoleLog.add("gyroscope.watch started");
+		window.addEventListener("deviceorientation", gyroscopeAPI.onSuccess);
+		gyroscopeAPI.watchID = setTimeout("gyroscopeAPI.executeCBs()", gyroscopeAPI.options.frequency);
+		console.log("gyroscope.watch started");
 	},
 	
 	stopWatching:function() {
 		window.removeEventListener("deviceorientation", gyroscopeAPI.onSuccess);
 		clearTimeout(gyroscopeAPI.watchID);
-		consoleLog.add("gyroscope.watch stopped");
+		console.log("gyroscope.watch stopped");
 	},
 	
-	sample:function() {
-		gyroscopeAPI.watchID = setTimeout("gyroscopeObj.sample()", gyroscopeAPI.options.frequency);
+	executeCBs:function() {
+		gyroscopeAPI.watchID = setTimeout("gyroscopeAPI.executeCBs()", gyroscopeAPI.options.frequency);
+		//execute onSuccess callback functions
+		for(i=0;i<gyroscopeAPI.successCBs.length;i++) {
+			gyroscopeAPI.successCBs[i](gyroscopeAPI.data);
+		}
 	},
 	
 	// onSuccess: take a snapshot of the orientation - can't use "this." in here...
@@ -300,11 +304,6 @@ var gyroscopeAPI = {
 		gyroscopeAPI.data.alpha = orientation.alpha;
 		gyroscopeAPI.data.beta = orientation.beta;
 		gyroscopeAPI.data.gamma = orientation.gamma;
-		
-		//execute onSuccess callback functions
-		for(i=0;i<gyroscopeAPI.successCBs.length;i++) {
-			gyroscopeAPI.successCBs[i](gyroscopeAPI.data);
-		}
 	},
 	
 	// return HTML formatted gyro data
