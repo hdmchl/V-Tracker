@@ -6,6 +6,20 @@
  */
 
 //************************************* HELPER SCRIPTS ************************************//
+function onPause() {
+	console.log("Device paused!");
+	//tell the user if GPS is still ON when the application is paused
+	if (geolocationAPI.watchID) {
+		var geoNotification = new notificationObj();
+		geoNotification.push(notificationsAPI.getTimeAfter(7000),"The GPS radio is still on!","",false,"GPSON");
+	}
+}
+
+function onResume() {
+	console.log("Device resumed!");
+	notificationsAPI.clearAll();
+}
+
 function formatDate(timestamp) {
 	//console.log(timestamp);
 	var date = new Date(timestamp);
@@ -38,50 +52,3 @@ function checkBrowserCompatibilities() {
 	}
 }
 //*********************************** END HELPER SCRIPTS *********************************//
-
-/************************************ DATA COLLECTION SCRIPTS ************************************
-//Data-collection
-var dataCollection = {
-	init:function() {
-		storage.reset(); //reset database in preparation for data collection
-	
-		//clear alerts console
-		consoleLog.alertsConsoleLog.length = 0;
-		clearDiv('alertsConsole');
-		
-		//clear dom
-		clearDiv('alertsConsoleLog');
-		clearDiv('geolocation');
-		clearDiv('acceleration');
-		clearDiv('compass');
-		clearDiv('databases');
-		
-		//alert the user
-		document.getElementById('dbResetStatus').innerText = 'Data Collection Reset';	
-	},
-	
-	start:function() {
-		//document.getElementById('loader').style.visibility = 'visible';
-		$.mobile.changePage('#loaderdialog', {transition: 'none'});
-		
-		showRealtimeData = false;
-		clearDiv('dbResetStatus');
-		
-		//start watching sensors
-		geolocationObj.startWatching();
-		accelerometerObj.startWatching();
-		compassObj.startWatching();	
-		gyroscopeObj.startWatching();
-	},
-	
-	stop:function() {
-		//stop watching sensors
-		geolocationObj.stopWatching();	
-		accelerometerObj.stopWatching();
-		compassObj.stopWatching();
-		gyroscopeObj.stopWatching();
-		
-		showRealtimeData = true;
-	}
-}
-//************************************* DATA COLLECTION SCRIPTS ************************************/
