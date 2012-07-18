@@ -5,28 +5,6 @@
  *
  */
 
-var newRoute;
-
-function startLearningNow() {
-	//new route
-	var routeName = $('#newRouteName').val(); //get route name
-	
-	//TO DO: check if route name is already in use, if yes, then prompt!
-	
-	newRoute = new route(routeName); //create a new route object
-	newRoute.alertOps.displayInDiv(true);
-	newRoute.alertOps.divId("#loaderDialog-alertsConsole");
-	newRoute.learn(); //start updating the object
-	
-	//prepare learning dialog
-	$("#loaderDialog-top").html(
-		"<p>Please tap <a href=\"javascript:newRoute.endLearn()\" data-role=\"button\" " +
-		"data-theme=\"b\" data-transition=\"none\">Destination reached</a>" +
-		" when you arrive at the end of your route.</p>")
-
-	$.mobile.changePage('#loaderDialog', 'none', true, true);
-}
-
 //*************************************** routeObj ****************************************//
 function route(name) {
 	if (!validObjName(name)) {return;}
@@ -57,6 +35,7 @@ function route(name) {
 			//if measurement is statiscally off, then pushMeasurement, else dismiss
 			//if pushed a new measurement, delete old one...
 		} else {
+			//TO DO: check measurement accuracy before pushing
 			geolocationAPI.successCBs.push(me.pushMeasurement);
 		}
 
