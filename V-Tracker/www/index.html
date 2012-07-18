@@ -21,9 +21,10 @@
 		<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="styles/iphone.css" type="text/css" />
 		
 		<!-- js files: you would NEVER have so many separate files if you were serving the app through the internet! -->
-		<!-- js helper scripts -->
+		<!-- js scripts -->
 		<script type="text/javascript" charset="utf-8" src="scripts/scripts.js"></script>
-		<script type="text/javascript" charset="utf-8" src="scripts/debug.js"></script>		
+		<script type="text/javascript" charset="utf-8" src="scripts/debug.js"></script>	
+		<script type="text/javascript" charset="utf-8" src="scripts/vtracker.js"></script>			
 		<script type="text/javascript" charset="utf-8" src="scripts/notificationsAPI.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/storageAPI.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/sensorsAPI.js"></script>
@@ -85,9 +86,9 @@
 			
 			<div data-role="content">				
 				<h3>What would you like to do?</h3>
-				<a data-role="button" href="javascript:" data-theme="b" data-icon="plus">Learn a new route</a>
-				<a data-role="button" href="javascript:" data-icon="search">Find nearby routes</a>
-				<a data-role="button" href="javascript:" data-icon="grid">Manage routes</a>
+				<a data-role="button" href="#newRouteDialog" data-rel="dialog" data-theme="b" data-icon="plus">Learn a new route</a>
+				<a data-role="button" href="#findRoutesDialog" data-rel="dialog" data-icon="search">Find nearby routes</a>
+				<a data-role="button" href="#manageRoutesDialog" data-rel="dialog" data-icon="grid">Manage routes</a>
 			</div>
 			
 		</div><!-- /startpage -->
@@ -256,7 +257,7 @@
 		</div><!-- /trackingpage -->
 		
 		<!-- Start of newroutedialog -->
-		<div data-role="dialog" id="newroutedialog" data-theme="c">
+		<div data-role="dialog" id="newRouteDialog" data-theme="c">
 			<div data-role="header" data-theme="d">
 				<h1>New Route</h1>
 			</div>
@@ -264,13 +265,13 @@
 			<div data-role="content" class="ui-body">
 				<label for="newRouteName">New route name:</label>
 				<input type="text" id="newRouteName" placeholder="insert route name" value="" />				
-				<a href="#" data-role="button" data-theme="b" data-transition="none">Start learning now</a> 
+				<a href="javascript:startLearningNow();" data-role="button" data-theme="b" data-transition="none">Start learning now</a> 
 				<a href="#" data-role="button" data-rel="back" data-theme="c"data-transition="none">Cancel</a> 
 			</div>
 		</div><!-- /newroutedialog -->
 		
 		<!-- Start of routesdialog -->
-		<div data-role="dialog" id="routesdialog" data-theme="c">
+		<div data-role="dialog" id="findRoutesDialog" data-theme="c">
 			<div data-role="header" data-theme="d">
 				<h1>Routes nearby</h1>
 			</div>
@@ -295,16 +296,18 @@
 		</div><!-- /routesdialog -->
 		
 		<!-- Start of loaderdialog -->
-		<div data-role="dialog" id="loaderdialog" data-theme="c">
+		<div data-role="dialog" id="loaderDialog" data-theme="c">
 			<div data-role="header" data-theme="d">
 				<h1>Working...</h1>
 			</div>
 			
 			<div data-role="content" class="ui-body">
-				<div id="stickyMessages"></div>
+				<div id="loaderDialog-top"></div>
 				
 				<h2>Received messages</h2>
-				<div id="alertsConsole"></div>
+				<div id="loaderDialog-alertsConsole"></div>
+				
+				<div id="loaderDialog-bottom"></div>
 			</div>
 		</div><!-- /loaderdialog -->
 		
