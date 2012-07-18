@@ -24,7 +24,7 @@ function notificationObj() {
 	
 	// This will fire based on the time provided
 	// Something to note is that the iPhone goes off of 24hr time it defaults to no timezone adjustment so +0000 !IMPORTANT
-	this.push = function(d,message,repeat,hasAction,id) {
+	this.pushNot = function(d,message,repeat,hasAction,id) {
 		notificationsAPI.badgeCount++;
 		
 		//make the notification
