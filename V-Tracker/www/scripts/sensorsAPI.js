@@ -281,13 +281,15 @@ var gyroscopeAPI = {
 	startWatching:function() {
 		window.addEventListener("deviceorientation", gyroscopeAPI.onSuccess);
 		gyroscopeAPI.watchID = setTimeout("gyroscopeAPI.executeCBs()", gyroscopeAPI.options.frequency);
-		console.log("gyroscope.watch started");
+		console.log("gyroscope.watch started, ID: " + gyroscopeAPI.watchID);
 	},
 	
 	stopWatching:function() {
-		window.removeEventListener("deviceorientation", gyroscopeAPI.onSuccess);
-		clearTimeout(gyroscopeAPI.watchID);
-		console.log("gyroscope.watch stopped");
+		if (gyroscopeAPI.watchID) {
+			window.removeEventListener("deviceorientation", gyroscopeAPI.onSuccess);
+			clearTimeout(gyroscopeAPI.watchID);
+			console.log("gyroscope.watch stopped");
+		}
 	},
 	
 	executeCBs:function() {
