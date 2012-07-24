@@ -36,7 +36,7 @@
 		<!-- other library dependancies -->
 		<script type="text/javascript" charset="utf-8" src="libraries/modernizr-2.5.3.js"></script>
 		<script type="text/javascript" charset="utf-8" src="libraries/numeric-1.0.2.js"></script>
-		
+			
 		<!-- jQuery.mobile dependancies -->		
 		<link rel="stylesheet" href="jquery/jquery.mobile-1.1.1.css" type="text/css" />
 		<script type="text/javascript" src="jquery/jquery-1.7.2.js"></script>
@@ -63,6 +63,7 @@
 				document.addEventListener("pause", onPause, false);
 				document.addEventListener("resume", onResume, false);
 			}
+
 		</script>
 			
 	</head>
@@ -84,11 +85,11 @@
 				</div>
 			</div><!-- /header -->
 			
-			<div data-role="content">				
+			<div data-role="content">			
 				<h3>What would you like to do?</h3>
 				<a data-role="button" href="#newRouteDialog" data-rel="dialog" data-theme="b" data-icon="plus">Learn a new route</a>
-				<a data-role="button" href="#findRoutesDialog" data-rel="dialog" data-icon="search">Find nearby routes</a>
-				<a data-role="button" href="#manageRoutesDialog" data-rel="dialog" data-icon="grid">Manage routes</a>
+				<a data-role="button" href="javascript:findNearbyRoutes()" data-rel="dialog" data-icon="search">Find nearby routes</a>
+				<a data-role="button" href="javascript:manageRoutes()" data-rel="dialog" data-icon="grid">Manage routes</a>
 			</div>
 			
 		</div><!-- /startpage -->
@@ -269,7 +270,7 @@
 			</div>
 		</div><!-- /newroutedialog -->
 		
-		<!-- Start of routesdialog -->
+		<!-- Start of findRoutesDialog -->
 		<div data-role="dialog" id="findRoutesDialog" data-theme="c">
 			<div data-role="header" data-theme="d">
 				<h1>Routes nearby</h1>
@@ -278,26 +279,37 @@
 			<div data-role="content" class="ui-body">
 				<fieldset data-role="controlgroup" id="routesNearby">
 					<legend>Choose a route:</legend>
-					<input type="radio" name="radio-choice" id="radio-choice-1" value="choice-1" checked="checked" />
-					<label for="radio-choice-1">Route 1</label>
-					
-					<input type="radio" name="radio-choice" id="radio-choice-2" value="choice-2"  />
-					<label for="radio-choice-2">Route 2</label>
-					
-					<input type="radio" name="radio-choice" id="radio-choice-3" value="choice-3"  />
-					<label for="radio-choice-3">Route 3</label>
+					<div id="findRoutesDialog-routesNearby"></div>
 				</fieldset>
 				
 				<a href="javascript:route.track();" data-role="button" data-theme="b" data-transition="none">Track me on route</a>
-				<a href="#" data-role="button" data-theme="b" data-transition="none">Update route</a> 
+				<a href="javascript:update();" data-role="button" data-theme="b" data-transition="none">Update route</a> 
+				<a href="#" data-role="button" data-rel="back" data-theme="c" data-transition="none">Cancel</a>    
+			</div>
+		</div><!-- /findRoutesDialog -->
+		
+		<!-- Start of manageRoutesDialog -->
+		<div data-role="dialog" id="manageRoutesDialog" data-theme="c">
+			<div data-role="header" data-theme="d">
+				<h1>Manage Routes</h1>
+			</div>
+			
+			<div data-role="content" class="ui-body">
+				<fieldset data-role="controlgroup" id="manageRoutesDialog-allRoutesRadios">
+					<legend>Choose a route:</legend>
+					<div id="manageRoutesDialog-allRoutes"></div>
+				</fieldset>
+				
+				<a href="javascript:exportRoute()" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Export to DB</a>
+				<a href="javascript:removeRoute()" data-role="button" data-theme="c" data-transition="none" data-icon="delete">Delete</a>
 				<a href="#" data-role="button" data-rel="back" data-theme="c"data-transition="none">Cancel</a>    
 			</div>
-		</div><!-- /routesdialog -->
+		</div><!-- /manageRoutesDialog -->
 		
-		<!-- Start of loaderdialog -->
+		<!-- Start of loaderDialog -->
 		<div data-role="dialog" id="loaderDialog" data-theme="c">
-			<div data-role="header" id="loaderDialog-header" data-theme="d">
-				<h1>Working...</h1>
+			<div data-role="header" data-theme="d">
+				<h1><span id="loaderDialog-header">Working...</span></h1>
 			</div>
 			
 			<div data-role="content" class="ui-body">
@@ -308,7 +320,7 @@
 				
 				<div id="loaderDialog-bottom"></div>
 			</div>
-		</div><!-- /loaderdialog -->
+		</div><!-- /loaderDialog -->
 		
 	</body>
 	

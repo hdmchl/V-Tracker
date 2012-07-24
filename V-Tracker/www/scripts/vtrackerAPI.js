@@ -25,9 +25,15 @@ function route(name) {
 	this.learnCounter = 0;
 	
 	//handle route methods
+	this.loadFromStored = function(storedRoute) {
+		me.name = storedRoute.name;
+		me.geoData = storedRoute.geoData;
+		learnCounter = storedRoute.learnCounter;
+	}
+	
 	this.pushMeasurement = function(measurements) {
 		me.geoData.push(measurements);
-		//routeAlerts.add("measurement added")
+		me.routeAlerts.add("measurement added")
 	};
 	
 	this.learn = function() {
@@ -50,12 +56,14 @@ function route(name) {
 		geolocationAPI.successCBs = []; //clear callbacks on API
 		geolocationAPI.stopWatching();
 		
+		me.save(); //save route
+		
 		me.routeAlerts.add("Route learning complete.");
 	}
 	
 	this.save = function() {
-		//TO DO: save to localstorage
-		
+		//store route in local storage
+		storageAPI.localStore.setObject(me.name, me);
 		console.log("Route " + me.name + " was saved.");
 	}
 	
@@ -98,11 +106,6 @@ function alertsObj(name) {
 		me.data.timestamp.push(new Date(new Date().getTime()));
 		me.data.message.push(message);
 		
-		/*TO DO: store messages in db
-		var toStore = '"' + new Date(new Date().getTime()) 	+ '",' +
-				      '"' + message 						+ '"';
-		storageAPI.insertIntoTable(me.name,toStore); //update SQL*/
-		
 		//if progress window is open, then display latest alerts in window
 		if(me.displayInDiv) {
 			$(me.divId).append(me.data.message.length + ") " + me.data.message[me.data.message.length-1] + "<br />");
@@ -117,6 +120,5 @@ function alertsObj(name) {
 	
 	//execute object's initialisation actions
 	$(me.divId).empty(); //empty the div
-	//storageAPI.createTable(this.data,this.name);
 }
 //************************************* END alertsObj *************************************//

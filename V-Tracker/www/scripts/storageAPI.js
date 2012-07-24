@@ -22,6 +22,37 @@ var storageAPI = {
 	},
 	//******************************** END INITIALISE STORAGE *********************************//
 	
+	//************************************** LOCALSTORAGE *************************************//
+	localStore: {
+		set:function(key, value) {
+			window.localStorage.setItem(key, value);
+		},
+		
+		get:function(key) {
+			return window.localStorage.getItem(key);
+		},
+		
+		setObject:function(key, objToStore) {
+			//we can only store the object's properties - not functions
+			//to do that, we convert the properties into a JSON object
+			window.localStorage.setItem(key, JSON.stringify(objToStore));
+		},
+		
+		getObject:function(key) {
+			//we can only restore the object's properties - not functions
+			return JSON.parse(window.localStorage.getItem(key));
+		},
+		
+		remove:function(key) {
+			window.localStorage.removeItem(key);
+		},
+		
+		clear:function() {
+			window.localStorage.clear()
+		},
+	},
+	//************************************ END LOCALSTORAGE ***********************************//
+	
 	//************************************** RESET TABLES *************************************//
 	reset:function() {
 		storageAPI.dropTable(storageAPI.dbTables); //drop all tables we know about at this stage
