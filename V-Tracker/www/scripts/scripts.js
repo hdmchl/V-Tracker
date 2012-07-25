@@ -53,6 +53,8 @@ function update() {
 	//retrieve route
 	var routeName = $('input[name=manage-route-choice]:checked').val(); //get route name
 	
+	//confirm that the object is still available in memory...
+	
 	var rr = storageAPI.localStore.getObject(routeName);
 	
 	//setup route object
