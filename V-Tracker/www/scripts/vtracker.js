@@ -194,6 +194,7 @@ function route(name) {
 	
 	this.pushGeoMeasurement = function(measurements) {
 		me.geoData.push(measurements);
+		console.log("measurement added to: " + me.name);
 		//me.routeAlerts.add("measurement added"); //useful for debugging
 	};
 	
