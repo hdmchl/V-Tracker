@@ -43,7 +43,7 @@ var storageAPI = {
 			return JSON.parse(window.localStorage.getItem(key));
 		},
 		
-		getAllKeys:function(){
+		getAllItemKeys:function(){
 			var allKeys = [];
 			for (var i=0;i<window.localStorage.length;i++) {
 				allKeys.push(window.localStorage.key(i));
