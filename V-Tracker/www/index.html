@@ -22,9 +22,8 @@
 		<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="styles/iphone.css" type="text/css" />
 		
 		<!-- js scripts -->
-		<script type="text/javascript" charset="utf-8" src="scripts/scripts.js"></script>
-		<script type="text/javascript" charset="utf-8" src="scripts/debug.js"></script>	
-		<script type="text/javascript" charset="utf-8" src="scripts/vtrackerAPI.js"></script>			
+		<script type="text/javascript" charset="utf-8" src="scripts/vtracker.js"></script>
+		<script type="text/javascript" charset="utf-8" src="scripts/debug.js"></script>				
 		<script type="text/javascript" charset="utf-8" src="scripts/notificationsAPI.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/storageAPI.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/sensorsAPI.js"></script>
@@ -301,8 +300,8 @@
 					<div id="findRoutesDialog-routesNearby"></div>
 				</fieldset>
 				
-				<a href="javascript:vtracker.route.track();" data-role="button" data-theme="b" data-transition="none">Track me on route</a>
-				<a href="javascript:vtracker.route.update();" data-role="button" data-theme="b" data-transition="none">Update route</a> 
+				<a href="javascript:vtracker.trackMeOnRoute();" data-role="button" data-theme="b" data-transition="none">Track me on route</a>
+				<a href="javascript:vtracker.updateRoute();" data-role="button" data-theme="b" data-transition="none">Update route</a> 
 				<a href="#" data-role="button" data-rel="back" data-theme="c" data-transition="none">Cancel</a>    
 			</div>
 		</div><!-- /findRoutesDialog -->
