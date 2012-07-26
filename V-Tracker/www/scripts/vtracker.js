@@ -6,106 +6,287 @@
  */
 
 //************************************** APP SCRIPTS **************************************//
-//START LEARNING A NEW ROUTE
-var currentRoute; //TO DO: don't use a global variable
-function startLearningNow() {
-	var routeName = $('#newRouteName').val(); //get route name
+// these are all the methods used in the start tab (ie. this is the view controller for vtracker)
+
+var vtracker = {
+	workingRoute: null, //users can only work with one route at a time - if necessary, this can be converted into an array in the future
 	
-	//TO DO: check if route name is free, if not, then prompt! PS. this could happen in validObjName
+	//***** LEARN NEW ROUTE *****//
+	startLearningNow:function() {
+		var routeName = $('#newRouteDialog-newRouteName').val(); //get route name
+		
+		//TO DO: validate Object name: check if route name is free, if not, then prompt! PS. this could happen in validObjName
+		//if all good, then let the user through
+		
+		//create new route object
+		vtracker.workingRoute = new route(routeName); //create a new route object
+		vtracker.workingRoute.alertOps.displayInDiv(true);
+		vtracker.workingRoute.alertOps.divId("#loaderDialog-alertsConsole");
+
+		vtracker.workingRoute.learn(); //start machine learning algorithm
+		
+		//prepare loading dialog
+		$("#loaderDialog-header").replaceWith("Learning...");
+		$("#loaderDialog-top").html("<a href=\"javascript:vtracker.destinationReached();\" data-role=\"button\" " + 
+									"data-theme=\"b\" data-transition=\"none\">Destination Reached</a></div>");
+		$("#loaderDialog").trigger('create'); //update the styles on the UI		
+		
+		//open the loader dialog
+		$.mobile.changePage('#loaderDialog', 'none', true, true);
+	},
 	
-	//create new route object
-	currentRoute = new route(routeName); //create a new route object
-	currentRoute.alertOps.displayInDiv(true);
-	currentRoute.alertOps.divId("#loaderDialog-alertsConsole");
-	currentRoute.learn(); //start updating the object
+	//***** END LEARN NEW ROUTE *****//
 	
-	//prepare loading dialog
-	$("#loaderDialog-header").replaceWith("Learning...");
-	$("#loaderDialog-top").html("<a href=\"javascript:destinationReached();\" data-role=\"button\" data-theme=\"b\" data-transition=\"none\">Destination reached</a></div>");
-	$("#loaderDialog").trigger('create');			
+	//***** UPDATE/TRACK ROUTES *****//
+	findNearbyRoutes:function() {
+		//TO DO: 1. pull all routes out of storage 2. get user's location 3. find nearest routes 4. create nearestRoutes var
+		var nearestRoutes = storageAPI.localStore.getAllItemKeys(); //for now, use all routes
+		
+		//create the radio buttons
+		vtracker.createRouteChoices(nearestRoutes, "#findRoutesDialog-routesNearby", "routesNearby");
+		$("#findRoutesDialog").trigger('create'); //update the styles on the UI
+		
+		//show the dialog
+		$.mobile.changePage('#findRoutesDialog', 'none', true, true);
+	},
 	
-	//open the loader dialog
-	$.mobile.changePage('#loaderDialog', 'none', true, true);
+	trackMeOnRoute:function() {
+		//TO DO: implement tracking
+		
+		var success = new notificationObj();
+		success.alert("Under Construction","Not yet bra!","Okay")
+		
+		$.mobile.changePage('#trackingpage', 'none', true, true);
+	},
+	
+	updateRoute:function() {
+		//retrieve route
+		var routeName = $('input[name=routesNearby-choice]:checked').val(); //get route name from routesNearby
+
+		var rr = storageAPI.localStore.getObject(routeName); //get route from storage
+		
+		//setup route object
+		vtracker.workingRoute = new route(rr.name) //probably don't need to do this, but it's cleaner
+		vtracker.workingRoute.loadFromStored(rr);
+		vtracker.workingRoute.alertOps.displayInDiv(true);
+		vtracker.workingRoute.alertOps.divId("#loaderDialog-alertsConsole");
+		
+		vtracker.workingRoute.learn(); //start machine learning algorithm
+		
+		//prepare loading dialog
+		$("#loaderDialog-header").replaceWith("Updating...");
+		$("#loaderDialog-top").html("<a href=\"javascript:vtracker.destinationReached();\" data-role=\"button\" " + 
+									"data-theme=\"b\" data-transition=\"none\">Destination Reached</a></div>");
+		$("#loaderDialog").trigger('create'); //update the styles on the UI		
+		
+		//open the loader dialog
+		$.mobile.changePage('#loaderDialog', 'none', true, true);
+	},
+	//***** END UPDATE/TRACK ROUTES *****//
+	
+	//***** MANAGE ROUTES *****//
+	manageRoutes:function() {
+		var allRoutes = storageAPI.localStore.getAllItemKeys(); //for now, use all routes
+		
+		//create the radio buttons
+		vtracker.createRouteChoices(allRoutes, "#manageRoutesDialog-allRoutes", "allRoutes");
+		$("#manageRoutesDialog").trigger('create'); //update the styles on the UI
+		
+		$.mobile.changePage('#manageRoutesDialog', 'none', true, true);
+	},
+	
+	exportRoute:function() {
+		var routeName = $('input[name=allRoutes-choice]:checked').val(); //get route name
+		
+		var rr = storageAPI.localStore.getObject(routeName); //get route from storage
+		
+		//setup route object
+		vtracker.workingRoute = new route(rr.name) //probably don't need to do this, but it's cleaner
+		vtracker.workingRoute.loadFromStored(rr);
+		
+		vtracker.workingRoute.exportToDB();
+		
+		//tell the user all went well
+		var success = new notificationObj();
+		success.alert("Route exported","Route has been exported successfully.","Okay")
+	},
+	
+	removeRoute:function() {
+		var routeName = $('input[name=allRoutes-choice]:checked').val(); //get route name
+		storageAPI.localStore.removeItem(routeName);
+		
+		vtracker.manageRoutes();	
+	},
+	//***** END MANAGE ROUTES *****//
+	
+	//GENERAL scripts
+	destinationReached:function() {
+		vtracker.workingRoute.stopLearning(); //end machine learning, and save object
+		
+		//tell the user that all went well
+		var success = new notificationObj();
+		success.alert("Route updated","Route has been recorded successfully.","Okay")
+		
+		//clean up loader dialog
+		$('#loaderDialog-top').empty();
+		$('#loaderDialog-alertsConsole').empty();
+		$('#loaderDialog-bottom').empty();
+		$("#loaderDialog").trigger('create'); //update the styles on the UI
+		$('#loaderDialog').dialog('close');
+		
+		//go back to startpage
+		$.mobile.changePage('#startpage', 'none', true, true);
+	},
+	
+	createRouteChoices:function(routesAry, divId, prefix) {
+		$(divId).empty(); //empty the div
+		
+		if (routesAry.length == 0) {
+			$(divId).append("<p>... no routes found ...</p>");
+			return;
+		}
+		
+		for (var i=0;i<routesAry.length;i++) {
+			$(divId).append("<input type=\"radio\" name=\"" + prefix  + "-choice\" id=\"" + prefix  + "-choice-" + i + 
+						"\" value=\"" + routesAry[i] + "\" /><label for=\"" + prefix  + "-choice-" + i + "\">" + routesAry[i] + "</label>");
+		}
+	},
+	//END GENERAL scripts
 }
+//************************************ END APP SCRIPTS ************************************//
 
-function destinationReached() {
-	currentRoute.end(); //end route
-	
-	//clean up loader dialog
-	$('#loaderDialog-top').empty();
-	$('#loaderDialog-alertsConsole').empty();
-	$('#loaderDialog-bottom').empty();
-	$('#loaderDialog').dialog('close');
-	
-	//go back to startpage
-	$.mobile.changePage('#startpage', 'none', true, true);
+//************************************** VTRACKERAPI **************************************//
+//these are all my helper scripts
+
+var vtrackerAPI = {
+		
 }
+//************************************ END VTRACKERAPI ************************************//
 
-//FIND ROUTES NEARBY
-//TO DO....
-function findNearbyRoutes() {
-	loadAllRoutes("#findRoutesDialog-routesNearby");
+//*************************************** routeObj ****************************************//
+//constructor for the route objects
+function route(name) {
+	if (!validObjName(name)) {return;}
 	
-	$.mobile.changePage('#findRoutesDialog', 'none', true, true);
-}
+	//create a reference object that can be inherited
+	var me = Object(this);
+	
+	//handle alerts
+	this.routeAlerts = new alertsObj(name);
+	this.alertOps = {
+		displayInDiv:function(state) {me.routeAlerts.displayInDiv = state},
+		divId:function(divId) {me.routeAlerts.divId = divId},	
+	}
 
-function update() {
-	//retrieve route
-	var routeName = $('input[name=manage-route-choice]:checked').val(); //get route name
+	//handle route properties
+	this.name = name;
+	this.geoData = [];
+	this.learnCounter = 0;
 	
-	//TO DO: confirm that the object is still available in memory...
-	
-	var rr = storageAPI.localStore.getObject(routeName);
-	
-	//setup route object
-	currentRoute = new route(rr.name)
-	currentRoute.loadFromStored(rr);
-	currentRoute.alertOps.displayInDiv(true);
-	currentRoute.alertOps.divId("#loaderDialog-alertsConsole");
-	
-	currentRoute.learn(); //start updating the object
-
-	//prepare loading dialog
-	$("#loaderDialog-header").replaceWith("Updating...");
-	$("#loaderDialog-top").html("<a href=\"javascript:destinationReached();\" data-role=\"button\" data-theme=\"b\" data-transition=\"none\">Destination reached</a></div>");
-	$("#loaderDialog").trigger('create');
-	
-	//open the loader dialog
-	$.mobile.changePage('#loaderDialog', 'none', true, true);
-}
-
-//MANAGE ROUTES
-function manageRoutes() {
-	loadAllRoutes("#manageRoutesDialog-allRoutes");
-	
-	$.mobile.changePage('#manageRoutesDialog', 'none', true, true);
-}
-
-function loadAllRoutes(divId) {
-	$(divId).empty();
-	
-	for (var i=0;i<window.localStorage.length;i++) {
-		var route = storageAPI.localStore.getObject(window.localStorage.key(i));
-		$(divId).append("<input type=\"radio\" name=\"manage-route-choice\" id=\"manage-route-choice-" + i + 
-					"\" value=\"" + route.name + "\" /><label for=\"manage-route-choice-" + i + "\">" + route.name + "</label>");
+	//handle route methods
+	this.loadFromStored = function(storedRoute) {
+		//when recovering a route from storage, the methods are all the same for any route
+		//the only difference is the route's properties, so load those in here:
+		me.name = storedRoute.name;
+		me.geoData = storedRoute.geoData;
+		me.learnCounter = storedRoute.learnCounter;
 	}
 	
-	$("#findRoutesDialog").trigger('create');
-	$("#manageRoutesDialog").trigger('create');
+	this.pushGeoMeasurement = function(measurements) {
+		me.geoData.push(measurements);
+		//me.routeAlerts.add("measurement added"); //useful for debugging
+	};
+	
+	this.learn = function() {
+		//housekeeping
+		me.learnCounter++;
+		me.routeAlerts.add("Please stand by while I learn the route <b>" + me.name + "</b>");
+		me.routeAlerts.add("This is update #" + me.learnCounter + ", for route: " + me.name);
+		
+		// machine learning algorithm
+		if (me.learnCounter > 3) {
+			me.routeAlerts.add("Sufficient route data exists. Only changes will be recorded.")
+			//if measurement is statiscally off, then pushMeasurement, else dismiss
+			//if pushed a new measurement, delete an old one...
+		} else {
+			me.routeAlerts.add("Insufficient route data. Learning started.")
+			//TO DO: check measurement accuracy before pushing
+			geolocationAPI.successCBs.push(me.pushGeoMeasurement); //add the pushMeasurement method to the geolocation's API callbacks stack
+		}
+		
+		//start collecting measurements, other sensors can be turned on here
+		geolocationAPI.startWatching();
+	}
+	
+	this.stopLearning = function() {
+		geolocationAPI.successCBs = []; //clear callbacks on API
+		
+		//stop collecting measurements, other sensors can be turned off here
+		geolocationAPI.stopWatching();
+		
+		me.save(); //save route
+		
+		me.routeAlerts.add("Route learning complete.");
+	}
+	
+	this.save = function() {
+		//store route in local storage
+		storageAPI.localStore.setObject(me.name, me);
+		console.log("Route " + me.name + " was saved.");
+	}
+	
+	this.exportToDB = function() {
+		//export to a database. At the moment we only care about geolocation data, so we use that data schema
+		var routeDB = "route_" + me.name;
+		storageAPI.createTable(geolocationAPI.data,routeDB);
+		
+		//make sql entries
+		var toSQL = null;
+		for (var i=0;i<me.geoData.length;i++) {
+			 toSQL = geolocationAPI.formatDataForSQL(me.geoData[i]);
+			 storageAPI.insertIntoTable(routeDB,toSQL);
+		}	 
+	}
 }
+//************************************* END routeObj **************************************//
 
-function exportRoute() {
-	var routeName = $('input[name=manage-route-choice]:checked').val(); //get route name
-	//TO DO: export to SQL
-	loadAllRoutes();
+//*************************************** alertsObj ***************************************//
+//constructor for a console alerts object
+function alertsObj(name) {
+	if (!validObjName(name)) {return;}
+	
+	//create a reference object that can be inherited
+	var me = Object(this);
+	
+	//declare the object's properties
+	this.name = name;
+	this.data = {	timestamp: [],
+					message: [] };
+					
+	this.displayInDiv = false;
+	this.divId = null;
+	
+	//declare the object's methods
+	this.add = function(message) {
+		me.data.timestamp.push(new Date(new Date().getTime()));
+		me.data.message.push(message);
+		
+		//if progress window is open, then display latest alerts in window
+		if(me.displayInDiv) {
+			$(me.divId).append(me.data.message.length + ") " + me.data.message[me.data.message.length-1] + "<br />");
+		}
+		
+		console.log(message); //display message in output console
+	};
+	
+	this.drop = function() {
+		storageAPI.dropTable([me.name]);
+	};
+	
+	//execute object's initialisation actions
+	$(me.divId).empty(); //empty the div
 }
-
-function removeRoute() {
-	var routeName = $('input[name=manage-route-choice]:checked').val(); //get route name
-	storageAPI.localStore.remove(routeName);
-	loadAllRoutes();	
-}
-//************************************ END APP SCRIPTS ************************************/
+//************************************* END alertsObj *************************************//
 
 //************************************* HELPER SCRIPTS ************************************//
 function onPause() {
