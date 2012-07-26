@@ -260,7 +260,7 @@ var debug = {
 	
 	localStorageGetItemKeys:function() {
 		$('#debug-localStorage').empty();
-		$('#debug-localStorage').append("<p>" + storageAPI.localStore.getAllKeys() + "</p>");
+		$('#debug-localStorage').append("<p>" + storageAPI.localStore.getAllItemKeys() + "</p>");
 		$('#debug-localStorage').append("<p>finished!</p>");
 	},
 	
