@@ -13,6 +13,7 @@
 		<meta name="apple-touch-fullscreen" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 			
+		<!-- include files: you would NEVER have so many separate files if you were serving the app through the internet! -->
 		<!-- general css styling -->
 		<link rel="stylesheet" href="styles/styles.css" type="text/css" />
 				
@@ -20,7 +21,6 @@
 		<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="styles/ipad.css" type="text/css" />		
 		<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="styles/iphone.css" type="text/css" />
 		
-		<!-- js files: you would NEVER have so many separate files if you were serving the app through the internet! -->
 		<!-- js scripts -->
 		<script type="text/javascript" charset="utf-8" src="scripts/scripts.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/debug.js"></script>	
@@ -57,8 +57,9 @@
 			function onDeviceReady() {
 				//We're ready to roll
 				checkBrowserCompatibilities();
-				//initialise database, the API restrict db use to one db
-				storageAPI.init("VTracker_db", "1.00", "V-Tracker DB", 2 * 1024*1024);
+				//initialise database, the API restricts db use to one db (by design)
+				storageAPI.init("VTracker_db", "1.00", "VTrackerDB", 2 * 1024*1024);
+				
 				//listen to device pause or resume
 				document.addEventListener("pause", onPause, false);
 				document.addEventListener("resume", onResume, false);
@@ -85,11 +86,11 @@
 				</div>
 			</div><!-- /header -->
 			
-			<div data-role="content">			
+			<div data-role="content" data-fullscreen="true">			
 				<h3>What would you like to do?</h3>
 				<a data-role="button" href="#newRouteDialog" data-rel="dialog" data-theme="b" data-icon="plus">Learn a new route</a>
-				<a data-role="button" href="javascript:findNearbyRoutes()" data-rel="dialog" data-icon="search">Find nearby routes</a>
-				<a data-role="button" href="javascript:manageRoutes()" data-rel="dialog" data-icon="grid">Manage routes</a>
+				<a data-role="button" href="javascript:vtracker.findNearbyRoutes()" data-rel="dialog" data-icon="search">Find nearby routes</a>
+				<a data-role="button" href="javascript:vtracker.manageRoutes()" data-rel="dialog" data-icon="grid">Manage routes</a>
 			</div>
 			
 		</div><!-- /startpage -->
@@ -111,7 +112,7 @@
 			
 			<!-- content -->
 			<div data-role="content" data-fullscreen="true">
-				<h3 style="margin-top: 0;">Data Collection</h3>					
+				<h3 class="h3modified">Data Collection</h3>					
 				<div data-role="controlgroup" data-type="horizontal">
 					<a href="javascript:debug.DCinit();" data-role="button" data-icon="">Init</a>
 					<a href="javascript:debug.DCcollect();" data-role="button" data-icon="arrow-r">Collect</a>
@@ -119,16 +120,16 @@
 				</div>
 				<div id="debug-DC"></div>
 				
-				<h3>API Access</h3>
+				<h3>Sensors Access</h3>
 				<div data-role="collapsible-set">					
                     <div data-role="collapsible" data-collapsed="true">
                         <h3>Geolocation</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 							<input type="checkbox" name="debug-geoStoreFlag" id="debug-geoStoreFlag" checked/><label for="debug-geoStoreFlag">Store</label>
-							<a id="debug-geoWatch" class="" data-role="button" href="javascript:debug.geolocationWatch()">Watch</a>
-							<a data-role="button" href="javascript:debug.geolocationStop()">Stop</a>
-							<a data-role="button" href="javascript:debug.geolocationClear()">Clear</a>
+							<a id="debug-geoWatch" class="" data-role="button" href="javascript:debug.geolocationWatch();">Watch</a>
+							<a data-role="button" href="javascript:debug.geolocationStop();">Stop</a>
+							<a data-role="button" href="javascript:debug.geolocationClear();">Clear</a>
 						</div>
 							
 						<div id="debug-geolocation">Ready...</div>
@@ -139,9 +140,9 @@
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 							<input type="checkbox" name="debug-compassStoreFlag" id="debug-compassStoreFlag" checked/><label for="debug-compassStoreFlag">Store</label>
-							<a id="debug-compassWatch" class="" data-role="button" href="javascript:debug.compassWatch()">Watch</a>
-							<a data-role="button" href="javascript:debug.compassStop()">Stop</a>
-							<a data-role="button" href="javascript:debug.compassClear()">Clear</a>
+							<a id="debug-compassWatch" class="" data-role="button" href="javascript:debug.compassWatch();">Watch</a>
+							<a data-role="button" href="javascript:debug.compassStop();">Stop</a>
+							<a data-role="button" href="javascript:debug.compassClear();">Clear</a>
 						</div>
 							
 						<div id="debug-compass">Ready...</div>
@@ -152,9 +153,9 @@
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 							<input type="checkbox" name="debug-accelerometerStoreFlag" id="debug-accelerometerStoreFlag" checked/><label for="debug-accelerometerStoreFlag">Store</label>
-							<a id="debug-accelerometerWatch" class="" data-role="button" href="javascript:debug.accelerometerWatch()">Watch</a>
-							<a data-role="button" href="javascript:debug.accelerometerStop()">Stop</a>
-							<a data-role="button" href="javascript:debug.accelerometerClear()">Clear</a>
+							<a id="debug-accelerometerWatch" class="" data-role="button" href="javascript:debug.accelerometerWatch();">Watch</a>
+							<a data-role="button" href="javascript:debug.accelerometerStop();">Stop</a>
+							<a data-role="button" href="javascript:debug.accelerometerClear();">Clear</a>
 						</div>
 							
 						<div id="debug-accelerometer">Ready...</div>
@@ -165,35 +166,51 @@
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 							<input type="checkbox" name="debug-gyroscopeStoreFlag" id="debug-gyroscopeStoreFlag" checked/><label for="debug-gyroscopeStoreFlag">Store</label>
-							<a id="debug-gyroscopeWatch" class="" data-role="button" href="javascript:debug.gyroscopeWatch()">Watch</a>
-							<a data-role="button" href="javascript:debug.gyroscopeStop()">Stop</a>
-							<a data-role="button" href="javascript:debug.gyroscopeClear()">Clear</a>
+							<a id="debug-gyroscopeWatch" class="" data-role="button" href="javascript:debug.gyroscopeWatch();">Watch</a>
+							<a data-role="button" href="javascript:debug.gyroscopeStop();">Stop</a>
+							<a data-role="button" href="javascript:debug.gyroscopeClear();">Clear</a>
 						</div>
 							
 						<div id="debug-gyroscope">Ready...</div>
                     </div>
-					
+                </div>
+                    
+				<h3>API Access</h3>	
+				<div data-role="collapsible-set">
 					<div data-role="collapsible" data-collapsed="true">
-                        <h3>Storage</h3>
+                        <h3>DB Storage</h3>
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<a data-role="button" href="javascript:debug.storageReset();">Reset</a>
-							<a data-role="button" href="javascript:debug.storageGetDBTableLengths()">Table Lengths</a>
-							<a data-role="button" href="javascript:debug.storageClear();">Clear</a>
+							<a data-role="button" href="javascript:debug.DBstorageReset();">Reset</a>
+							<a data-role="button" href="javascript:debug.DBstorageGetDBTableLengths();">Table Lengths</a>
+							<a data-role="button" href="javascript:debug.DBstorageClear();">Clear</a>
 						</div>
 						
 						<div id="debug-databases">Ready...</div>
+                    </div>
+                    
+                    <div data-role="collapsible" data-collapsed="true">
+                        <h3>LocalStorage</h3>
+						
+						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+							<a data-role="button" href="javascript:debug.localStorageReset();">Reset</a>
+							<a data-role="button" href="javascript:debug.localStorageAddItem();">Add Item</a>
+							<a data-role="button" href="javascript:debug.localStorageGetItemKeys();">Items</a>
+							<a data-role="button" href="javascript:debug.localStorageClear();">Clear</a>
+						</div>
+						
+						<div id="debug-localStorage">Ready...</div>
                     </div>
 					
 					<div data-role="collapsible" data-collapsed="true">
                         <h3>Notifications</h3>
 						
 						<div data-role="controlgroup" data-type="vertical">
-							<a data-role="button" href="javascript:debug.notificationsShowAlert()">Show Alert</a>
-							<a data-role="button" href="javascript:debug.notificationsPlayBeep()">Play Beep</a>
-							<a data-role="button" href="javascript:debug.notificationsVibrate()">Vibrate</a>
-							<a data-role="button" href="javascript:debug.notificationsNotifyIn5()">Show Notification in 5s</a>
-							<a data-role="button" href="javascript:debug.notificationsClearAll()">Clear All Notifications</a>
+							<a data-role="button" href="javascript:debug.notificationsShowAlert();">Show Alert</a>
+							<a data-role="button" href="javascript:debug.notificationsPlayBeep();">Play Beep</a>
+							<a data-role="button" href="javascript:debug.notificationsVibrate();">Vibrate</a>
+							<a data-role="button" href="javascript:debug.notificationsNotifyIn5();">Show Notification in 5s</a>
+							<a data-role="button" href="javascript:debug.notificationsClearAll();">Clear All Notifications</a>
 						</div>
                     </div>
                 </div>
@@ -217,9 +234,9 @@
 			</div><!-- /header -->
 			
 			<!-- content -->
-			<div data-role="content" data-fullscreen="true" class="content">
+			<div data-role="content" data-fullscreen="true">
 				<div class="text">
-					<h2 style="margin-top: 0;">Project info</h2>
+					<h3 class="h3modified">Project info</h3>
 					<p>Vehicle Tracker (V-Tracker) is a mobile application for ‘Realtime route learning and vehicle tracking using web-technologies on a mobile device’.</p>
 		
 					<br><p>V-Tracker is part of a research project in the Deparment of Electrical and Computer Systems Engineering (ECSE) at <a href="http://www.monash.edu" target="_blank">Monash University</a>, Australia.</p>
@@ -231,7 +248,9 @@
 		
 					<br><p>Licensed under the Apache License, Version 2.0 (the "License");
 					   you may not use this file except in compliance with the License.
-					   You may obtain a copy of the License <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">here</a>.</p>
+					   You may obtain a copy of the License at:</p>
+					   
+						<p><a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">http://www.apache.org/licenses/LICENSE-2.0</a>.</p>
 					
 					<br><p>Unless required by applicable law or agreed to in writing, software
 					   distributed under the License is distributed on an "AS IS" BASIS,
@@ -251,9 +270,9 @@
 			</div>
 			
 			<div data-role="content" class="ui-body">
-				<span id="routeName"><h3>Route name</h3></span>
+				<h3 class="h3modified"><span id="trackingpage-routeName">Route name</span></h3>
 				
-				<div id="map_canvas" style="width:100%; height:300px"></div>
+				<div id="trackingpage-map_canvas"></div>
 			</div>
 		</div><!-- /trackingpage -->
 		
@@ -264,9 +283,9 @@
 			</div>
 			
 			<div data-role="content" class="ui-body">
-				<input type="text" id="newRouteName" placeholder="enter route name here" value="" />				
-				<a href="javascript:startLearningNow();" data-role="button" data-theme="b" data-transition="none">Start learning now</a> 
-				<a href="#" data-role="button" data-rel="back" data-theme="c"data-transition="none">Cancel</a> 
+				<input type="text" id="newRouteDialog-newRouteName" placeholder="enter route name here" value="" />				
+				<a href="javascript:vtracker.startLearningNow();" data-role="button" data-theme="b" data-transition="none">Start learning now</a> 
+				<a href="#" data-role="button" data-rel="back" data-theme="c" data-transition="none">Cancel</a> 
 			</div>
 		</div><!-- /newroutedialog -->
 		
@@ -277,13 +296,13 @@
 			</div>
 			
 			<div data-role="content" class="ui-body">
-				<fieldset data-role="controlgroup" id="routesNearby">
+				<fieldset data-role="controlgroup">
 					<legend>Choose a route:</legend>
 					<div id="findRoutesDialog-routesNearby"></div>
 				</fieldset>
 				
-				<a href="javascript:route.track();" data-role="button" data-theme="b" data-transition="none">Track me on route</a>
-				<a href="javascript:update();" data-role="button" data-theme="b" data-transition="none">Update route</a> 
+				<a href="javascript:vtracker.route.track();" data-role="button" data-theme="b" data-transition="none">Track me on route</a>
+				<a href="javascript:vtracker.route.update();" data-role="button" data-theme="b" data-transition="none">Update route</a> 
 				<a href="#" data-role="button" data-rel="back" data-theme="c" data-transition="none">Cancel</a>    
 			</div>
 		</div><!-- /findRoutesDialog -->
@@ -295,13 +314,13 @@
 			</div>
 			
 			<div data-role="content" class="ui-body">
-				<fieldset data-role="controlgroup" id="manageRoutesDialog-allRoutesRadios">
+				<fieldset data-role="controlgroup">
 					<legend>Choose a route:</legend>
 					<div id="manageRoutesDialog-allRoutes"></div>
 				</fieldset>
 				
-				<a href="javascript:exportRoute()" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Export to DB</a>
-				<a href="javascript:removeRoute()" data-role="button" data-theme="c" data-transition="none" data-icon="delete">Delete</a>
+				<a href="javascript:vtracker.exportRoute()" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Export to DB</a>
+				<a href="javascript:vtracker.removeRoute()" data-role="button" data-theme="c" data-transition="none" data-icon="delete">Delete</a>
 				<a href="#" data-role="button" data-rel="back" data-theme="c"data-transition="none">Cancel</a>    
 			</div>
 		</div><!-- /manageRoutesDialog -->
