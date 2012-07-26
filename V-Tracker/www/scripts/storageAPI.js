@@ -24,11 +24,11 @@ var storageAPI = {
 	
 	//************************************** LOCALSTORAGE *************************************//
 	localStore: {
-		set:function(key, value) {
+		setItem:function(key, value) {
 			window.localStorage.setItem(key, value);
 		},
 		
-		get:function(key) {
+		getItem:function(key) {
 			return window.localStorage.getItem(key);
 		},
 		
@@ -43,11 +43,19 @@ var storageAPI = {
 			return JSON.parse(window.localStorage.getItem(key));
 		},
 		
-		remove:function(key) {
+		getAllKeys:function(){
+			var allKeys = [];
+			for (var i=0;i<window.localStorage.length;i++) {
+				allKeys.push(window.localStorage.key(i));
+			}
+			return allKeys;
+		},
+		
+		removeItem:function(key) {
 			window.localStorage.removeItem(key);
 		},
 		
-		clear:function() {
+		clearAll:function() {
 			window.localStorage.clear()
 		},
 	},

@@ -6,8 +6,8 @@
  */
 
 //************************************* debug methods *************************************//
-// these are all the methods used in the debug tab
-// the can be used to collect data accross all sensors, as well as test and debug individual sensors
+// these are all the methods used in the debug tab (ie. this is the view controller for debug)
+// these methods can be used to collect data accross all sensors, as well as test and debug individual sensors
 
 var debug = {
 	liveMonitor: true,
@@ -203,48 +203,71 @@ var debug = {
 	},
 	//END GYROSCOPE	
 
-	//STORAGE
-	storageReset:function() {
+	//DB STORAGE
+	DBstorageReset:function() {
 		storageAPI.reset();
+		$('#debug-databases').append("<p>DB storage was Reset</p>");
 	},
 	
-	storageQueryCounter: 0,
-	storageGetDBTableLengths:function() {
+	DBstorageQueryCounter: 0,
+	DBstorageGetDBTableLengths:function() {
 		//if this is the first run, then set the output window
-		if (debug.storageQueryCounter == 0) {$('#debug-databases').empty();$('#debug-databases').append('<p>started...</p>');}
+		if (debug.DBstorageQueryCounter == 0) {$('#debug-databases').empty();$('#debug-databases').append('<p>started...</p>');}
 		
-		if (debug.storageQueryCounter < storageAPI.dbTables.length) {
+		if (debug.DBstorageQueryCounter < storageAPI.dbTables.length) {
 			//if the next table to be queried is the infoTable, then skip
-			if (storageAPI.dbTables[debug.storageQueryCounter] == "__WebKitDatabaseInfoTable__") {
+			if (storageAPI.dbTables[debug.DBstorageQueryCounter] == "__WebKitDatabaseInfoTable__") {
 				storageAPI.getDBTableLengths();
 				return;
 			}
 			
 			//otherwise, select everything in that table and put in a query for its length...
-			var tableQuery = 'SELECT * FROM ' + storageAPI.dbTables[debug.storageQueryCounter];
-			debug.storageGetTableLengthsQuery(storageAPI.dbTables[debug.storageQueryCounter], tableQuery);
-			debug.storageQueryCounter++;
+			var tableQuery = 'SELECT * FROM ' + storageAPI.dbTables[debug.DBstorageQueryCounter];
+			debug.DBstorageGetTableLengthsQuery(storageAPI.dbTables[debug.DBstorageQueryCounter], tableQuery);
+			debug.DBstorageQueryCounter++;
 		}
 		else {
 			//if we're done, then post 'finished...'
-			debug.storageQueryCounter = 0;
+			debug.DBstorageQueryCounter = 0;
 			$('#debug-databases').append('<p>finished!</p>');
 		}
 	},
 		
-	storageGetTableLengthsQuery:function(tableName, tableQuery) {
+	DBstorageGetTableLengthsQuery:function(tableName, tableQuery) {
 		//display the table's length, then call getTableLengths when done
 		db.transaction(function (tx){
 						   tx.executeSql(tableQuery, [], function (tx, results) {
 									 	$('#debug-databases').append('<p>' + tableName + ' length: ' + results.rows.length + '</p>');
 									 }, storageAPI.errorCB);
-						   }, storageAPI.errorCB, debug.storageGetDBTableLengths);	
+						   }, storageAPI.errorCB, debug.DBstorageGetDBTableLengths);	
 	},
 	
-	storageClear:function() {
+	DBstorageClear:function() {
 		$('#debug-databases').empty();
 	},
-	//END STORAGE
+	//END DB STORAGE
+	
+	//LOCALSTORAGE
+	localStorageReset:function() {
+		storageAPI.localStore.clearAll();
+		$('#debug-localStorage').empty();
+		$('#debug-localStorage').append("<p>localStorage was Reset</p>");
+	},
+	
+	localStorageAddItem:function() {
+		storageAPI.localStore.setItem("dummyKey", "dummyValue");
+	},
+	
+	localStorageGetItemKeys:function() {
+		$('#debug-localStorage').empty();
+		$('#debug-localStorage').append("<p>" + storageAPI.localStore.getAllKeys() + "</p>");
+		$('#debug-localStorage').append("<p>finished!</p>");
+	},
+	
+	localStorageClear:function() {
+		$('#debug-localStorage').empty();
+	},
+	//END LOCALSTORAGE
 	
 	//NOTIFICATIONS
 	notificationsShowAlert:function() {
