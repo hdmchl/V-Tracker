@@ -65,13 +65,6 @@
 			remoteGlobalIDString = 303A4068152124BB00182201;
 			remoteInfo = CordovaLibApp;
 		};
-		0FD3AD6C15C217180092A11D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0FD3AD5C15C2145F0092A11D /* CordovaLib.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 303A4067152124BB00182201;
-			remoteInfo = CordovaLibApp;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -311,7 +304,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				0FD3AD6D15C217180092A11D /* PBXTargetDependency */,
 			);
 			name = "V-Tracker";
 			productName = "V-Tracker";
@@ -421,14 +413,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		0FD3AD6D15C217180092A11D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = CordovaLibApp;
-			targetProxy = 0FD3AD6C15C217180092A11D /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		0F92F59814FCD07700F344D6 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -463,7 +447,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -488,7 +472,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -505,6 +489,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					/Users/Shared/Cordova/Frameworks,
@@ -529,6 +514,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "V-Tracker";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -538,6 +524,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -562,6 +549,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "V-Tracker";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;

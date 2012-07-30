@@ -18,7 +18,7 @@
  */
 //
 //  main.m
-//  PT Tracker
+//  V-Tracker
 //
 //  Created by Hadi Michel Salem on 28/02/12.
 //  Copyright __MyCompanyName__ 2012. All rights reserved.
