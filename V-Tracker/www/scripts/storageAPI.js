@@ -23,7 +23,7 @@ var storageAPI = {
 	//******************************** END INITIALISE STORAGE *********************************//
 	
 	//************************************** LOCALSTORAGE *************************************//
-	localStore: {
+	localStorageAPI: {
 		setItem:function(key, value) {
 			window.localStorage.setItem(key, value);
 		},
@@ -55,7 +55,7 @@ var storageAPI = {
 			window.localStorage.removeItem(key);
 		},
 		
-		clearAll:function() {
+		clear:function() {
 			window.localStorage.clear()
 		},
 	},
