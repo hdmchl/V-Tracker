@@ -5,11 +5,21 @@
  *
  */
 
+// These API should probably all be included under one global object: sensorsAPI 
+
+//format the data for live display on screen
+function formatDate(timestamp) {
+	//console.log(timestamp);
+	var date = new Date(timestamp);
+	var month = parseFloat(date.getMonth()) + 1;
+	return date.getDate() + "/" + month + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
+}
+
 //************************************* geolocationAPI ************************************//
 var geolocationAPI = {
 	watchID: null,
 	
-	options: {	frequency: 10000, 	//frequency is not part of W3C and will not be supported in the future
+	options: {	frequency: 5000, 	//frequency is not part of W3C and will not be supported in the future
 				maximumAge: 10000, 	//Accept a cached position whose age is no greater than the specified time
 				timeout: 5000, 		//max time between call and receipt
 				enableHighAccuracy: false },
@@ -102,9 +112,9 @@ var geolocationAPI = {
 var compassAPI = {
 	watchID: null,
 	
-	options: { frequency: 1000 }, //Set update interval in milliseconds
+	options: { frequency: 500 }, //Set update interval in milliseconds
 	
-	data: {	timestamp:null, 
+	data: {	timestamp: null, 
 			magneticHeading: null, 
 			trueHeading: null,
 			headingAccuracy: null },
@@ -269,7 +279,7 @@ var accelerometerAPI = {
 var gyroscopeAPI = {	
 	watchID: null,
 	
-	options: { frequency: 500 }, //Set update interval in milliseconds
+	options: { frequency: 200 }, //Set update interval in milliseconds
 	
 	data: {	timestamp: null,
 			alpha: null,
