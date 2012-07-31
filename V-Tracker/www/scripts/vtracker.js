@@ -7,7 +7,6 @@
 
 //************************************** APP SCRIPTS **************************************//
 // these are all the methods used in the start tab (ie. this is the view controller for vtracker)
-
 var vtracker = {
 	workingRoute: null, //users can only work with one route at a time - if necessary, this can be converted into an array in the future
 	
@@ -15,7 +14,19 @@ var vtracker = {
 	startLearningNow:function() {
 		var routeName = $('#newRouteDialog-newRouteName').val(); //get route name
 		
-		//TO DO: validate Object name: check if route name is free, if not, then prompt! PS. this could happen in validObjName
+		var allRoutes = vtracker.getAllRoutes(); //get all routes
+		if (allRoutes.indexOf(routeName) != -1) {
+			//route name already exists
+			var x = new notificationObj();
+			var overwrite = x.confirm("The route name you selected is already in use. Would you like to overwrite it?", function onConfirm(buttonIndex) {
+				if (buttonIndex == 2) {
+					storageAPI.localStorageAPI.removeItem("route_" + routeName);
+					vtracker.startLearningNow();
+				}
+			}, "Name exists", "Cancel,Overwrite")
+			return;
+		}
+		
 		//if all good, then let the user through
 		
 		//create new route object
@@ -34,13 +45,12 @@ var vtracker = {
 		//open the loader dialog
 		$.mobile.changePage('#loaderDialog', 'none', true, true);
 	},
-	
 	//***** END LEARN NEW ROUTE *****//
 	
 	//***** UPDATE/TRACK ROUTES *****//
 	findNearbyRoutes:function() {
 		//TO DO: 1. pull all routes out of storage 2. get user's location 3. find nearest routes 4. create nearestRoutes var
-		var nearestRoutes = storageAPI.localStore.getAllItemKeys(); //for now, use all routes
+		var nearestRoutes = vtracker.getAllRoutes(); //for now, use all routes
 		
 		//create the radio buttons
 		vtracker.createRouteChoices(nearestRoutes, "#findRoutesDialog-routesNearby", "routesNearby");
@@ -60,10 +70,10 @@ var vtracker = {
 	},
 	
 	updateRoute:function() {
-		//retrieve route
-		var routeName = $('input[name=routesNearby-choice]:checked').val(); //get route name from routesNearby
+		var routeName = $('input[name=routesNearby-choice]:checked').val(); //get route name from routesNearby selection
 
-		var rr = storageAPI.localStore.getObject(routeName); //get route from storage
+		var rr = storageAPI.localStorageAPI.getObject("route_" + routeName); //get route from storage
+		if (rr == null) {console.log("Error retrieving route from storage");return;}
 		
 		//setup route object
 		vtracker.workingRoute = new route(rr.name) //probably don't need to do this, but it's cleaner
@@ -86,7 +96,7 @@ var vtracker = {
 	
 	//***** MANAGE ROUTES *****//
 	manageRoutes:function() {
-		var allRoutes = storageAPI.localStore.getAllItemKeys(); //for now, use all routes
+		var allRoutes = vtracker.getAllRoutes(); //get all routes
 		
 		//create the radio buttons
 		vtracker.createRouteChoices(allRoutes, "#manageRoutesDialog-allRoutes", "allRoutes");
@@ -98,7 +108,8 @@ var vtracker = {
 	exportRoute:function() {
 		var routeName = $('input[name=allRoutes-choice]:checked').val(); //get route name
 		
-		var rr = storageAPI.localStore.getObject(routeName); //get route from storage
+		var rr = storageAPI.localStorageAPI.getObject("route_" + routeName); //get route from storage
+		if (rr == null) {console.log("Error retrieving route from storage");return;}
 		
 		//setup route object
 		vtracker.workingRoute = new route(rr.name) //probably don't need to do this, but it's cleaner
@@ -113,19 +124,33 @@ var vtracker = {
 	
 	removeRoute:function() {
 		var routeName = $('input[name=allRoutes-choice]:checked').val(); //get route name
-		storageAPI.localStore.removeItem(routeName);
+		storageAPI.localStorageAPI.removeItem("route_" + routeName);
 		
 		vtracker.manageRoutes();	
 	},
 	//***** END MANAGE ROUTES *****//
 	
 	//GENERAL scripts
+	getAllRoutes:function() {
+		//return all route names
+		var allRoutes = [];
+		var allItemKeys = storageAPI.localStorageAPI.getAllItemKeys();
+
+		for (i in allItemKeys) {	
+			if(allItemKeys[i].substring(0,6) == "route_") {
+				allRoutes.push(allItemKeys[i].substr(6))
+			}
+		}
+		
+		return allRoutes;	
+	},
+	
 	destinationReached:function() {
 		vtracker.workingRoute.stopLearning(); //end machine learning, and save object
 		
 		//tell the user that all went well
 		var success = new notificationObj();
-		success.alert("Route updated","Route has been recorded successfully.","Okay")
+		success.alert("Route updated","Route has been recorded.","Okay")
 		
 		//clean up loader dialog
 		$('#loaderDialog-top').empty();
@@ -155,18 +180,10 @@ var vtracker = {
 }
 //************************************ END APP SCRIPTS ************************************//
 
-//************************************** VTRACKERAPI **************************************//
-//these are all my helper scripts
-
-var vtrackerAPI = {
-		
-}
-//************************************ END VTRACKERAPI ************************************//
-
 //*************************************** routeObj ****************************************//
 //constructor for the route objects
 function route(name) {
-	if (!validObjName(name)) {return;}
+	if (!vtrackerAPI.validObjName(name)) {return;}
 	
 	//create a reference object that can be inherited
 	var me = Object(this);
@@ -194,7 +211,7 @@ function route(name) {
 	
 	this.pushGeoMeasurement = function(measurements) {
 		me.geoData.push(measurements);
-		console.log("measurement added to: " + me.name);
+		//console.log("measurement added to: " + me.name);
 		//me.routeAlerts.add("measurement added"); //useful for debugging
 	};
 	
@@ -232,13 +249,13 @@ function route(name) {
 	
 	this.save = function() {
 		//store route in local storage
-		storageAPI.localStore.setObject(me.name, me);
+		storageAPI.localStorageAPI.setObject("route_" + me.name, me);
 		console.log("Route " + me.name + " was saved.");
 	}
 	
 	this.exportToDB = function() {
 		//export to a database. At the moment we only care about geolocation data, so we use that data schema
-		var routeDB = "route_" + me.name;
+		var routeDB = "route_" + me.name.split(' ').join('_');
 		storageAPI.createTable(geolocationAPI.data,routeDB);
 		
 		//make sql entries
@@ -251,10 +268,58 @@ function route(name) {
 }
 //************************************* END routeObj **************************************//
 
+//************************************** VTRACKERAPI **************************************//
+//these are all my helper scripts
+var vtrackerAPI = {
+	onPause:function() {
+		console.log("Device paused!");
+		//tell the user if GPS is still ON when the application is paused
+		if (geolocationAPI.watchID) {
+			var geoNotification = new notificationObj();
+			geoNotification.pushNot(notificationsAPI.getTimeAfter(5000),"The GPS radio is still on!","",false,"GPSON");
+		}
+	},
+	
+	onResume:function() {
+		console.log("Device resumed!");
+		notificationsAPI.clearAll();
+	},
+	
+	validObjName:function(name) {
+		if (name == null || name == "") {
+			console.log("Invalid object name at declaration!");
+			return false;
+		} else {
+			return true;
+		}
+	},
+	
+	checkBrowserCompatibilities:function() {
+		var incompatibilities = null;
+		
+		//check local storage
+		if (!Modernizr.localstorage) {
+			// no native support for local storage :(
+			incompatibilities = incompatibilities + 'localstorage, ';
+		}
+		
+		if (!Modernizr.geolocation) {
+			// no native geolocation support available :(
+			incompatibilities = incompatibilities + 'geolocation, ';
+		}
+		
+		// display an alert if there are any incompatibilities
+		if (incompatibilities) {
+			alert('Your browser is not fully compatible with PT Tracker.' + '\n' + 'The services lacking are: ' + incompatibilities);
+		}
+	}
+}
+//************************************ END VTRACKERAPI ************************************//
+
 //*************************************** alertsObj ***************************************//
 //constructor for a console alerts object
 function alertsObj(name) {
-	if (!validObjName(name)) {return;}
+	if (!vtrackerAPI.validObjName(name)) {return;}
 	
 	//create a reference object that can be inherited
 	var me = Object(this);
@@ -263,7 +328,6 @@ function alertsObj(name) {
 	this.name = name;
 	this.data = {	timestamp: [],
 					message: [] };
-					
 	this.displayInDiv = false;
 	this.divId = null;
 	
@@ -279,69 +343,5 @@ function alertsObj(name) {
 		
 		console.log(message); //display message in output console
 	};
-	
-	this.drop = function() {
-		storageAPI.dropTable([me.name]);
-	};
-	
-	//execute object's initialisation actions
-	$(me.divId).empty(); //empty the div
 }
 //************************************* END alertsObj *************************************//
-
-//************************************* HELPER SCRIPTS ************************************//
-function onPause() {
-	console.log("Device paused!");
-	//tell the user if GPS is still ON when the application is paused
-	if (geolocationAPI.watchID) {
-		var geoNotification = new notificationObj();
-		geoNotification.pushNot(notificationsAPI.getTimeAfter(7000),"The GPS radio is still on!","",false,"GPSON");
-	}
-}
-
-function onResume() {
-	console.log("Device resumed!");
-	notificationsAPI.clearAll();
-}
-
-function formatDate(timestamp) {
-	//console.log(timestamp);
-	var date = new Date(timestamp);
-	var month = parseFloat(date.getMonth()) + 1;
-	return date.getDate() + "/" + month + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
-}
-
-function validObjName(name) {
-	if (name == null || name == "") {
-		console.log("Invalid object name at declaration!");
-		return false;
-	} else {
-		return true;
-	}
-}
-
-//use modernizr to test the browser compatibility
-function checkBrowserCompatibilities() {
-	var incompatibilities = '';
-	
-	//check local storage
-	if (Modernizr.localstorage) {
-		// window.localStorage is available!
-	} else {
-		// no native support for local storage :(
-		incompatibilities = incompatibilities + 'localstorage, ';
-	}
-	
-	if (Modernizr.geolocation) {
-		// let's find out where you are!
-	} else {
-		// no native geolocation support available :(
-		incompatibilities = incompatibilities + 'geolocation, ';
-	}
-	
-	// display an alert if there are any incompatibilities
-	if (incompatibilities != '') {
-		alert('Your browser is not fully compatible with PT Tracker.' + '\n' + 'The services lacking are: ' + incompatibilities);
-	}
-}
-//*********************************** END HELPER SCRIPTS *********************************//
