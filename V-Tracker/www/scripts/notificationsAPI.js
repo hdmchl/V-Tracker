@@ -8,10 +8,12 @@
 //************************************* notification **************************************//
 //constructor for notification objects
 function notificationObj() {
-	if (name == null) {throw "you must give the object a name";} //make sure they name the object
-	
 	this.alert = function(title,message,buttonText) {
 		navigator.notification.alert(message,notificationsAPI.alertDismissed(),title,buttonText);
+	}
+	
+	this.confirm = function(message, confirmCallback, title, buttonLabels) {
+		navigator.notification.confirm(message, confirmCallback, title, buttonLabels)
 	}
 	
 	this.beep = function(duration) {
