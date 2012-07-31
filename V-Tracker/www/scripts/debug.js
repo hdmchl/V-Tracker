@@ -14,7 +14,6 @@ var debug = {
 	
 	//DATA COLLECTION
 	DCinit:function() {
-		debug.liveMonitor = false;
 		//select storage for all
 		$('#debug-geoStoreFlag').prop("checked", true);
 		$('#debug-compassStoreFlag').prop("checked", true);
@@ -24,14 +23,23 @@ var debug = {
 		
 		storageAPI.reset();
 		
-		$('#debug-DC').html("<p>Initialised. Will store all data.</p>");
+		$('#debug-DC').html("<p>Initialised. Will store all selected data.</p>");
 	},
 	
 	DCcollect:function() {
+		debug.liveMonitor = false;
+		
 		debug.geolocationWatch();
+		debug.geolocationClear();
+		
 		debug.compassWatch();
+		debug.compassClear();
+		
 		debug.accelerometerWatch();
+		debug.accelerometerClear();
+		
 		debug.gyroscopeWatch();
+		debug.gyroscopeClear();
 		
 		$('#debug-DC').html("<p>Started</p>");
 	},
@@ -206,6 +214,7 @@ var debug = {
 	//DB STORAGE
 	DBstorageReset:function() {
 		storageAPI.reset();
+		$('#debug-databases').empty();
 		$('#debug-databases').append("<p>DB storage was Reset</p>");
 	},
 	
@@ -249,18 +258,19 @@ var debug = {
 	
 	//LOCALSTORAGE
 	localStorageReset:function() {
-		storageAPI.localStore.clearAll();
+		storageAPI.localStorageAPI.clear();
 		$('#debug-localStorage').empty();
 		$('#debug-localStorage').append("<p>localStorage was Reset</p>");
 	},
 	
 	localStorageAddItem:function() {
-		storageAPI.localStore.setItem("dummyKey", "dummyValue");
+		storageAPI.localStorageAPI.setItem("dummyKey", "dummyValue");
 	},
 	
 	localStorageGetItemKeys:function() {
 		$('#debug-localStorage').empty();
-		$('#debug-localStorage').append("<p>" + storageAPI.localStore.getAllItemKeys() + "</p>");
+		$('#debug-localStorage').append("<p>started...</p>");
+		$('#debug-localStorage').append("<p>" + storageAPI.localStorageAPI.getAllItemKeys() + "</p>");
 		$('#debug-localStorage').append("<p>finished!</p>");
 	},
 	
