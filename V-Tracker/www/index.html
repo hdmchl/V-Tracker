@@ -17,7 +17,7 @@
 		<!-- general css styling -->
 		<link rel="stylesheet" href="styles/styles.css" type="text/css" />
 				
-		<!-- iPad/iPhone specific css below -->
+		<!-- iPad/iPhone specific css below //not really used much -->
 		<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="styles/ipad.css" type="text/css" />		
 		<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="styles/iphone.css" type="text/css" />
 		
@@ -44,7 +44,7 @@
 		<!-- jQuery.flot dependancies -->
 		<script type="text/javascript" src="libraries/flot/jquery.flot.js"></script>
 		
-		<!-- Google Maps dependancies -->
+		<!-- Google Maps dependancies //not yet -->
 		<!--<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=&sensor=true"></script>-->
 			
 		<!-- onLoad scripts -->	
@@ -55,15 +55,13 @@
 			
 			function onDeviceReady() {
 				//We're ready to roll
-				checkBrowserCompatibilities();
-				//initialise database, the API restricts db use to one db (by design)
-				storageAPI.init("VTracker_db", "1.00", "VTrackerDB", 2 * 1024*1024);
+				vtrackerAPI.checkBrowserCompatibilities();
+				storageAPI.init("VTracker_db", "1.00", "VTrackerDB", 2 * 1024*1024); //initialise database, the API restricts db use to one db (by design)
 				
 				//listen to device pause or resume
-				document.addEventListener("pause", onPause, false);
-				document.addEventListener("resume", onResume, false);
+				document.addEventListener("pause", vtrackerAPI.onPause, false);
+				document.addEventListener("resume", vtrackerAPI.onResume, false);
 			}
-
 		</script>
 			
 	</head>
@@ -174,7 +172,7 @@
                     </div>
                 </div>
                     
-				<h3>API Access</h3>	
+				<h3>Storage API</h3>	
 				<div data-role="collapsible-set">
 					<div data-role="collapsible" data-collapsed="true">
                         <h3>DB Storage</h3>
@@ -200,7 +198,10 @@
 						
 						<div id="debug-localStorage">Ready...</div>
                     </div>
-					
+				</div>
+				
+				<h3>Other</h3>
+				<div data-role="collapsible-set">
 					<div data-role="collapsible" data-collapsed="true">
                         <h3>Notifications</h3>
 						
@@ -234,8 +235,8 @@
 			
 			<!-- content -->
 			<div data-role="content" data-fullscreen="true">
-				<div class="text">
-					<h3 class="h3modified">Project info</h3>
+				<h3 class="h3modified">Project info</h3>
+				<div class="text">	
 					<p>Vehicle Tracker (V-Tracker) is a mobile application for ‘Realtime route learning and vehicle tracking using web-technologies on a mobile device’.</p>
 		
 					<br><p>V-Tracker is part of a research project in the Deparment of Electrical and Computer Systems Engineering (ECSE) at <a href="http://www.monash.edu" target="_blank">Monash University</a>, Australia.</p>
@@ -249,7 +250,7 @@
 					   you may not use this file except in compliance with the License.
 					   You may obtain a copy of the License at:</p>
 					   
-						<p><a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">http://www.apache.org/licenses/LICENSE-2.0</a>.</p>
+						<p><a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">http://apache.org/licenses/LICENSE-2.0</a>.</p>
 					
 					<br><p>Unless required by applicable law or agreed to in writing, software
 					   distributed under the License is distributed on an "AS IS" BASIS,
