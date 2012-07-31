@@ -61,7 +61,8 @@ var vtracker = {
 	},
 	
 	trackMeOnRoute:function() {
-		//TO DO: implement tracking
+		//TO DO: implement tracking, probably by plotting the route, and adding a method to the geolocationAPI that puts a cursor on the plot...
+		//would be good to calculate "distance travelled/route distance"
 		
 		var success = new notificationObj();
 		success.alert("Under Construction","Not yet bra!","Okay")
@@ -198,6 +199,7 @@ function route(name) {
 	//handle route properties
 	this.name = name;
 	this.geoData = [];
+	this.model = [];
 	this.learnCounter = 0;
 	
 	//handle route methods
@@ -206,31 +208,64 @@ function route(name) {
 		//the only difference is the route's properties, so load those in here:
 		me.name = storedRoute.name;
 		me.geoData = storedRoute.geoData;
+		me.model = storedRoute.model;
 		me.learnCounter = storedRoute.learnCounter;
 	}
 	
-	this.pushGeoMeasurement = function(measurements) {
+	this.onGeoMeasurement = function(measurements) {
+		//TO DO: check accuracy, and do timeouts etc...
+		
+		//if all good, add measurement to "data" array
+		//TO DO: USE EUCLIDEAN DISTANCE find the nearest two points, and add the measurement between them
 		me.geoData.push(measurements);
-		//console.log("measurement added to: " + me.name);
 		//me.routeAlerts.add("measurement added"); //useful for debugging
-	};
+	
+		//call modelling algorithm to update model
+		me.updateModel();	
+	}
+	
+	this.updateModel = function() {
+		//TO DO: ADD ALGORITHM INTO HERE...
+		//take in me.data
+		
+		//return me.model
+	}
+	
+	this.plotModelInDiv = function(divId) {
+		//TO DO: get x and y from me.model
+		
+		var options = {
+			series: {
+				lines: { show: true },
+				points: { show: true }
+			},
+			yaxis: {
+				//min: 0,
+				//max: 10
+			},
+			xaxis: {
+				//min: 144.982366,
+				//max: 145.097081,
+			}
+		};
+			
+		$.plot($(divId), [ numeric.transpose([x,y]) ], options);
+	}
 	
 	this.learn = function() {
 		//housekeeping
 		me.learnCounter++;
 		me.routeAlerts.add("Please stand by while I learn the route <b>" + me.name + "</b>");
 		me.routeAlerts.add("This is update #" + me.learnCounter + ", for route: " + me.name);
-		
-		// machine learning algorithm
-		if (me.learnCounter > 3) {
-			me.routeAlerts.add("Sufficient route data exists. Only changes will be recorded.")
-			//if measurement is statiscally off, then pushMeasurement, else dismiss
-			//if pushed a new measurement, delete an old one...
+		// tell the user what's happening
+		if (me.model) {
+			me.routeAlerts.add("Model data exists for this route. Only route changes will be recorded.")
 		} else {
-			me.routeAlerts.add("Insufficient route data. Learning started.")
-			//TO DO: check measurement accuracy before pushing
-			geolocationAPI.successCBs.push(me.pushGeoMeasurement); //add the pushMeasurement method to the geolocation's API callbacks stack
+			me.routeAlerts.add("Insufficient route data. Learning started.")		
 		}
+		
+		//add method to the geolocation's API callbacks stack
+		geolocationAPI.successCBs.push(me.onGeoMeasurement); 
 		
 		//start collecting measurements, other sensors can be turned on here
 		geolocationAPI.startWatching();
@@ -258,7 +293,7 @@ function route(name) {
 		var routeDB = "route_" + me.name.split(' ').join('_'); //replace spaces with underscores for dbname
 		storageAPI.createTable(geolocationAPI.data,routeDB);
 		
-		//make sql entries
+		//make sql entries - do I want geoData or the Model? hmm...
 		var toSQL = null;
 		for (var i=0;i<me.geoData.length;i++) {
 			 toSQL = geolocationAPI.formatDataForSQL(me.geoData[i]);
