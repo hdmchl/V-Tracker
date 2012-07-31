@@ -255,7 +255,7 @@ function route(name) {
 	
 	this.exportToDB = function() {
 		//export to a database. At the moment we only care about geolocation data, so we use that data schema
-		var routeDB = "route_" + me.name.split(' ').join('_');
+		var routeDB = "route_" + me.name.split(' ').join('_'); //replace spaces with underscores for dbname
 		storageAPI.createTable(geolocationAPI.data,routeDB);
 		
 		//make sql entries
@@ -271,6 +271,7 @@ function route(name) {
 //************************************** VTRACKERAPI **************************************//
 //these are all my helper scripts
 var vtrackerAPI = {
+	//set callback for device pause
 	onPause:function() {
 		console.log("Device paused!");
 		//tell the user if GPS is still ON when the application is paused
@@ -280,11 +281,13 @@ var vtrackerAPI = {
 		}
 	},
 	
+	//set callback for device resume
 	onResume:function() {
 		console.log("Device resumed!");
 		notificationsAPI.clearAll();
 	},
 	
+	//make sure a potential object name is not null or blank
 	validObjName:function(name) {
 		if (name == null || name == "") {
 			console.log("Invalid object name at declaration!");
@@ -294,7 +297,9 @@ var vtrackerAPI = {
 		}
 	},
 	
+	//make sure the browser engine can do what we need
 	checkBrowserCompatibilities:function() {
+		//this is a rough compatibility check, needs to be expanded
 		var incompatibilities = null;
 		
 		//check local storage
@@ -310,7 +315,7 @@ var vtrackerAPI = {
 		
 		// display an alert if there are any incompatibilities
 		if (incompatibilities) {
-			alert('Your browser is not fully compatible with PT Tracker.' + '\n' + 'The services lacking are: ' + incompatibilities);
+			alert('Your browser is not fully compatible with Vehicle Tracker.' + '\n' + 'The services lacking are: ' + incompatibilities);
 		}
 	}
 }
