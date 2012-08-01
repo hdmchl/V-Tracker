@@ -9,10 +9,27 @@
 //constructor for notification objects
 function notificationObj() {
 	this.alert = function(title,message,buttonText) {
+		//handle non-cordova
+		if (typeof device == "undefined") {
+			alert(message);
+			return;
+		}
+		//cordova call
 		navigator.notification.alert(message,notificationsAPI.alertDismissed(),title,buttonText);
 	}
 	
 	this.confirm = function(message, confirmCallback, title, buttonLabels) {
+		//handle non-cordova
+		if (typeof device == "undefined") {
+			var response = confirm(message);
+			if (response) {
+				confirmCallback("2");
+			} else {
+				confirmCallback("1");
+			}
+			return;
+		}
+		//cordova call
 		navigator.notification.confirm(message, confirmCallback, title, buttonLabels)
 	}
 	
