@@ -23,7 +23,7 @@ var debug = {
 		
 		storageAPI.reset();
 		
-		$('#debug-DC').html("<p>Initialised. Will store all selected data.</p>");
+		$('#debug-DC').html("<p>Initialised. Will try to store all selected data.</p>");
 	},
 	
 	DCcollect:function() {
@@ -98,6 +98,14 @@ var debug = {
 	compassWatch:function() {
 		var compassDBname = "debug" + "_COM";
 		
+		//console.log(device.cordova)
+		
+		//if not cordova, then tell the user
+		if (typeof device == "undefined") {
+			$('#debug-compass').html("<p>Device is running outside Cordova. Use the gyroscope for orientation data.</p>");
+			return;
+		}
+		
 		//is selected, store the measurements
 		if ($('#debug-compassStoreFlag').is(':checked')) {
 			storageAPI.createTable(compassAPI.data,compassDBname);
@@ -136,6 +144,12 @@ var debug = {
 	//ACCELEROMETER
 	accelerometerWatch:function() {
 		var accelerometerDBname = "debug" + "_ACC";
+		
+		//if not cordova, then tell the user
+		if (typeof device == "undefined") {
+			$('#debug-accelerometer').html("<p>Device is running outside Cordova</p>");
+			return;
+		}
 		
 		//is selected, store the measurements
 		if ($('#debug-accelerometerStoreFlag').is(':checked')) {
@@ -267,7 +281,7 @@ var debug = {
 		storageAPI.localStorageAPI.setItem("dummyKey", "dummyValue");
 	},
 	
-	localStorageGetItemKeys:function() {
+	localStorageGetItemsSummary:function() {
 		$('#debug-localStorage').empty();
 		$('#debug-localStorage').append("<p>started...</p>");
 		$('#debug-localStorage').append("<p>" + storageAPI.localStorageAPI.getAllItemKeys() + "</p>");
@@ -283,6 +297,11 @@ var debug = {
 	notificationsShowAlert:function() {
 		var noti = new notificationObj();
 		noti.alert("title","message","button");
+	},
+	
+	notificationsConfirm:function() {
+		var noti = new notificationObj();
+		noti.confirm("message", notificationsAPI.alertDismissed(), "title","button1,button2");
 	},
 	
 	notificationsPlayBeep:function() {
