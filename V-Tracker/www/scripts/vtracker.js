@@ -173,7 +173,7 @@ var vtracker = {
 		}
 		
 		for (var i=0;i<routesAry.length;i++) {
-			$(divId).append("<input type=\"radio\" name=\"" + prefix  + "-choice\" id=\"" + prefix  + "-choice-" + i + 
+			$(divId).append("<input type=\"radio\" checked=\"checked\" name=\"" + prefix  + "-choice\" id=\"" + prefix  + "-choice-" + i + 
 						"\" value=\"" + routesAry[i] + "\" /><label for=\"" + prefix  + "-choice-" + i + "\">" + routesAry[i] + "</label>");
 		}
 	},
@@ -199,7 +199,7 @@ function route(name) {
 	//handle route properties
 	this.name = name;
 	this.geoData = [];
-	this.model = [];
+	this.model = {lon: [], lat: []};
 	this.learnCounter = 0;
 	
 	//handle route methods
