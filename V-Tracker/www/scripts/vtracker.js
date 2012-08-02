@@ -258,7 +258,7 @@ function route(name) {
 		me.routeAlerts.add("Please stand by while I learn the route <b>" + me.name + "</b>");
 		me.routeAlerts.add("This is update #" + me.learnCounter + ", for route: " + me.name);
 		// tell the user what's happening
-		if (me.model) {
+		if (me.model.lat.length > 0 && me.model.lon.length > 0) {
 			me.routeAlerts.add("Model data exists for this route. Only route changes will be recorded.")
 		} else {
 			me.routeAlerts.add("Insufficient route data. Learning started.")		
