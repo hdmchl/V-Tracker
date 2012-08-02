@@ -6,7 +6,7 @@
 		<title>Vehicle Tracker</title>
 		
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		
 		<!-- set apple mobile settings for quicker debugging using Safari -->
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -49,8 +49,9 @@
 			
 		<!-- onLoad scripts -->	
 		<script type="text/javascript">
-			function onBodyLoad() {	
-				document.addEventListener("deviceready", onDeviceReady, false);
+			function onBodyLoad() {
+				document.addEventListener("deviceready", onDeviceReady, false); //this is the listener for Cordova
+				$(document).ready(function() {onDeviceReady();}); //this is the listener for Mobile Safari - I think this does the same thing as above...
 			}
 			
 			function onDeviceReady() {
@@ -192,7 +193,7 @@
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 							<a data-role="button" href="javascript:debug.localStorageReset();">Reset</a>
 							<a data-role="button" href="javascript:debug.localStorageAddItem();">Add Item</a>
-							<a data-role="button" href="javascript:debug.localStorageGetItemKeys();">Items</a>
+							<a data-role="button" href="javascript:debug.localStorageGetItemsSummary();">Items</a>
 							<a data-role="button" href="javascript:debug.localStorageClear();">Clear</a>
 						</div>
 						
@@ -207,6 +208,7 @@
 						
 						<div data-role="controlgroup" data-type="vertical">
 							<a data-role="button" href="javascript:debug.notificationsShowAlert();">Show Alert</a>
+							<a data-role="button" href="javascript:debug.notificationsConfirm();">Confirm</a>
 							<a data-role="button" href="javascript:debug.notificationsPlayBeep();">Play Beep</a>
 							<a data-role="button" href="javascript:debug.notificationsVibrate();">Vibrate</a>
 							<a data-role="button" href="javascript:debug.notificationsNotifyIn5();">Show Notification in 5s</a>
