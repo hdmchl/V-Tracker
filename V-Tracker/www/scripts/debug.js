@@ -100,9 +100,9 @@ var debug = {
 		
 		//console.log(device.cordova)
 		
-		//if not cordova, then tell the user
+		//if not cordova, then tell the user, this is a VERY single case fix... the actual API should be checking...
 		if (typeof device == "undefined") {
-			$('#debug-compass').html("<p>Device is running outside Cordova. Use the gyroscope for orientation data.</p>");
+			$('#debug-compass').html("<p>App is running outside Cordova. Use the gyroscope for orientation data.</p>");
 			return;
 		}
 		
@@ -145,9 +145,9 @@ var debug = {
 	accelerometerWatch:function() {
 		var accelerometerDBname = "debug" + "_ACC";
 		
-		//if not cordova, then tell the user
+		//if not cordova, then tell the user, this is a VERY single case fix... the actual API should be checking...
 		if (typeof device == "undefined") {
-			$('#debug-accelerometer').html("<p>Device is running outside Cordova</p>");
+			$('#debug-accelerometer').html("<p>App is running outside Cordova</p>");
 			return;
 		}
 		
