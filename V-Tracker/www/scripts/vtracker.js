@@ -333,7 +333,7 @@ var vtrackerAPI = {
 	},
 	
 	//make sure the browser engine can do what we need
-	checkBrowserCompatibilities:function(divId) {
+	checkBrowserCompatibility:function(divId) {
 		//this is a rough compatibility check
 		var incompatibilities = [];
 		var coreReqs = ['geolocation', 'localstorage'];
