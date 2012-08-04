@@ -27,6 +27,13 @@ body {
     height:300px
 }
 
+#startpage-errors {
+    width: 90%;
+    text-align: center;
+    padding: 10px;
+    color: #777;
+}
+
 /*********************** LOADER  **********************
 #loader {
 	visibility: hidden;
