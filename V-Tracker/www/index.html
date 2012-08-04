@@ -1,17 +1,24 @@
 <!DOCTYPE html> <!-- the main markup is in HTML5, but there are some proprietory attributes in jQueryMobile -->
-<html>
+<html lang="en"> <!-- manifest="offline.manifest"> --> <!-- uncomment this if you want to let users cache the app -->
 	
 	<head>
 		
-		<title>Vehicle Tracker</title>
+		<title>V-Tracker</title>
 		
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		
 		<!-- set apple mobile settings for quicker debugging using Safari -->
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-touch-fullscreen" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-touch-fullscreen" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<!-- have startup image ready for apple devices -->
+        <link rel="apple-touch-startup-image" href="mobile-safari-images/Default-cut.png" media="(device-width: 320px)" />
+        <link rel="apple-touch-startup-image" href="mobile-safari-images/Default-cut@2x.png" media="(device-width: 320px) and (-webkit-device-pixel-ratio: 2)" />
+        <!-- have touch icons ready for apple devices -->
+		<link rel="apple-touch-icon" sizes="57x57" href="mobile-safari-images/icon.png" />
+		<link rel="apple-touch-icon" sizes="72x72" href="mobile-safari-images/icon-72.png" />
+		<link rel="apple-touch-icon" sizes="114x114" href="mobile-safari-images/icon@2x.png" />	
 			
 		<!-- include files: you would NEVER have so many separate files if you were serving the app through the internet! -->
 		<!-- general css styling -->
@@ -33,7 +40,7 @@
 		<script type="text/javascript" charset="utf-8" src="libraries/LocalNotification.js"></script>
 	
 		<!-- other library dependancies -->
-		<script type="text/javascript" charset="utf-8" src="libraries/modernizr-2.5.3.js"></script>
+		<script type="text/javascript" charset="utf-8" src="libraries/modernizr-2.6.1.js"></script>
 		<script type="text/javascript" charset="utf-8" src="libraries/numeric-1.0.2.js"></script>
 			
 		<!-- jQuery.mobile dependancies -->		
@@ -50,13 +57,12 @@
 		<!-- onLoad scripts -->	
 		<script type="text/javascript">
 			function onBodyLoad() {
-				document.addEventListener("deviceready", onDeviceReady, false); //this is the listener for Cordova
-				$(document).ready(function() {onDeviceReady();}); //this is the listener for Mobile Safari - I think this does the same thing as above...
+				$(document).ready(function() {onDeviceReady();}); //this listener works for Mobile Safari and Cordova
 			}
 			
 			function onDeviceReady() {
 				//We're ready to roll
-				vtrackerAPI.checkBrowserCompatibilities();
+				setTimeout(function(){vtrackerAPI.checkBrowserCompatibilities("#startpage-errors");},500);
 				storageAPI.init("VTracker_db", "1.00", "VTrackerDB", 2 * 1024*1024); //initialise database, the API restricts db use to one db (by design)
 				
 				//listen to device pause or resume
@@ -89,6 +95,8 @@
 				<a data-role="button" href="#newRouteDialog" data-rel="dialog" data-theme="b" data-icon="plus">Learn a new route</a>
 				<a data-role="button" href="javascript:vtracker.findNearbyRoutes()" data-rel="dialog" data-icon="search">Find nearby routes</a>
 				<a data-role="button" href="javascript:vtracker.manageRoutes()" data-rel="dialog" data-icon="grid">Manage routes</a>
+				
+				<div id="startpage-errors"></div>
 			</div>
 			
 		</div><!-- /startpage -->
@@ -321,7 +329,7 @@
 					<div id="manageRoutesDialog-allRoutes"></div>
 				</fieldset>
 				
-				<a href="javascript:vtracker.exportRoute()" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Export to DB</a>
+				<a href="javascript:vtracker.exportRoute()" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Export to database</a>
 				<a href="javascript:vtracker.removeRoute()" data-role="button" data-theme="c" data-transition="none" data-icon="delete">Delete</a>
 				<a href="#" data-role="button" data-rel="back" data-theme="c"data-transition="none">Cancel</a>    
 			</div>
