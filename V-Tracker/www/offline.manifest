@@ -1,6 +1,7 @@
 CACHE MANIFEST
 
-# This is a comment
+# This is the cache manifest that can be included when you want to allows users to save the app to their homescreen
+# manifest true at 04-08-12
 
 CACHE:
 index.html
