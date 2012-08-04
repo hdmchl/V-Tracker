@@ -333,24 +333,41 @@ var vtrackerAPI = {
 	},
 	
 	//make sure the browser engine can do what we need
-	checkBrowserCompatibilities:function() {
-		//this is a rough compatibility check, needs to be expanded
-		var incompatibilities = null;
+	checkBrowserCompatibilities:function(divId) {
+		//this is a rough compatibility check
+		var incompatibilities = [];
+		var coreReqs = ['geolocation', 'localstorage'];
 		
-		//check local storage
-		if (!Modernizr.localstorage) {
-			// no native support for local storage :(
-			incompatibilities = incompatibilities + 'localstorage, ';
-		}
+		//check if the tests fail
+		if (!geolocationAPI.test() || !Modernizr.geolocation) {incompatibilities.push('geolocation');}
+		if (!compassAPI.test()) {incompatibilities.push('compass');}
+		if (!accelerometerAPI.test()) {incompatibilities.push('accelerometer');}
+		if (!gyroscopeAPI.test()) {incompatibilities.push('gyroscope');}
 		
-		if (!Modernizr.geolocation) {
-			// no native geolocation support available :(
-			incompatibilities = incompatibilities + 'geolocation, ';
-		}
+		if (!notificationsAPI.test()) {incompatibilities.push('notifications');}
+		
+		if (!storageAPI.test() || !Modernizr.websqldatabase) {incompatibilities.push('web sql databases');}	
+		if (!storageAPI.localStorageAPI.test() || !Modernizr.localstorage) {incompatibilities.push('localstorage');}
+		
+		if (!Modernizr.webworkers) {incompatibilities.push('webworkers');}	
 		
 		// display an alert if there are any incompatibilities
-		if (incompatibilities) {
-			alert('Your browser is not fully compatible with Vehicle Tracker.' + '\n' + 'The services lacking are: ' + incompatibilities);
+		if (incompatibilities.length > 0) {
+			var message = "<p>Your browser is not fully compatible with Vehicle Tracker! Complete support is lacking for: ";
+			for (var i = 0;i < incompatibilities.length-1;i++) {
+				message+=("<b>" + incompatibilities[i] + "</b>" + ", ");
+			};
+			message+=("and <b>" +  incompatibilities[incompatibilities.length-1] + "</b>.</p>");
+			$(divId).html(message);
+		}
+		
+		//make sure we have the CORE requirements
+		for(i in incompatibilities) {
+			for(j in coreReqs) {
+				if (incompatibilities[i] == coreReqs[j]) {
+					alert("Your browser is lacking critical core services. \n This app requires: " + coreReqs);
+				}
+			}
 		}
 	}
 }
