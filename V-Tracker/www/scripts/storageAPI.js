@@ -10,6 +10,10 @@ var db = null; //declare a global database object
 var storageAPI = {
 	ready: false, //status flag
 	
+	test:function() {
+		return typeof window.openDatabase == 'function';
+	},
+	
 	//********************************** INITIALISE STORAGE ***********************************//
 	init:function(database_name, database_version, database_displayname, database_size) {
 		//open a database, create it if it doesn't exist - don't need a constructor, because I 
@@ -24,6 +28,10 @@ var storageAPI = {
 	
 	//************************************** LOCALSTORAGE *************************************//
 	localStorageAPI: {
+		test:function() {
+			return typeof window.localStorage == 'object';
+		},
+		
 		setItem:function(key, value) {
 			window.localStorage.setItem(key, value);
 		},

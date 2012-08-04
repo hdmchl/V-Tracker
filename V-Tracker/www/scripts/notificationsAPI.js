@@ -10,7 +10,7 @@
 function notificationObj() {
 	this.alert = function(title,message,buttonText) {
 		//handle non-cordova
-		if (typeof device == "undefined") {
+		if (!notificationsAPI.test()) {
 			alert(message);
 			return;
 		}
@@ -20,7 +20,7 @@ function notificationObj() {
 	
 	this.confirm = function(message, confirmCallback, title, buttonLabels) {
 		//handle non-cordova
-		if (typeof device == "undefined") {
+		if (!notificationsAPI.test()) {
 			var response = confirm(message);
 			if (response) {
 				confirmCallback("2");
@@ -65,6 +65,10 @@ function notificationObj() {
 //********************************** notificationsAPI *************************************//
 var notificationsAPI = {	
 	badgeCount: 0,
+	
+	test:function() {
+		return typeof navigator.notification == 'object';
+	},
 	
 	// alert dialog dismissed
  	alertDismissed:function() {
