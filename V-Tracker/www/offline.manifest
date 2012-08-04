@@ -27,6 +27,7 @@ libraries/LocalNotification.js
 libraries/cordova-2.0.0.js
 libraries/modernizr-2.6.1.js
 libraries/numeric-1.0.2.js
+#libraries/flot/*
 
 scripts/debug.js
 scripts/jquery-mods.js
