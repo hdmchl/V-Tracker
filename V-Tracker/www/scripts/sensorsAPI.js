@@ -35,6 +35,11 @@ var geolocationAPI = {
 			
 	successCBs: [], //this is an array of functions that get called "onSuccess"
 	
+	test:function() {
+		//check if geolocation works
+		return typeof navigator.geolocation == 'object';
+	},
+	
 	// Start watching the geolocation
 	startWatching:function() {
 		geolocationAPI.watchID = navigator.geolocation.watchPosition(geolocationAPI.onSuccess, geolocationAPI.onError, geolocationAPI.options);	
@@ -121,6 +126,11 @@ var compassAPI = {
 			
 	successCBs: [], //this is an array of functions that get called "onSuccess"
 
+	test:function() {
+		//check if compass works
+		return typeof navigator.compass == 'object';
+	},
+
 	// Start watching the compass
 	startWatching:function() {	
 		compassAPI.watchID = navigator.compass.watchHeading(compassAPI.onSuccess, compassAPI.onError, compassAPI.options);
@@ -186,6 +196,11 @@ var accelerometerAPI = {
 			z: null },
 	
 	successCBs: [], //this is an array of functions that get called "onSuccess"
+	
+	test:function() {
+		//check if accelerometer works
+		return typeof navigator.accelerometer == 'object';
+	},
 	
 	// Start watching the acceleration
 	startWatching:function() {
@@ -284,9 +299,16 @@ var gyroscopeAPI = {
 	data: {	timestamp: null,
 			alpha: null,
 			beta: null,
-			gamma: null },
+			gamma: null,
+			webkitCompassAccuracy: null,
+			webkitCompassHeading: null },
 	
 	successCBs: [], //this is an array of functions that get called "onSuccess"
+	
+	test:function() {
+		//check if gyroscope works
+		return 'ondeviceorientation' in window;
+	},
 	
 	startWatching:function() {
 		window.addEventListener("deviceorientation", gyroscopeAPI.onSuccess);
@@ -316,14 +338,18 @@ var gyroscopeAPI = {
 		gyroscopeAPI.data.alpha = orientation.alpha;
 		gyroscopeAPI.data.beta = orientation.beta;
 		gyroscopeAPI.data.gamma = orientation.gamma;
+		gyroscopeAPI.data.webkitCompassHeading = orientation.webkitCompassHeading;
+		gyroscopeAPI.data.webkitCompassAccuracy = orientation.webkitCompassAccuracy;
 	},
 	
 	// return HTML formatted gyro data
 	formatDataForHTML:function(orientationData) {
-		var formattedData = 	'Alpha (yaw): '  	+ orientationData.alpha + '<br />' +
-								'Beta (pitch): '  	+ orientationData.beta  + '<br />' +
-								'Gamma (roll): ' 	+ orientationData.gamma + '<br />' +
-								'Timestamp: '       + formatDate(orientationData.timestamp);
+		var formattedData = 	'Alpha (yaw): '  			+ orientationData.alpha + '<br />' +
+								'Beta (pitch): '  			+ orientationData.beta  + '<br />' +
+								'Gamma (roll): ' 			+ orientationData.gamma + '<br />' +
+								'Compass heading (true): '	+ orientationData.webkitCompassHeading + '<br />' +
+								'Compass accuracy: '		+ orientationData.webkitCompassAccuracy + '<br />' +
+								'Timestamp: '       		+ formatDate(orientationData.timestamp);
 		return formattedData;
 	},
 	
@@ -331,9 +357,11 @@ var gyroscopeAPI = {
 	formatDataForSQL:function(orientationData) {
 		//this variable can be created dynamically using the "gyroscopeAPI.data" array property
 		var formattedData = 	'"' + new Date(orientationData.timestamp) 	+ '",' +               
-								'"' + orientationData.alpha    	+ '",' +
-								'"' + orientationData.beta     	+ '",' +
-								'"' + orientationData.gamma    	+ '"';
+								'"' + orientationData.alpha    				+ '",' +
+								'"' + orientationData.beta     				+ '",' +
+								'"' + orientationData.gamma    				+ '",' + 
+								'"' + orientationData.webkitCompassHeading  + '",' + 
+								'"' + orientationData.webkitCompassAccuracy + '"';
 		return formattedData;
 	}
 }
