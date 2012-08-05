@@ -288,16 +288,20 @@ function route(name) {
 		console.log("Route " + me.name + " was saved.");
 	}
 	
-	this.exportToDB = function() {
-		//export to a database. At the moment we only care about geolocation data, so we use that data schema
-		var routeDB = "route_" + me.name.split(' ').join('_'); //replace spaces with underscores for dbname
-		storageAPI.createTable(geolocationAPI.data,routeDB);
+	this.exportRouteToDB = function() {
+		//export to a database. 
+		var routeDBname = "route_" + me.name.split(' ').join('_'); //replace spaces with underscores for dbname
+		storageAPI.dropTable(routeDBname)
+		storageAPI.createTable(geolocationAPI.data,routeDBname);
 		
-		//make sql entries - do I want geoData or the Model? hmm...
+		//make sql entries
 		var toSQL = null;
 		for (var i=0;i<me.geoData.length;i++) {
-			 toSQL = geolocationAPI.formatDataForSQL(me.geoData[i]);
-			 storageAPI.insertIntoTable(routeDB,toSQL);
+			 toSQL = geolocationAPI.formatDataForSQL(me.geoData[i]); //At the moment we only care about geolocation data, so we use that data schema
+			 storageAPI.insertIntoTable(routeDBname,toSQL);
+		}	 
+	}
+	
 	this.exportModelToDB = function() {
 		//export to a database.
 		var modelDBname = "model_" + me.name.split(' ').join('_'); //replace spaces with underscores for dbname
