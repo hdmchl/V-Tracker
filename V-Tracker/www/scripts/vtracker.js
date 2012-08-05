@@ -13,6 +13,8 @@ var vtracker = {
 	//***** LEARN NEW ROUTE *****//
 	startLearningNow:function() {
 		var routeName = $('#newRouteDialog-newRouteName').val(); //get route name
+		var noiseThreshold = $('#newRouteDialog-noiseSlider').val(); //get noise threshold
+		var minAccuracy = $('#newRouteDialog-minAccuracy').val(); //get min accuracy
 		
 		var allRoutes = vtracker.getAllRoutes(); //get all routes
 		if (allRoutes.indexOf(routeName) != -1) {
@@ -28,12 +30,16 @@ var vtracker = {
 		}
 		
 		//if all good, then let the user through
-		
+
 		//create new route object
 		vtracker.workingRoute = new route(routeName); //create a new route object
 		vtracker.workingRoute.alertOps.displayInDiv(true);
 		vtracker.workingRoute.alertOps.divId("#loaderDialog-alertsConsole");
-
+		
+		//set options
+		vtracker.workingRoute.noiseThreshold = noiseThreshold; //set noise threshold
+		vtracker.workingRoute.minAccuracy = minAccuracy; //set min accuracy
+		
 		vtracker.workingRoute.learn(); //start machine learning algorithm
 		
 		//prepare loading dialog
@@ -71,7 +77,9 @@ var vtracker = {
 	
 	updateRoute:function() {
 		var routeName = $('input[name=routesNearby-choice]:checked').val(); //get route name from routesNearby selection
-
+		var noiseThreshold = $('#newRouteDialog-noiseSlider').val(); //get noise threshold
+		var minAccuracy = $('#newRouteDialog-minAccuracy').val(); //get min accuracy
+		
 		var rr = storageAPI.localStorageAPI.getObject("route_" + routeName); //get route from storage
 		if (rr == null) {console.log("Error retrieving route from storage");return;}
 		
@@ -80,6 +88,10 @@ var vtracker = {
 		vtracker.workingRoute.loadFromStored(rr);
 		vtracker.workingRoute.alertOps.displayInDiv(true);
 		vtracker.workingRoute.alertOps.divId("#loaderDialog-alertsConsole");
+		
+		//set options
+		vtracker.workingRoute.noiseThreshold = noiseThreshold; //set noise threshold
+		vtracker.workingRoute.minAccuracy = minAccuracy; //set min accuracy
 		
 		vtracker.workingRoute.learn(); //start machine learning algorithm
 		
@@ -197,7 +209,7 @@ var vtracker = {
 		$('#loaderDialog-top').empty();
 		$('#loaderDialog-alertsConsole').empty();
 		$('#loaderDialog-bottom').empty();
-		$("#loaderDialog").trigger('create'); //update the styles on the UI
+		$('#loaderDialog').trigger('create'); //update the styles on the UI
 		$('#loaderDialog').dialog('close');
 		
 		//go back to startpage
@@ -247,8 +259,10 @@ function route(name) {
 					heading: [],
 					speed: [] },
 	this.model = {lon: [], lat: []};
-	this.noiseThreshold = 3; //the threshold radius (in metres) between what is considered to be natural noise fluctuation and what is considered to be a route change
+	this.noiseThreshold = 2; //the threshold radius (in metres) between what is considered to be natural noise fluctuation and what is considered to be a route change
 	this.learnCounter = 0;
+	this.timeoutLimit = 10;
+	this.minAccuracy = 50;
 	
 	//handle route methods
 	this.loadFromStored = function(storedRoute) {
@@ -259,30 +273,20 @@ function route(name) {
 		me.model = storedRoute.model;
 		me.noiseThreshold = storedRoute.noiseThreshold;
 		me.learnCounter = storedRoute.learnCounter;
+		me.timeoutLimit = storedRoute.timeoutLimit;
 	}
 	
+	var accuracyTimout = 0;
 	this.onGeoMeasurement = function(measurement) {
-		//TODO: check measurement's accuracy, and do timeouts etc...
-		//measurement.coords.accuracy
-		
-		//if all good, add measurement to "data" array
-		//TODO: USE EUCLIDEAN DISTANCE find the nearest two points, and add the measurement between them
-		me.geoData.timestamp.push(measurement.timestamp);
-		me.geoData.latitude.push(measurement.coords.latitude);
-		me.geoData.longitude.push(measurement.coords.longitude);
-		me.geoData.accuracy.push(measurement.coords.accuracy);
-		me.geoData.altitude.push(measurement.coords.altitude);
-		me.geoData.altitudeAccuracy.push(measurement.coords.altitudeAccuracy);
-		me.geoData.heading.push(measurement.coords.heading);
-		me.geoData.speed.push(measurement.coords.heading);
-		//me.routeAlerts.add("measurement added"); //useful for debugging
-		
 		if (measurement.coords.accuracy < me.minAccuracy) {
 			if (accuracyTimout > 0) {
+				me.routeAlerts.add("Accuracy improved. Learning...");
 			}
+			//if all good, add measurement to "data" array
 			//TODO: USE EUCLIDEAN DISTANCE find the nearest two points, and add the measurement between them
 			me.geoData.timestamp.push(measurement.timestamp);
 			me.geoData.latitude.push(measurement.coords.latitude);
+			me.geoData.longitude.push(measurement.coords.longitude);
 			me.geoData.accuracy.push(measurement.coords.accuracy);
 			me.geoData.altitude.push(measurement.coords.altitude);
 			me.geoData.altitudeAccuracy.push(measurement.coords.altitudeAccuracy);
@@ -463,11 +467,14 @@ function route(name) {
 		me.learnCounter++;
 		me.routeAlerts.add("Please stand by while I learn the route <b>" + me.name + "</b>");
 		me.routeAlerts.add("This is update #" + me.learnCounter + ", for route: " + me.name);
+		
 		// tell the user what's happening
 		if (me.model.lat.length > 0 && me.model.lon.length > 0) {
-			me.routeAlerts.add("A model exists for this route - only route changes will be recorded. Learning started.")
+			geolocationAPI.options.enableHighAccuracy = false;
+			me.routeAlerts.add("A model exists for this route - only route changes will be recorded.");
 		} else {
-			me.routeAlerts.add("Insufficient route data. Learning started.")		
+			geolocationAPI.options.enableHighAccuracy = true;
+			me.routeAlerts.add("Insufficient route data. A new route will be created.");		
 		}
 		
 		//add method to the geolocation's API callbacks stack
@@ -497,21 +504,30 @@ function route(name) {
 	this.exportRouteToDB = function() {
 		//export to a database. 
 		var routeDBname = "route_" + me.name.split(' ').join('_'); //replace spaces with underscores for dbname
-		storageAPI.dropTable(routeDBname)
-		storageAPI.createTable(geolocationAPI.data,routeDBname);
+		var table = []; table.push(routeDBname);
+		storageAPI.dropTable(table);
+		storageAPI.createTable(me.geoData,routeDBname);
 		
 		//make sql entries
 		var toSQL = null;
-		for (var i=0;i<me.geoData.length;i++) {
-			 toSQL = geolocationAPI.formatDataForSQL(me.geoData[i]); //At the moment we only care about geolocation data, so we use that data schema
-			 storageAPI.insertIntoTable(routeDBname,toSQL);
+		for (var i=0;i<me.geoData.latitude.length;i++) {
+			toSQL =  	'"' + new Date(me.geoData.timestamp) + '",' +
+						'"' + me.geoData.latitude          + '",' +
+						'"' + me.geoData.longitude         + '",' +
+						'"' + me.geoData.altitude          + '",' +
+						'"' + me.geoData.accuracy          + '",' +
+						'"' + me.geoData.altitudeAccuracy  + '",' +
+						'"' + me.geoData.heading           + '",' +
+						'"' + me.geoData.speed             + '"';
+			storageAPI.insertIntoTable(routeDBname,toSQL);
 		}	 
 	}
 	
 	this.exportModelToDB = function() {
 		//export to a database.
 		var modelDBname = "model_" + me.name.split(' ').join('_'); //replace spaces with underscores for dbname
-		storageAPI.dropTable(modelDBname)
+		var table = []; table.push(modelDBname);
+		storageAPI.dropTable(table);
 		storageAPI.createTable(me.model,modelDBname);
 		
 		//make sql entries
