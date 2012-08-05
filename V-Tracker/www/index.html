@@ -91,10 +91,11 @@
 			</div><!-- /header -->
 			
 			<div data-role="content" data-fullscreen="true">			
-				<h3>What would you like to do?</h3>
+				<h3 class="h3modified">What would you like to do?</h3>
 				<a data-role="button" href="#newRouteDialog" data-rel="dialog" data-theme="b" data-icon="plus">Learn a new route</a>
 				<a data-role="button" href="javascript:vtracker.trackOrUpdateRoutes()" data-rel="dialog" data-icon="search">Track or update a route</a>
 				<a data-role="button" href="javascript:vtracker.manageRoutes()" data-rel="dialog" data-icon="grid">Manage routes</a>
+				<a data-role="button" href="#optionsDialog" data-rel="dialog" data-icon="gear">Edit learning settings</a>
 				
 				<div id="startpage-errors"></div>
 			</div>
@@ -311,11 +312,29 @@
 			</div>
 			
 			<div data-role="content" class="ui-body">
-				<input type="text" id="newRouteDialog-newRouteName" placeholder="enter route name here" value="" />				
+				<input type="text" id="newRouteDialog-newRouteName" placeholder="enter route name here" value="" />
+		
 				<a href="javascript:vtracker.startLearningNow();" data-role="button" data-theme="b" data-transition="none">Start learning now</a> 
 				<a href="#" data-role="button" data-rel="back" data-theme="c" data-transition="none">Cancel</a> 
 			</div>
 		</div><!-- /newroutedialog -->
+		
+		<!-- Start of optionsDialog -->
+		<div data-role="dialog" id="optionsDialog" data-theme="c">
+			<div data-role="header" data-theme="d">
+				<h1>Settings</h1>
+			</div>
+			
+			<div data-role="content" class="ui-body">
+					<label for="newRouteDialog-noiseSlider">Noise threshold radius (m):</label>
+					<input type="range" name="newRouteDialog-noiseSlider" id="newRouteDialog-noiseSlider" value="2" min="0" max="10" data-highlight="true" />
+					
+					<label for="newRouteDialog-minAccuracy">Minimum GPS accuracy (m):</label>
+					<input type="range" name="newRouteDialog-minAccuracy" id="newRouteDialog-minAccuracy" value="50" min="20" max="100" data-highlight="true" />
+				
+				<a href="#" data-role="button" data-rel="back" data-theme="b" data-transition="none"  data-icon="check">Done</a>
+			</div>
+		</div><!-- /optionsDialog -->
 		
 		<!-- Start of findRoutesDialog -->
 		<div data-role="dialog" id="findRoutesDialog" data-theme="c">
