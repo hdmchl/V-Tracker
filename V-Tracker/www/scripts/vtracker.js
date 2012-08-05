@@ -113,14 +113,55 @@ var vtracker = {
 		if (rr == null) {console.log("Error retrieving route from storage");return;}
 		
 		//setup route object
-		vtracker.workingRoute = new route(rr.name) //probably don't need to do this, but it's cleaner
+		vtracker.workingRoute = new route(rr.name);
 		vtracker.workingRoute.loadFromStored(rr);
 		
-		vtracker.workingRoute.exportToDB();
+		vtracker.workingRoute.exportRouteToDB();
 		
 		//tell the user all went well
 		var success = new notificationObj();
-		success.alert("Route exported","Route has been exported successfully.","Okay")
+		success.alert("Route exported","Route has been exported.","Okay")
+	},
+	
+	exportModel:function() {
+		var routeName = $('input[name=allRoutes-choice]:checked').val(); //get route name
+		
+		var rr = storageAPI.localStorageAPI.getObject("route_" + routeName); //get route from storage
+		if (rr == null) {console.log("Error retrieving route from storage");return;}
+		
+		//setup route object
+		vtracker.workingRoute = new route(rr.name);
+		vtracker.workingRoute.loadFromStored(rr);
+		
+		vtracker.workingRoute.exportModelToDB();
+		
+		//tell the user all went well
+		var success = new notificationObj();
+		success.alert("Model exported","Model has been exported.","Okay")
+	},
+	
+	plotRoute:function() {
+		var routeName = $('input[name=allRoutes-choice]:checked').val(); //get route name
+		
+		var rr = storageAPI.localStorageAPI.getObject("route_" + routeName); //get route from storage
+		if (rr == null) {console.log("Error retrieving route from storage");return;}
+		
+		//setup route object
+		vtracker.workingRoute = new route(rr.name);
+		vtracker.workingRoute.loadFromStored(rr);
+		
+		//plot the model
+		vtracker.workingRoute.plotModelInDiv("#plotpage-plotPlaceholder");
+		
+		//prepare the page
+		$("#plotpage-routeName").html(vtracker.workingRoute.name);
+		$("#plotpage-dataLength").html(vtracker.workingRoute.geoData.longitude.length);
+		$("#plotpage-learnCounter").html(vtracker.workingRoute.learnCounter);
+		$("#plotpage-modelLength").html(vtracker.workingRoute.model.lon.length);
+		$("#plotpage-noise").html(vtracker.workingRoute.noiseThreshold);
+		
+		//display the page
+		$.mobile.changePage('#plotpage', 'none', true, true);
 	},
 	
 	removeRoute:function() {
@@ -198,8 +239,16 @@ function route(name) {
 
 	//handle route properties
 	this.name = name;
-	this.geoData = [];
+	this.geoData = {timestamp: [],
+					latitude: [],
+					longitude: [],
+					altitude: [],
+					accuracy: [],
+					altitudeAccuracy: [],
+					heading: [],
+					speed: [] },
 	this.model = {lon: [], lat: []};
+	this.noiseThreshold = 3; //the threshold radius (in metres) between what is considered to be natural noise fluctuation and what is considered to be a route change
 	this.learnCounter = 0;
 	
 	//handle route methods
@@ -209,31 +258,160 @@ function route(name) {
 		me.name = storedRoute.name;
 		me.geoData = storedRoute.geoData;
 		me.model = storedRoute.model;
+		me.noiseThreshold = storedRoute.noiseThreshold;
 		me.learnCounter = storedRoute.learnCounter;
 	}
 	
-	this.onGeoMeasurement = function(measurements) {
-		//TO DO: check accuracy, and do timeouts etc...
+	this.onGeoMeasurement = function(measurement) {
+		//TO DO: check measurement's accuracy, and do timeouts etc...
 		
 		//if all good, add measurement to "data" array
 		//TO DO: USE EUCLIDEAN DISTANCE find the nearest two points, and add the measurement between them
-		me.geoData.push(measurements);
+		me.geoData.timestamp.push(measurement.timestamp);
+		me.geoData.latitude.push(measurement.coords.latitude);
+		me.geoData.longitude.push(measurement.coords.longitude);
+		me.geoData.accuracy.push(measurement.coords.accuracy);
+		me.geoData.altitude.push(measurement.coords.altitude);
+		me.geoData.altitudeAccuracy.push(measurement.coords.altitudeAccuracy);
+		me.geoData.heading.push(measurement.coords.heading);
+		me.geoData.speed.push(measurement.coords.heading);
 		//me.routeAlerts.add("measurement added"); //useful for debugging
-	
-		//call modelling algorithm to update model
-		me.updateModel();	
+		
+		//get the relevant data and update the model
+		var relevantData = {lon: me.geoData.longitude, lat: me.geoData.latitude}
+		me.model = me.updateModel(relevantData);
 	}
 	
-	this.updateModel = function() {
-		//TO DO: ADD ALGORITHM INTO HERE...
-		//take in me.data
+	this.updateModel = function(data) {
+		//this function takes in "data" and returns the model as "output"
 		
-		//return me.model
+		//at this point, the assumption is that the data variable has: {lon:[...],lat:[...]} properties...
+		//we make sure it's actually good data
+		if (data.lon.length != data.lat.length || !(data.lon.length > 1)) {console.log("Data array is not suitable for modeling");return;}
+		
+		//get data length
+		var dataLength = data.lon.length;
+		
+		//set the parameters
+		var start = 0;
+		var end = dataLength-1;
+		var borderRadius = me.noiseThreshold; //pull this from the route's properties
+		
+		//declare our output object
+		var output = {lon: [], lat: []};
+		
+		//push on the start point
+		//console.log("Modelling started from point: " + start)
+		output.lon.push(data.lon[start]);
+		output.lat.push(data.lat[start]);
+
+		//get the first breakpoint after the start point
+		var breakPoint = me.createModel(data, start, end, borderRadius);
+		//console.log("Loop broke, segment created from: " + start + " to " + breakPoint)
+		
+		//if it's less than the end, then get the other breakpoints until you reach the end
+		while(breakPoint < end) {
+			//push on the breakpoint, because it's before the end
+			output.lon.push(data.lon[breakPoint]);
+			output.lat.push(data.lat[breakPoint]);
+			
+			start = breakPoint; //change the starting point to the previous breakpoint
+			breakPoint = me.createModel(data, start, end, borderRadius); //find new breakPoint
+			//console.log("Loop broke, segment created from: " + start + " to " + breakPoint)
+		}
+		
+		//at this stage, "breakPoint" must equal "end"
+		if (breakPoint!=end) {console.log("Error: 'breakPoint' was not the 'end'");return;}
+		
+		//push on the last data point
+		output.lon.push(data.lon[end]);
+		output.lat.push(data.lat[end]);
+		//console.log("Modelling ended at point: " + breakPoint);
+		
+		return output;
+	}
+	
+	this.createModel = function(data, start, end, limit) {
+		//uses "data" from "start" to "end" and return the point where a straight line fit is still acceptable, under "limit" condition for RMSD
+		//we are creating a piecewise model, using multivariate orinary linear regression, where the minimum residuals is already specified 
+		//  and acts as the "splitter"
+		
+		//housekeeping: set up our variables
+		var lat = data.lat;
+		var lon = data.lon;
+		var x = [];
+		var y = [];
+		
+		//set the start at the origin
+		x[start] = 0;
+		y[start] = 0;
+		
+		for (var i=start+1 ; i<end ; i++) {
+			//console.log("trying to model from: " + start + " to " + i)
+			
+			//**** STEP 1: get distances between the points in metres
+			//we are essentially creating the (x,y) equivalent for point i, where lon[start],lat[start] is the origin
+			//for this we use the Haversine formula
+			var R = 6371000; // radius of the earth in metres
+	
+			var lat1 = lat[start] * Math.PI/180;
+			var lat2 = lat[i] * Math.PI/180;
+			
+			//find difference when dLat = 0
+			var dLat = 0;
+			var dLon = (lon[i]-lon[start]) * Math.PI/180;
+			var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+					Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+			x[i] = (R * c);
+			
+			//find difference when dLon = 0
+			var dLat = (lat[i]-lat[start]) * Math.PI/180;
+			var dLon = 0;
+			var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+					Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+			y[i] = (R * c);
+			
+			//**** STEP 2: create a straight line model from "start" to the current point of interest: i
+			//create the line using the general standard model for a straight line: ax + by + c = 0
+			var a = y[start] - y[i]; // (y1-y2)
+			var b = x[i] - x[start]; // (x2-x1)
+			var c = x[start]*y[i] - x[i]*y[start]; // (x1y2-x2y1)
+			
+			// if the line is vertical or horizontal, then just include that point and break
+			if((-b/a) == Number.POSITIVE_INFINITY || (-a/b) == Number.POSITIVE_INFINITY || (-b/a) == Number.NEGATIVE_INFINITY || (-a/b) == Number.NEGATIVE_INFINITY) {return i;}
+			
+			//**** STEP 3: apply that model from the start point, to the point of interest and find the squared deviations
+			var deviations = [];//reset deviations
+			for (var j = start+1; j < i; j++) {
+				//console.log("testing midpoint: " + j)
+
+				var x_predicted = (-b/a) * y[j] + (-c/a);
+				var y_predicted = (-a/b) * x[j] + (-c/b);
+
+				//get errors on x and y axes
+				var x_error = (x_predicted - x[j]);
+				var y_error = (y_predicted - y[j]);
+
+				//get right-angle error from the straight line model
+				var errorBufferOnSegment = Math.sqrt(y_error*y_error + x_error*x_error); //the hypotenuse
+				var deviation = y_error * Math.sin(Math.acos(y_error/errorBufferOnSegment));
+				deviations.push(deviation*deviation);
+			}
+			//get the square root of the mean of the squared deviations (Root Mean Squared Deviations = RMSD)
+			var RMSD = Math.sqrt(vtrackerAPI.retAvg(deviations));
+			//if it's larger than the limit, then return
+			//console.log("RMSD: " + RMSD)
+			if (RMSD >= limit) {return i;}
+		}
+		
+		//if the RMSD never exceeded the limit, just return the end point		
+		return end;
 	}
 	
 	this.plotModelInDiv = function(divId) {
-		//TO DO: get x and y from me.model
-		
+		//prepare the options
 		var options = {
 			series: {
 				lines: { show: true },
@@ -241,15 +419,16 @@ function route(name) {
 			},
 			yaxis: {
 				//min: 0,
-				//max: 10
+				//max: 10,
 			},
 			xaxis: {
-				//min: 144.982366,
-				//max: 145.097081,
+				//min: 0,
+				//max: 0,
 			}
 		};
-			
-		$.plot($(divId), [ numeric.transpose([x,y]) ], options);
+		
+		//plot
+		$.plot($(divId), [ numeric.transpose([me.model.lon,me.model.lat]) ], options);
 	}
 	
 	this.learn = function() {
@@ -259,7 +438,7 @@ function route(name) {
 		me.routeAlerts.add("This is update #" + me.learnCounter + ", for route: " + me.name);
 		// tell the user what's happening
 		if (me.model.lat.length > 0 && me.model.lon.length > 0) {
-			me.routeAlerts.add("Model data exists for this route. Only route changes will be recorded.")
+			me.routeAlerts.add("A model exists for this route - only route changes will be recorded. Learning started.")
 		} else {
 			me.routeAlerts.add("Insufficient route data. Learning started.")		
 		}
@@ -346,6 +525,19 @@ var vtrackerAPI = {
 		} else {
 			return true;
 		}
+	},
+	
+	retAvg:function(ary) {
+		var av = 0;
+		var cnt = 0;
+		var len = ary.length;
+		if (len == 0) {return 0;}
+		for (var i = 0; i < len; i++) {
+			var e = +ary[i];
+			if(!e && ary[i] !== 0 && ary[i] !== '0') e--;
+			if (ary[i] == e) {av += e; cnt++;}
+		}
+		return av/cnt;
 	},
 	
 	//make sure the browser engine can do what we need
