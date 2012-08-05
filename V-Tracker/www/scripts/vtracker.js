@@ -48,9 +48,8 @@ var vtracker = {
 	//***** END LEARN NEW ROUTE *****//
 	
 	//***** UPDATE/TRACK ROUTES *****//
-	findNearbyRoutes:function() {
-		//TO DO: 1. pull all routes out of storage 2. get user's location 3. find nearest routes 4. create nearestRoutes var
-		var nearestRoutes = vtracker.getAllRoutes(); //for now, use all routes
+	trackOrUpdateRoutes:function() {
+		var allRoutes = vtracker.getAllRoutes(); //get all routes
 		
 		//create the radio buttons
 		vtracker.createRouteChoices(nearestRoutes, "#findRoutesDialog-routesNearby", "routesNearby");
@@ -61,7 +60,7 @@ var vtracker = {
 	},
 	
 	trackMeOnRoute:function() {
-		//TO DO: implement tracking, probably by plotting the route, and adding a method to the geolocationAPI that puts a cursor on the plot...
+		//TODO: implement tracking, probably by plotting the route, and adding a method that puts a cursor on the plot...
 		//would be good to calculate "distance travelled/route distance"
 		
 		var success = new notificationObj();
@@ -263,10 +262,11 @@ function route(name) {
 	}
 	
 	this.onGeoMeasurement = function(measurement) {
-		//TO DO: check measurement's accuracy, and do timeouts etc...
+		//TODO: check measurement's accuracy, and do timeouts etc...
+		//measurement.coords.accuracy
 		
 		//if all good, add measurement to "data" array
-		//TO DO: USE EUCLIDEAN DISTANCE find the nearest two points, and add the measurement between them
+		//TODO: USE EUCLIDEAN DISTANCE find the nearest two points, and add the measurement between them
 		me.geoData.timestamp.push(measurement.timestamp);
 		me.geoData.latitude.push(measurement.coords.latitude);
 		me.geoData.longitude.push(measurement.coords.longitude);
