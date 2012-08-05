@@ -286,6 +286,20 @@
 			</div>
 		</div><!-- /trackingpage -->
 		
+		<!-- Start of plotpage -->
+		<div data-role="page" id="plotpage" data-theme="c">
+			<div data-role="header" data-position="fixed">
+				<h1>Model Preview</h1>
+				<a href="#startpage" data-icon="check" data-theme="b" data-transition="none" class="ui-btn-right">Done</a>
+			</div>
+			
+			<div data-role="content" class="ui-body">
+				<h3 class="h3modified"><span id="plotpage-routeName">Route name</span></h3>
+				
+				<div id="plotpage-plotPlaceholder"></div>
+			</div>
+		</div><!-- /plotpage -->
+		
 		<!-- Start of newroutedialog -->
 		<div data-role="dialog" id="newRouteDialog" data-theme="c">
 			<div data-role="header" data-theme="d">
@@ -330,6 +344,7 @@
 				</fieldset>
 				
 				<a href="javascript:vtracker.exportRoute()" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Export to database</a>
+				<a href="javascript:vtracker.plotRoute()" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Plot route model</a>
 				<a href="javascript:vtracker.removeRoute()" data-role="button" data-theme="c" data-transition="none" data-icon="delete">Delete</a>
 				<a href="#" data-role="button" data-rel="back" data-theme="c"data-transition="none">Cancel</a>    
 			</div>
