@@ -298,6 +298,18 @@ function route(name) {
 		for (var i=0;i<me.geoData.length;i++) {
 			 toSQL = geolocationAPI.formatDataForSQL(me.geoData[i]);
 			 storageAPI.insertIntoTable(routeDB,toSQL);
+	this.exportModelToDB = function() {
+		//export to a database.
+		var modelDBname = "model_" + me.name.split(' ').join('_'); //replace spaces with underscores for dbname
+		storageAPI.dropTable(modelDBname)
+		storageAPI.createTable(me.model,modelDBname);
+		
+		//make sql entries
+		var toSQL = null;
+		for (var i=0;i<me.model.lon.length;i++) {
+			toSQL =  '"' + me.model.lon[i]     + '",' +
+					 '"' + me.model.lat[i]     + '"';
+			storageAPI.insertIntoTable(modelDBname,toSQL);
 		}	 
 	}
 }
