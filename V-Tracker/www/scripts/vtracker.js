@@ -277,6 +277,33 @@ function route(name) {
 		me.geoData.speed.push(measurement.coords.heading);
 		//me.routeAlerts.add("measurement added"); //useful for debugging
 		
+		if (measurement.coords.accuracy < me.minAccuracy) {
+			if (accuracyTimout > 0) {
+			}
+			//TODO: USE EUCLIDEAN DISTANCE find the nearest two points, and add the measurement between them
+			me.geoData.timestamp.push(measurement.timestamp);
+			me.geoData.latitude.push(measurement.coords.latitude);
+			me.geoData.accuracy.push(measurement.coords.accuracy);
+			me.geoData.altitude.push(measurement.coords.altitude);
+			me.geoData.altitudeAccuracy.push(measurement.coords.altitudeAccuracy);
+			me.geoData.heading.push(measurement.coords.heading);
+			me.geoData.speed.push(measurement.coords.heading);
+			//me.routeAlerts.add("measurement added"); //useful for debugging
+			
+			accuracyTimout = 0; //reset accuracy timeout
+		} else {
+			if (accuracyTimout >= me.timeoutLimit) {
+				geolocationAPI.successCBs = []; //clear callbacks on API
+				//stop collecting measurements, other sensors can be turned off here
+				geolocationAPI.stopWatching();
+				me.routeAlerts.add("Learning stopped because measurement accuracy has been consistently poor.");
+			} else {
+				me.routeAlerts.add("Accuracy is poor (" + accuracyTimout + ").");
+				accuracyTimout++;
+			}
+			return;
+		}
+
 		//get the relevant data and update the model
 		var relevantData = {lon: me.geoData.longitude, lat: me.geoData.latitude}
 		me.model = me.updateModel(relevantData); //overwrite model - for optimisation, this method call can be done in a webworker
