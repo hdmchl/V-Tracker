@@ -52,7 +52,7 @@ var vtracker = {
 		var allRoutes = vtracker.getAllRoutes(); //get all routes
 		
 		//create the radio buttons
-		vtracker.createRouteChoices(nearestRoutes, "#findRoutesDialog-routesNearby", "routesNearby");
+		vtracker.createRouteChoices(allRoutes, "#findRoutesDialog-routesNearby", "routesNearby");
 		$("#findRoutesDialog").trigger('create'); //update the styles on the UI
 		
 		//show the dialog
@@ -76,7 +76,7 @@ var vtracker = {
 		if (rr == null) {console.log("Error retrieving route from storage");return;}
 		
 		//setup route object
-		vtracker.workingRoute = new route(rr.name) //probably don't need to do this, but it's cleaner
+		vtracker.workingRoute = new route(rr.name);
 		vtracker.workingRoute.loadFromStored(rr);
 		vtracker.workingRoute.alertOps.displayInDiv(true);
 		vtracker.workingRoute.alertOps.divId("#loaderDialog-alertsConsole");
@@ -279,7 +279,7 @@ function route(name) {
 		
 		//get the relevant data and update the model
 		var relevantData = {lon: me.geoData.longitude, lat: me.geoData.latitude}
-		me.model = me.updateModel(relevantData);
+		me.model = me.updateModel(relevantData); //overwrite model - for optimisation, this method call can be done in a webworker
 	}
 	
 	this.updateModel = function(data) {

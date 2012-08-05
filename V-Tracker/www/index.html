@@ -93,7 +93,7 @@
 			<div data-role="content" data-fullscreen="true">			
 				<h3>What would you like to do?</h3>
 				<a data-role="button" href="#newRouteDialog" data-rel="dialog" data-theme="b" data-icon="plus">Learn a new route</a>
-				<a data-role="button" href="javascript:vtracker.findNearbyRoutes()" data-rel="dialog" data-icon="search">Find nearby routes</a>
+				<a data-role="button" href="javascript:vtracker.trackOrUpdateRoutes()" data-rel="dialog" data-icon="search">Track or update a route</a>
 				<a data-role="button" href="javascript:vtracker.manageRoutes()" data-rel="dialog" data-icon="grid">Manage routes</a>
 				
 				<div id="startpage-errors"></div>
@@ -348,8 +348,7 @@
 				</fieldset>
 				
 				<a href="javascript:vtracker.plotRoute()" data-role="button" data-theme="a" data-transition="none" data-icon="arrow-r">Preview model</a>
-				<a href="javascript:vtracker.exportModel()" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Export model to database</a>
-				<a href="javascript:vtracker.exportRoute()" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Export route to database</a>
+				<a href="javascript:vtracker.exportModel();vtracker.exportRoute();" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Export to database</a>
 				<a href="javascript:vtracker.removeRoute()" data-role="button" data-theme="c" data-transition="none" data-icon="delete">Delete</a>
 				<a href="#" data-role="button" data-rel="back" data-theme="c"data-transition="none">Cancel</a>    
 			</div>
