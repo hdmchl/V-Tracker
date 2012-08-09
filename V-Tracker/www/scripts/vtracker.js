@@ -689,6 +689,17 @@ var vtrackerAPI = {
 		notificationsAPI.clearAll();
 	},
 	
+	initialiseGoogleMaps:function() {
+		var myMap = {
+		    GMapScriptURL: "http://maps.googleapis.com/maps/api/js?key=",
+		    Map: null,
+		    InitiazlizeMaps: function () {
+		        if (GBrowserIsCompatible()) {
+		    }
+		}
+		$.getScript(myMap.GMapScriptURL + local.gmapsKey + "&callback=myMap.InitializeMaps&sensor=false");
+	},
+	
 	//make sure a potential object name is not null or blank
 	validObjName:function(name) {
 		if (name == null || name == "") {

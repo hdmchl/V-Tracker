@@ -64,6 +64,7 @@
 				//We're ready to roll
 				setTimeout(function(){vtrackerAPI.checkBrowserCompatibility("#startpage-errors");},1000);
 				storageAPI.init("VTracker_db", "1.00", "VTrackerDB", 2 * 1024*1024); //initialise database, the API restricts db use to one db (by design)
+				vtrackerAPI.initialiseGoogleMaps();
 				
 				//listen to device pause or resume
 				document.addEventListener("pause", vtrackerAPI.onPause, false);
