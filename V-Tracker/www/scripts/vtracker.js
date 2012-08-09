@@ -541,6 +541,135 @@ function route(name) {
 }
 //************************************* END routeObj **************************************//
 
+//************************************* MODELLINGAPI **************************************//
+var modellingAPI = {
+	createModel:function(route) {
+		//this function takes in a "route" and returns a model as "output"
+		
+		//get the data we need from the route...
+		var data = {lon: route.geoData.longitude, lat: route.geoData.latitude}
+		
+		//we need to make sure it's actually good data
+		if (data.lon.length != data.lat.length || !(data.lon.length > 0)) {route.routeAlerts.add("Data array is not suitable for modelling.");return;}
+		
+		//housekeeping, set some parameters
+		var dataLength = data.lon.length; //get data length
+		var start = 0;
+		var end = dataLength-1;
+		var borderRadius = route.noiseThreshold; //pull this from the route's properties
+		
+		//declare our output object, which we start adding to
+		var output = {lon: [], lat: []};
+		
+		//push the start point onto the output
+		//console.log("Modelling started from point: " + start)
+		output.lon.push(data.lon[start]);
+		output.lat.push(data.lat[start]);
+
+		//get the first breakpoint after the start point
+		var breakPoint = modellingAPI.getBreakPoint(data, start, end, borderRadius);
+		//console.log("Loop broke, segment created from: " + start + " to " + breakPoint)
+		
+		//if it's less than the end, then get the other breakpoints until you reach the end
+		while(breakPoint < end) {
+			//push on the breakpoint, because it's before the end
+			output.lon.push(data.lon[breakPoint]);
+			output.lat.push(data.lat[breakPoint]);
+			
+			start = breakPoint; //change the starting point to the previous breakpoint
+			breakPoint = modellingAPI.getBreakPoint(data, start, end, borderRadius); //find new breakPoint
+			//console.log("Loop broke, segment created from: " + start + " to " + breakPoint)
+		}
+		
+		//at this stage, "breakPoint" must equal "end"
+		if (breakPoint!=end) {route.routeAlerts.add("Error: 'breakPoint' was not the 'end'");return;}
+		
+		//push on the last data point
+		output.lon.push(data.lon[end]);
+		output.lat.push(data.lat[end]);
+		//console.log("Modelling ended at point: " + breakPoint);
+		
+		return output;
+	},
+	
+	getBreakPoint:function(data, start, end, limit) {
+		//uses "data" from "start" to "end" and returns the point where a straight line fit is still acceptable, under "limit" condition for RMSD
+		//we are creating a piecewise model, using multivariate orinary linear regression, where the minimum residuals is already specified 
+		//  and acts as the "splitter"
+		
+		//housekeeping: set up our variables
+		var lat = data.lat;
+		var lon = data.lon;
+		var x = [];
+		var y = [];
+		
+		//set the start at the origin
+		x[start] = 0;
+		y[start] = 0;
+		
+		for (var i=start+1 ; i<end ; i++) {
+			//console.log("trying to model from: " + start + " to " + i)
+			
+			//**** STEP 1: creating the (x,y) equivalent for point i, where lon[start],lat[start] is the origin
+			x[i] = modellingAPI.haversineDistance(lat[start],lon[start],lat[start],lon[i])
+			y[i] = modellingAPI.haversineDistance(lat[start],lon[start],lat[i],lon[start])
+			
+			//**** STEP 2: get the angle for the straight line between "start" and the current point of interest: i
+			//we have the x,y components of the vector, so now let's get the angle "alpha" between the vector and the x-axis
+			var alpha = Math.atan2(y_component, x_component);
+			
+			//**** STEP 3: apply that model from the start point, to the point of interest and find the squared deviations
+			var squaredDeviations = []; //reset squared deviations
+			for (var j = start+1; j < i; j++) {
+				//console.log("testing midpoint: " + j)
+				
+				//using the alpha as the rotation angle of the z axis, rotate the vector such that it is aligned with the x-axis
+				//at this point, the right angle deviation will equal the y-component: y' = x*sin(-alpha) + y*cos(-alpha)
+				
+				var deviation = x[j]*Math.sin(-alpha) + y[j]*Math.cos(-alpha); // deviation = y'
+				squaredDeviations.push(deviation*deviation);
+			}
+			
+			//**** STEP 4: get the square root of the mean of the squared deviations (Root Mean Squared Deviations = RMSD)
+			var RMSD = Math.sqrt(modellingAPI.retAvg(squaredDeviations));
+			//console.log("RMSD: " + RMSD)
+			if (RMSD >= limit) {return i-1;}//if it's larger than the limit, then return the previous point (when it was still okay)
+		}
+		
+		//if the RMSD never exceeded the limit, just return the end point		
+		return end;
+	},
+	
+	retAvg:function(ary) {
+		//return an array's average - this can also be used to modify the Array prototype to add a "avg()" method
+		var av = 0;
+		var cnt = 0;
+		var len = ary.length;
+		if (len == 0) {return 0;}
+		for (var i = 0; i < len; i++) {
+			var e = +ary[i];
+			if(!e && ary[i] !== 0 && ary[i] !== '0') e--;
+			if (ary[i] == e) {av += e; cnt++;}
+		}
+		return av/cnt;
+	},
+	
+	haversineDistance:function(lat1,lon1,lat2,lon2) {
+		//use the Haversine formula to return the distance between two geo points in metres
+		var R = 6371000; // radius of the earth in metres
+		var dLat = (lat2-lat1).toRad();
+		var dLon = (lon2-lon1).toRad();
+		var lat1 = lat1.toRad();
+		var lat2 = lat2.toRad();
+		
+		var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+		var d = R * c;
+		
+		return d;
+	},
+}
+//*********************************** END MODELLINGAPI ************************************//
 //************************************** VTRACKERAPI **************************************//
 //these are all my helper scripts
 var vtrackerAPI = {
