@@ -203,7 +203,7 @@ var vtracker = {
 	},
 	
 	placeholderShrink:function() {
-		if necessary, this method can be made to be "smarter"
+		//if necessary, this method can be made to be "smarter"
 		var currentHeight = $("#previewpage-placeholder").height();
 		$("#previewpage-placeholder").height(currentHeight*0.75);
 	},
@@ -219,7 +219,7 @@ var vtracker = {
 					 storageAPI.localStorageAPI.removeItem("route_" + routeName);
 					 vtracker.manageRoutes(); //refresh dialog
 					 }
-		}, "Delete?","Cancel,Okay");
+		}, "Delete?","Cancel,Delete");
 	},
 	//***** END MANAGE ROUTES *****//
 	
