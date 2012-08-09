@@ -96,7 +96,6 @@
 				<a data-role="button" href="#newRouteDialog" data-rel="dialog" data-theme="b" data-icon="plus">Learn a new route</a>
 				<a data-role="button" href="javascript:vtracker.trackOrUpdateRoutes()" data-rel="dialog" data-icon="search">Track or update a route</a>
 				<a data-role="button" href="javascript:vtracker.manageRoutes()" data-rel="dialog" data-icon="grid">Manage routes</a>
-				<a data-role="button" href="#optionsDialog" data-rel="dialog" data-icon="gear">Edit learning settings</a>
 				
 				<div id="startpage-errors"></div>
 			</div>
@@ -282,29 +281,44 @@
 			</div>
 			
 			<div data-role="content" class="ui-body">
-				<h3 class="h3modified"><span id="trackingpage-routeName">Route name</span></h3>
+				<h3 class="h3modified">Route: <span id="trackingpage-routeName"></span></h3>
 				
-				<div id="trackingpage-map_canvas"></div>
+				<div id="trackingpage-placeholder"></div>
 			</div>
 		</div><!-- /trackingpage -->
 		
-		<!-- Start of plotpage -->
-		<div data-role="page" id="plotpage" data-theme="c">
+		<!-- Start of previewpage -->
+		<div data-role="page" id="previewpage" data-theme="c">
 			<div data-role="header" data-position="fixed">
 				<h1>Model Preview</h1>
 				<a href="#startpage" data-icon="check" data-theme="b" data-transition="none" class="ui-btn-right">Done</a>
 			</div>
 			
 			<div data-role="content" class="ui-body">
-				<h3 class="h3modified">Route: <span id="plotpage-routeName"></span></h3>
+				<h3 class="h3modified">Route: <span id="previewpage-routeName"></span></h3>
+
+				<p><b>Original data</b> consists of <span id="previewpage-dataLength"></span> data points, collected over <span id="previewpage-learnCounter"></span> learning session(s).
+				<br />The <b>Model</b> consists of <span id="previewpage-modelLength"></span> data points, created using an average noise-threshold radius of <span id="previewpage-noise"></span> metres.</p>
+			
+				<hr />
 				
-				<div id="plotpage-plotPlaceholder"></div>
-				<br /><br /><hr />
-				<h3>Route properties</h3>
-				<p><b>Original data</b> consists of <span id="plotpage-dataLength"></span> data points, collected over <span id="plotpage-learnCounter"></span> learning session(s).
-				<br />The <b>Model</b> consists of <span id="plotpage-modelLength"></span> data points, created using a noise threshold radius of <span id="plotpage-noise"></span> metres.</p>
+				<label>Settings:</label>
+				<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+					<a href="javascript:vtracker.showModelOnPlot();" data-role="button" data-inline="true">Plot</a>
+					<a href="javascript:vtracker.showModelOnSatelliteMap();" data-role="button" data-inline="true">Satellite</a>
+					<a href="javascript:vtracker.showModelOnHybridMap();" data-role="button" data-inline="true">Hybrid</a>
+					<a href="javascript:vtracker.showModelOnRoadMap();" data-role="button" data-inline="true">Road Map</a>
+				</div>
+				<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+					<a href="javascript:vtracker.placeholderGrow();" data-role="button" data-inline="true">Grow display</a>
+					<a href="javascript:vtracker.placeholderShrink();" data-role="button" data-inline="true">Shrink display</a>
+				</div>
+				
+				<br />
+				<div id="previewpage-placeholder"></div>				
+				
 			</div>
-		</div><!-- /plotpage -->
+		</div><!-- /previewpage -->
 		
 		<!-- Start of newroutedialog -->
 		<div data-role="dialog" id="newRouteDialog" data-theme="c">
@@ -315,8 +329,8 @@
 			<div data-role="content" class="ui-body">
 				<input type="text" id="newRouteDialog-newRouteName" placeholder="enter route name here" value="" />
 		
-				<a href="javascript:vtracker.startLearningNow();" data-role="button" data-theme="b" data-transition="none">Start learning now</a> 
-				<a href="#" data-role="button" data-rel="back" data-theme="c" data-transition="none">Cancel</a> 
+				<a href="javascript:vtracker.startLearningNow();" data-role="button" data-theme="b" data-icon="arrow-r" data-transition="none">Start learning now</a> 
+				<a href="#optionsDialog" data-role="button" data-theme="c" data-rel="dialog" data-icon="gear" data-transition="none">Edit learning settings</a>
 			</div>
 		</div><!-- /newroutedialog -->
 		
@@ -327,13 +341,13 @@
 			</div>
 			
 			<div data-role="content" class="ui-body">
-					<label for="newRouteDialog-noiseSlider">Noise threshold radius (m):</label>
+					<label for="newRouteDialog-noiseSlider">Average noise threshold radius (m):</label>
 					<input type="range" name="newRouteDialog-noiseSlider" id="newRouteDialog-noiseSlider" value="2" min="0" max="10" data-highlight="true" />
 					
 					<label for="newRouteDialog-minAccuracy">Minimum GPS accuracy (m):</label>
 					<input type="range" name="newRouteDialog-minAccuracy" id="newRouteDialog-minAccuracy" value="50" min="20" max="100" data-highlight="true" />
 				
-				<a href="#" data-role="button" data-rel="back" data-theme="b" data-transition="none"  data-icon="check">Done</a>
+				<a href="#" data-role="button" data-rel="back" data-theme="b" data-transition="none" data-icon="check">Done</a>
 			</div>
 		</div><!-- /optionsDialog -->
 		
@@ -345,13 +359,12 @@
 			
 			<div data-role="content" class="ui-body">
 				<fieldset data-role="controlgroup">
-					<legend>Choose a route:</legend>
+					<legend>Please choose a route:</legend>
 					<div id="findRoutesDialog-routesNearby"></div>
 				</fieldset>
 				
-				<a href="javascript:vtracker.trackMeOnRoute();" data-role="button" data-theme="a" data-transition="none">Track me on route</a>
-				<a href="javascript:vtracker.updateRoute();" data-role="button" data-theme="b" data-transition="none">Update route</a> 
-				<a href="#" data-role="button" data-rel="back" data-theme="c" data-transition="none">Cancel</a>    
+				<a href="javascript:vtracker.trackMeOnRoute();" data-role="button" data-theme="b" data-icon="arrow-r" data-transition="none">Track me on route</a>
+				<a href="javascript:vtracker.updateRoute();" data-role="button" data-theme="b" data-icon="arrow-r" data-transition="none">Update route</a>   
 			</div>
 		</div><!-- /findRoutesDialog -->
 		
@@ -363,14 +376,13 @@
 			
 			<div data-role="content" class="ui-body">
 				<fieldset data-role="controlgroup">
-					<legend>Choose a route:</legend>
+					<legend>Please choose a route:</legend>
 					<div id="manageRoutesDialog-allRoutes"></div>
 				</fieldset>
 				
-				<a href="javascript:vtracker.plotRoute()" data-role="button" data-theme="a" data-transition="none" data-icon="arrow-r">Preview model</a>
+				<a href="javascript:vtracker.viewModel()" data-role="button" data-theme="b" data-transition="none" data-icon="arrow-r">View model</a>
 				<a href="javascript:vtracker.exportModel();vtracker.exportRoute();" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Export to database</a>
-				<a href="javascript:vtracker.removeRoute()" data-role="button" data-theme="c" data-transition="none" data-icon="delete">Delete</a>
-				<a href="#" data-role="button" data-rel="back" data-theme="c"data-transition="none">Cancel</a>    
+				<a href="javascript:vtracker.removeRoute()" data-role="button" data-theme="a" data-transition="none" data-icon="delete">Delete</a>
 			</div>
 		</div><!-- /manageRoutesDialog -->
 		
