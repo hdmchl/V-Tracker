@@ -212,14 +212,14 @@ var vtracker = {
 		vtracker.workingRoute.showModelOnMap("#previewpage-placeholder", "ROADMAP");
 	},
 
-	replayAtSlow:function() {
-		vtracker.workingRoute.showModelOnMap("#previewpage-placeholder", "SATELLITE");
-		vtracker.workingRoute.replayModel(100); // if necessary the interval can be set to be a function of the time diff...
+	replayModel:function() {
+		vtracker.workingRoute.replayModel(20);
 	},
 	
-	replayAtQuick:function() {
-		vtracker.workingRoute.showModelOnMap("#previewpage-placeholder", "SATELLITE");
-		vtracker.workingRoute.replayModel(20); // if necessary the interval can be set to be a function of the time diff...
+	replayRoute:function() {
+		// if desireable the interval can be set to be a proportional to the time diff b/w points...
+		// currently I am assuming ~5sec between readings... therefore 5000ms/50 = 100ms (ie. factor of 50x)
+		vtracker.workingRoute.replayRoute(100); 
 	},
 	
 	placeholderGrow:function() {
@@ -419,7 +419,7 @@ function route(name) {
 		
         var mapOptions = {
 	          center: new google.maps.LatLng(me.model.lat[0], me.model.lon[0]),
-	          zoom: 15,
+	          zoom: 14,
 	          disableDefaultUI: true,
 	          panControl: false,
 			  zoomControl: true,
@@ -471,15 +471,42 @@ function route(name) {
 		modelPath.setMap(map); //generate and render map
 	}
 	
+	this.getModelLength = function(from, to) {
+		var length = 0;
+		for (var i=from+1;i<to;i++) { length += modellingAPI.haversineDistance(me.model.lat[i-1],me.model.lon[i-1],me.model.lat[i],me.model.lon[i]); }
+		return length; //in metres
+	}
+	
+	this.getRouteLength = function(from, to) {
+		var length = 0;
+		for (var i=from+1;i<to;i++) { length += modellingAPI.haversineDistance(me.geoData.latitude[i-1],me.geoData.longitude[i-1],me.geoData.latitude[i],me.geoData.longitude[i]); }
+		return length; //in metres
+	}
+	
 	var offsetId;
 	this.replayModel = function(interval) {
 		clearInterval(offsetId);
 		var count = 0;
 	    offsetId = window.setInterval(function() {
 	    	count = (count + 1) % 200;
-	
+	    	
 	    	var icons = modelPath.get('icons');
-	    	icons[0].offset = (count / 2) + '%';
+	    	icons[0].offset = count  + '%';
+	   		modelPath.set('icons', icons);
+	 	}, interval);
+	}
+	
+	this.replayRoute = function(interval) {
+		clearInterval(offsetId);
+		var counter = 0;
+	    offsetId = window.setInterval(function() {
+	    	counter++;
+	    	var distance = (me.getRouteLength(0,counter) / me.getRouteLength(0,me.geoData.latitude.length))*100;
+	    	
+	    	var icons = modelPath.get('icons');
+	    	icons[0].offset = distance  + '%';
+	    	
+	    	if (distance == 100 || distance > 100) {clearInterval(offsetId);}
 	   		modelPath.set('icons', icons);
 	 	}, interval);
 	}
@@ -712,7 +739,13 @@ var vtrackerAPI = {
 		notificationsAPI.clearAll();
 	},
 	
-	initialiseGoogleMaps:function() {
+	initApplication:function() {
+		//ABSOLUTELY NO CORDOVA CALLS ARE ALLOWED IN HERE!!
+		
+		//insert any other initialisations here...
+				
+		//initialise google maps
+		if (local == null) {alert("local.js is missing! \n Can't initialise Google Maps"); return;}
 		var myMap = {
 		    GMapScriptURL: "http://maps.googleapis.com/maps/api/js?key=",
 		    Map: null,
@@ -729,7 +762,7 @@ var vtrackerAPI = {
 	//make sure a potential object name is not null or blank
 	validObjName:function(name) {
 		if (name == null || name == "") {
-			console.log("Invalid object name at declaration!");
+			console.log("Error: Invalid object name at declaration!");
 			return false;
 		} else {
 			return true;
