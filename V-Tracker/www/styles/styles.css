@@ -39,9 +39,9 @@ body {
     color: #777;
 }
 
-/*********************** LOADER  **********************
+/*********************** LOADER  **********************/
 #loader {
-	visibility: hidden;
+	display: none;
 	z-index: 100;
     -webkit-border-radius: 10px;
     background-color: rgba(0,0,0,.7);
@@ -50,15 +50,16 @@ body {
 	font-family: Helvetica, Arial, sans-serif;
     text-shadow: none;
     text-align: center;
+    vertical-align: middle;
     font-weight: bold;
     position: fixed;
     height: auto;
-    width: 90%;
-	/*max-height: 350px;
-    min-width: 230px;
-	left: 3.5%;
-	top: 40%;
+    width: 100%;
+	max-height: 300px;
+	left: 0px;
+	top: 35%;
     margin: auto;
-	padding: 5px;
-}*/
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
 /******************************************************/
