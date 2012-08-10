@@ -1,4 +1,4 @@
-/* scripts.js
+/* vtracker.js
  * 
  * Written by Hadi Michael in 2012
  * Faculty of Engineering, Monash University (Australia)
@@ -13,23 +13,23 @@ var vtracker = {
 	//***** LEARN NEW ROUTE *****//
 	startLearningNow:function() {
 		var routeName = $('#newRouteDialog-newRouteName').val(); //get route name
-		var noiseThreshold = $('#newRouteDialog-noiseSlider').val(); //get noise threshold
-		var minAccuracy = $('#newRouteDialog-minAccuracy').val(); //get min accuracy
+		var noiseThreshold = $('#optionsDialog-noiseSlider').val(); //get noise threshold
+		var minAccuracy = $('#optionsDialog-minAccuracy').val(); //get min accuracy
 		
 		var allRoutes = vtracker.getAllRoutes(); //get all routes
 		if (allRoutes.indexOf(routeName) != -1) {
 			//route name already exists
-			var x = new notificationObj();
-			var overwrite = x.confirm("The route name you selected is already in use. Would you like to overwrite it?", function onConfirm(buttonIndex) {
+			var noti = new notificationObj();
+			var overwrite = noti.confirm("The route name you selected is already in use. Would you like to overwrite it?", function onConfirm(buttonIndex) {
 				if (buttonIndex == 2) {
 					storageAPI.localStorageAPI.removeItem("route_" + routeName);
-					vtracker.startLearningNow();
+					vtracker.startLearningNow(); //rerun this method
 				}
 			}, "Name exists", "Cancel,Overwrite")
 			return;
 		}
 		
-		//if all good, then let the user through
+		//if all good, then proceed through
 
 		//create new route object
 		vtracker.workingRoute = new route(routeName); //create a new route object
@@ -55,7 +55,7 @@ var vtracker = {
 	
 	//***** UPDATE/TRACK ROUTES *****//
 	trackOrUpdateRoutes:function() {
-		var allRoutes = vtracker.getAllRoutes(); //get all routes
+		var allRoutes = vtracker.getAllRoutes(); //get all routes - in the future, you would only load the routes that are nearby
 		
 		//create the radio buttons
 		vtracker.createRouteChoices(allRoutes, "#findRoutesDialog-routesNearby", "routesNearby");
@@ -67,10 +67,10 @@ var vtracker = {
 	
 	trackMeOnRoute:function() {
 		//TODO: implement tracking, probably by plotting the route, and adding a method that puts a cursor on the plot...
-		//would be good to calculate "distance travelled/route distance"
+		//would be good to also calculate "distance travelled/route distance" using haversine
 		
-		var success = new notificationObj();
-		success.alert("Under Construction","Not yet bra!","Okay")
+		var noti = new notificationObj();
+		noti.alert("Under Construction","Not yet bra!","Okay")
 		
 		$.mobile.changePage('#trackingpage', 'none', true, true);
 	},
@@ -89,7 +89,7 @@ var vtracker = {
 		vtracker.workingRoute.alertOps.displayInDiv(true);
 		vtracker.workingRoute.alertOps.divId("#loaderDialog-alertsConsole");
 		
-		//set options
+		//refresh options
 		vtracker.workingRoute.noiseThreshold = noiseThreshold; //set noise threshold
 		vtracker.workingRoute.minAccuracy = minAccuracy; //set min accuracy
 		
@@ -117,7 +117,40 @@ var vtracker = {
 		$.mobile.changePage('#manageRoutesDialog', 'none', true, true);
 	},
 	
-	exportRoute:function() {
+	recreateModel:function() {
+		var routeName = $('input[name=allRoutes-choice]:checked').val(); //get route name
+		if (routeName == null) {return;} //stop "no selection" case
+		
+		$("#loader").show();
+		
+		var noiseThreshold = $('#optionsDialog-noiseSlider').val(); //get noise threshold
+		var minAccuracy = $('#optionsDialog-minAccuracy').val(); //get min accuracy
+		
+		var rr = storageAPI.localStorageAPI.getObject("route_" + routeName); //get route from storage
+		if (rr == null) {console.log("Error retrieving route from storage");return;}
+		
+		//setup route object
+		vtracker.workingRoute = new route(rr.name);
+		vtracker.workingRoute.loadFromStored(rr);
+		
+		//set options
+		vtracker.workingRoute.noiseThreshold = noiseThreshold; //set noise threshold
+		vtracker.workingRoute.minAccuracy = minAccuracy; //set min accuracy
+	
+		//tell the user that it may take a while...
+		//confirm before deleting
+		var noti = new notificationObj();
+		noti.confirm("Recreating the model for: " + routeName + " may take a while. Are you sure you want to do that?", function onConfirm(buttonIndex) {
+			if (buttonIndex == 2) {
+					setTimeout(function(){
+						vtracker.workingRoute.recreateModel($("#loader").slideToggle());
+						},1000);
+					 }
+		}, "Continue?","Cancel,Yup");
+	},
+	
+	
+	exportRouteAndModel:function() {
 		var routeName = $('input[name=allRoutes-choice]:checked').val(); //get route name
 		if (routeName == null) {return;} //stop "no selection" case
 		
@@ -129,28 +162,11 @@ var vtracker = {
 		vtracker.workingRoute.loadFromStored(rr);
 		
 		vtracker.workingRoute.exportRouteToDB();
-		
-		//tell the user all went well
-		var success = new notificationObj();
-		success.alert("Route exported","Route has been exported.","Okay")
-	},
-	
-	exportModel:function() {
-		var routeName = $('input[name=allRoutes-choice]:checked').val(); //get route name
-		if (routeName == null) {return;} //stop "no selection" case
-		
-		var rr = storageAPI.localStorageAPI.getObject("route_" + routeName); //get route from storage
-		if (rr == null) {console.log("Error retrieving route from storage");return;}
-		
-		//setup route object
-		vtracker.workingRoute = new route(rr.name);
-		vtracker.workingRoute.loadFromStored(rr);
-		
 		vtracker.workingRoute.exportModelToDB();
 		
 		//tell the user all went well
 		var success = new notificationObj();
-		success.alert("Model exported","Model has been exported.","Okay")
+		success.alert("Exported","The route and its model have been exported.","Okay")
 	},
 	
 	viewModel:function() {
@@ -163,14 +179,14 @@ var vtracker = {
 		//setup route object
 		vtracker.workingRoute = new route(rr.name);
 		vtracker.workingRoute.loadFromStored(rr);
-	
+		
 		//prepare the page = show the route's properties
 		$("#previewpage-routeName").html(vtracker.workingRoute.name);
 		$("#previewpage-dataLength").html(vtracker.workingRoute.geoData.longitude.length);
 		$("#previewpage-learnCounter").html(vtracker.workingRoute.learnCounter);
 		$("#previewpage-modelLength").html(vtracker.workingRoute.model.lon.length);
 		$("#previewpage-noise").html(vtracker.workingRoute.noiseThreshold);
-		$("#previewpage-placeholder").empty();
+		$("#previewpage-placeholder").empty(); //clear placeholder display
 		
 		//display the page
 		$.mobile.changePage('#previewpage', 'none', true, true);
@@ -195,17 +211,31 @@ var vtracker = {
 		//show the model on Google Maps
 		vtracker.workingRoute.showModelOnMap("#previewpage-placeholder", "ROADMAP");
 	},
+
+	replayAtSlow:function() {
+		vtracker.workingRoute.showModelOnMap("#previewpage-placeholder", "SATELLITE");
+		vtracker.workingRoute.replayModel(100); // if necessary the interval can be set to be a function of the time diff...
+	},
+	
+	replayAtQuick:function() {
+		vtracker.workingRoute.showModelOnMap("#previewpage-placeholder", "SATELLITE");
+		vtracker.workingRoute.replayModel(20); // if necessary the interval can be set to be a function of the time diff...
+	},
 	
 	placeholderGrow:function() {
 		//if necessary, this method can be made to be "smarter"
-		var currentHeight = $("#previewpage-placeholder").height();
-		$("#previewpage-placeholder").height(currentHeight*1.5);
+		var currentHeight1 = $("#previewpage-placeholder").height();
+		$("#previewpage-placeholder").height(currentHeight1*1.5);
+		var currentHeight2 = $("#trackingpage-placeholder").height();
+		$("#trackingpage-placeholder").height(currentHeight2*1.5);
 	},
 	
 	placeholderShrink:function() {
 		//if necessary, this method can be made to be "smarter"
-		var currentHeight = $("#previewpage-placeholder").height();
-		$("#previewpage-placeholder").height(currentHeight*0.75);
+		var currentHeight1 = $("#previewpage-placeholder").height();
+		$("#previewpage-placeholder").height(currentHeight1*0.75);
+		var currentHeight2 = $("#trackingpage-placeholder").height();
+		$("#trackingpage-placeholder").height(currentHeight2*0.75);
 	},
 	
 	removeRoute:function() {
@@ -260,7 +290,7 @@ var vtracker = {
 		$(divId).empty(); //empty the div
 		
 		if (routesAry.length == 0) {
-			$(divId).append("<p>... no routes found ...</p>");
+			$(divId).append("<p>... <i>no routes found</i> ...</p>");
 			return;
 		}
 		
@@ -274,7 +304,7 @@ var vtracker = {
 //************************************ END APP SCRIPTS ************************************//
 
 //*************************************** routeObj ****************************************//
-//constructor for the route objects
+//constructor for the route object
 function route(name) {
 	if (!vtrackerAPI.validObjName(name)) {return;}
 	
@@ -300,9 +330,9 @@ function route(name) {
 					speed: [] },
 	this.model = {lon: [], lat: []};
 	this.noiseThreshold = 2; //the threshold radius (in metres) between what is considered to be natural noise fluctuation and what is considered to be a route change
-	this.minAccuracy = 50;
+	this.minAccuracy = 50; //minimum GPS accuracy tolerated
 	this.learnCounter = 0;
-	this.timeoutLimit = 10;
+	this.timeoutLimit = 10; //limit before we decide that the accuracy is not getting better...
 	
 	//handle route methods
 	this.loadFromStored = function(storedRoute) {
@@ -312,6 +342,7 @@ function route(name) {
 		me.geoData = storedRoute.geoData;
 		me.model = storedRoute.model;
 		me.noiseThreshold = storedRoute.noiseThreshold;
+		me.minAccuracy = storedRoute.minAccuracy;
 		me.learnCounter = storedRoute.learnCounter;
 		me.timeoutLimit = storedRoute.timeoutLimit;
 	}
@@ -346,8 +377,17 @@ function route(name) {
 			return;
 		}
 		
-		//create a model - this method call can be done in a webworker to optimise
-		me.model = modellingAPI.createModel(me); //we pass the method that actual route...
+		//create a model - this method call can be done in a webworker for optimisation
+		me.model = modellingAPI.createModel(me); //we pass the method the actual route...
+	}
+	
+	this.recreateModel = function(callback) {
+		me.model = {lon: [], lat: []}; //clear the model
+		
+		me.model = modellingAPI.createModel(me);
+		me.save();
+		
+		callback(); //call callback function
 	}
 	
 	this.showModelOnPlot = function(divId) {
@@ -373,6 +413,7 @@ function route(name) {
 		$.plot($(divId), [ numeric.transpose([me.model.lon,me.model.lat]) ], plotOptions);
 	}
 	
+	var modelPath;
 	this.showModelOnMap = function(divId, mapType) {
 		$(divId).empty();
 		
@@ -413,14 +454,34 @@ function route(name) {
 		var modelCoordinates = [];
 		for (var i in me.model.lon) { modelCoordinates[i] = new google.maps.LatLng(me.model.lat[i],me.model.lon[i]); }
 		
-	 	var modelPath = new google.maps.Polyline({
+		var lineSymbol = {
+			path: google.maps.SymbolPath.CIRCLE,
+			scale: 4,
+			strokeColor: '#393'
+		};
+
+	 	modelPath = new google.maps.Polyline({
 	    	path: modelCoordinates,
 	   	 	strokeColor: "#FF0000",
 	    	strokeOpacity: 1.0,
 	    	strokeWeight: 2,
+	    	icons: [{icon: lineSymbol, offset: '100%'}],
 	  	});
 		
 		modelPath.setMap(map); //generate and render map
+	}
+	
+	var offsetId;
+	this.replayModel = function(interval) {
+		clearInterval(offsetId);
+		var count = 0;
+	    offsetId = window.setInterval(function() {
+	    	count = (count + 1) % 200;
+	
+	    	var icons = modelPath.get('icons');
+	    	icons[0].offset = (count / 2) + '%';
+	   		modelPath.set('icons', icons);
+	 	}, interval);
 	}
 	
 	this.learn = function() {
@@ -435,7 +496,7 @@ function route(name) {
 			me.routeAlerts.add("A model exists for this route - only route changes will be recorded.");
 		} else {
 			geolocationAPI.options.enableHighAccuracy = true;
-			me.routeAlerts.add("Insufficient route data. A new route will be created.");		
+			me.routeAlerts.add("No route data exists. A new route will be created.");		
 		}
 		
 		//add method to the geolocation's API callbacks stack
@@ -506,9 +567,15 @@ function route(name) {
 var modellingAPI = {
 	createModel:function(route) {
 		//this function takes in a "route" and returns a model as "output"
-		
+	
 		//get the data we need from the route...
-		var data = {lon: route.geoData.longitude, lat: route.geoData.latitude}
+		if (route.model.lon.length == 0 && route.model.lat.length == 0) {
+			var data = {lon: route.geoData.longitude, lat: route.geoData.latitude}
+		} else {
+			var data = {lon: route.model.lon, lat: route.model.lat};
+			data.lon.push(route.geoData.longitude[route.geoData.longitude.length-1]);
+			data.lat.push(route.geoData.latitude[route.geoData.latitude.length-1]);
+		}
 		
 		//we need to make sure it's actually good data
 		if (data.lon.length != data.lat.length || !(data.lon.length > 0)) {route.routeAlerts.add("Data array is not suitable for modelling.");return;}
@@ -572,12 +639,12 @@ var modellingAPI = {
 			//console.log("trying to model from: " + start + " to " + i)
 			
 			//**** STEP 1: creating the (x,y) equivalent for point i, where lon[start],lat[start] is the origin
-			x[i] = modellingAPI.haversineDistance(lat[start],lon[start],lat[start],lon[i])
-			y[i] = modellingAPI.haversineDistance(lat[start],lon[start],lat[i],lon[start])
+			x[i] = modellingAPI.haversineDistance(lat[start],lon[start],lat[start],lon[i]);
+			y[i] = modellingAPI.haversineDistance(lat[start],lon[start],lat[i],lon[start]);
 			
 			//**** STEP 2: get the angle for the straight line between "start" and the current point of interest: i
 			//we have the x,y components of the vector, so now let's get the angle "alpha" between the vector and the x-axis
-			var alpha = Math.atan2(y_component, x_component);
+			var alpha = -Math.atan2(y[i], x[i]);
 			
 			//**** STEP 3: apply that model from the start point, to the point of interest and find the squared deviations
 			var squaredDeviations = []; //reset squared deviations
@@ -587,12 +654,14 @@ var modellingAPI = {
 				//using the alpha as the rotation angle of the z axis, rotate the vector such that it is aligned with the x-axis
 				//at this point, the right angle deviation will equal the y-component: y' = x*sin(-alpha) + y*cos(-alpha)
 				
-				var deviation = x[j]*Math.sin(-alpha) + y[j]*Math.cos(-alpha); // deviation = y'
+				var deviation = x[j]*Math.sin(alpha) + y[j]*Math.cos(alpha); // deviation = y'
 				squaredDeviations.push(deviation*deviation);
+				//console.log(deviation);
 			}
 			
 			//**** STEP 4: get the square root of the mean of the squared deviations (Root Mean Squared Deviations = RMSD)
 			var RMSD = Math.sqrt(modellingAPI.retAvg(squaredDeviations));
+
 			//console.log("RMSD: " + RMSD)
 			if (RMSD >= limit) {return i-1;}//if it's larger than the limit, then return the previous point (when it was still okay)
 		}
