@@ -12,7 +12,7 @@
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-touch-fullscreen" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-		<!-- have startup image ready for apple devices -->
+		<!-- have startup image ready for iPhone/iPod devices -->
         <link rel="apple-touch-startup-image" href="mobile-safari-images/Default-cut.png" media="(device-width: 320px)" />
         <link rel="apple-touch-startup-image" href="mobile-safari-images/Default-cut@2x.png" media="(device-width: 320px) and (-webkit-device-pixel-ratio: 2)" />
         <!-- have touch icons ready for apple devices -->
@@ -20,7 +20,7 @@
 		<link rel="apple-touch-icon" sizes="72x72" href="mobile-safari-images/icon-72.png" />
 		<link rel="apple-touch-icon" sizes="114x114" href="mobile-safari-images/icon@2x.png" />	
 			
-		<!-- include files: you would NEVER have so many separate files if you were serving the app through the internet! -->
+		<!-- link files: you would NEVER have so many separate files if you were serving the app through the internet! -->
 		<!-- general css styling -->
 		<link rel="stylesheet" href="styles/styles.css" type="text/css" />
 				
@@ -31,13 +31,13 @@
 		<script type="text/javascript" charset="utf-8" src="scripts/storageAPI.js"></script>
 		<script type="text/javascript" charset="utf-8" src="scripts/sensorsAPI.js"></script>
 		
-		<!-- secret scripts -->
+		<!-- local scripts -->
 		<script type="text/javascript" charset="utf-8" src="scripts/local.js"></script>
-					
+
 		<!-- cordova dependancies + plugins -->
 		<script type="text/javascript" charset="utf-8" src="libraries/cordova-2.0.0.js"></script>
 		<script type="text/javascript" charset="utf-8" src="libraries/LocalNotification.js"></script>
-	
+
 		<!-- other library dependancies -->
 		<script type="text/javascript" charset="utf-8" src="libraries/modernizr-2.6.1.js"></script>
 		<script type="text/javascript" charset="utf-8" src="libraries/numeric-1.0.2.js"></script>
@@ -58,9 +58,10 @@
 			
 			function onDeviceReady() {
 				//We're ready to roll
-				setTimeout(function(){vtrackerAPI.checkBrowserCompatibility("#startpage-errors");},1000);
+				setTimeout(function(){vtrackerAPI.checkBrowserCompatibility("#startpage-errors");},1500);
 				storageAPI.init("VTracker_db", "1.00", "VTrackerDB", 2 * 1024*1024); //initialise database, the API restricts db use to one db (by design)
 				vtrackerAPI.initialiseGoogleMaps();
+				sensorsAPI.geolocationAPI.get(); //turn on GPS radio by making a single request, we'll probably need it soon
 				
 				//listen to device pause or resume
 				document.addEventListener("pause", vtrackerAPI.onPause, false);
@@ -71,6 +72,7 @@
 	</head>
 
 	<body onload="onBodyLoad()">
+		<div id="loader"><p>Working... this may take a while. Maybe you can grab a coffee or something?<br /><img src="libraries/jquery/images/bar-loader.gif"></p></div>	
 		
 		<!-- Start of startpage -->
 		<div data-role="page" id="startpage" data-theme="c">
@@ -87,7 +89,7 @@
 				</div>
 			</div><!-- /header -->
 			
-			<div data-role="content" data-fullscreen="true">			
+			<div data-role="content" data-fullscreen="true">	
 				<h3 class="h3modified">What would you like to do?</h3>
 				<a data-role="button" href="#newRouteDialog" data-rel="dialog" data-theme="b" data-icon="plus">Learn a new route</a>
 				<a data-role="button" href="javascript:vtracker.trackOrUpdateRoutes()" data-rel="dialog" data-icon="search">Track or update a route</a>
@@ -197,8 +199,8 @@
 						
 						<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 							<a data-role="button" href="javascript:debug.localStorageReset();">Reset</a>
-							<a data-role="button" href="javascript:debug.localStorageAddItem();">Add Item</a>
-							<a data-role="button" href="javascript:debug.localStorageGetItemsSummary();">Items</a>
+							<a data-role="button" href="javascript:debug.localStorageAddItem();">Add</a>
+							<a data-role="button" href="javascript:debug.localStorageGetItemsSummary();">Get Items</a>
 							<a data-role="button" href="javascript:debug.localStorageClear();">Clear</a>
 						</div>
 						
@@ -298,7 +300,7 @@
 			
 				<hr />
 				
-				<label>Settings:</label>
+				<label>Controls:</label>
 				<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 					<a href="javascript:vtracker.showModelOnPlot();" data-role="button" data-inline="true">Plot</a>
 					<a href="javascript:vtracker.showModelOnSatelliteMap();" data-role="button" data-inline="true">Satellite</a>
@@ -341,11 +343,11 @@
 			</div>
 			
 			<div data-role="content" class="ui-body">
-					<label for="newRouteDialog-noiseSlider">Average noise threshold radius (m):</label>
-					<input type="range" name="newRouteDialog-noiseSlider" id="newRouteDialog-noiseSlider" value="2" min="0" max="10" data-highlight="true" />
+					<label for="optionsDialog-noiseSlider">Average noise threshold radius (m):</label>
+					<input type="range" name="optionsDialog-noiseSlider" id="optionsDialog-noiseSlider" value="2" min="0" max="10" data-highlight="true" />
 					
-					<label for="newRouteDialog-minAccuracy">Minimum GPS accuracy (m):</label>
-					<input type="range" name="newRouteDialog-minAccuracy" id="newRouteDialog-minAccuracy" value="50" min="20" max="100" data-highlight="true" />
+					<label for="optionsDialog-minAccuracy">Minimum GPS accuracy (m):</label>
+					<input type="range" name="optionsDialog-minAccuracy" id="optionsDialog-minAccuracy" value="50" min="20" max="100" data-highlight="true" />
 				
 				<a href="#" data-role="button" data-rel="back" data-theme="b" data-transition="none" data-icon="check">Done</a>
 			</div>
@@ -380,8 +382,9 @@
 					<div id="manageRoutesDialog-allRoutes"></div>
 				</fieldset>
 				
+				<a href="javascript:vtracker.recreateModel()" data-role="button" data-theme="b" data-transition="none" data-icon="refresh">Recreate model</a>
 				<a href="javascript:vtracker.viewModel()" data-role="button" data-theme="b" data-transition="none" data-icon="arrow-r">View model</a>
-				<a href="javascript:vtracker.exportModel();vtracker.exportRoute();" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Export to database</a>
+				<a href="javascript:vtracker.exportRouteAndModel();" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Export to database</a>
 				<a href="javascript:vtracker.removeRoute()" data-role="button" data-theme="a" data-transition="none" data-icon="delete">Delete</a>
 			</div>
 		</div><!-- /manageRoutesDialog -->
