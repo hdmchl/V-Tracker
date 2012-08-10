@@ -53,15 +53,17 @@
 		<!-- onLoad scripts -->	
 		<script type="text/javascript">
 			function onBodyLoad() {
-				$(document).ready(function() {onDeviceReady();}); //this listener works for Mobile Safari and Cordova
+				setTimeout(function(){vtrackerAPI.checkBrowserCompatibility("#startpage-errors");},500);
+				vtrackerAPI.initApplication();
+				
+				//wait till Cordova loads before running cordova scripts
+				$(document).bind('deviceready', function(){ onDeviceReady() })
 			}
 			
 			function onDeviceReady() {
 				//We're ready to roll
-				setTimeout(function(){vtrackerAPI.checkBrowserCompatibility("#startpage-errors");},1500);
+				vtrackerAPI.checkBrowserCompatibility("#startpage-errors"); //recheck compatibility
 				storageAPI.init("VTracker_db", "1.00", "VTrackerDB", 2 * 1024*1024); //initialise database, the API restricts db use to one db (by design)
-				vtrackerAPI.initialiseGoogleMaps();
-				sensorsAPI.geolocationAPI.get(); //turn on GPS radio by making a single request, we'll probably need it soon
 				
 				//listen to device pause or resume
 				document.addEventListener("pause", vtrackerAPI.onPause, false);

@@ -741,6 +741,7 @@ var vtrackerAPI = {
 		//this is a rough compatibility check
 		var incompatibilities = [];
 		var coreReqs = ['geolocation', 'localstorage'];
+		$(divId).empty();
 		
 		//check if the tests fail
 		if (!geolocationAPI.test() || !Modernizr.geolocation) {incompatibilities.push('geolocation');}
@@ -761,8 +762,10 @@ var vtrackerAPI = {
 			for (var i = 0;i < incompatibilities.length-1;i++) {
 				message+=("<b>" + incompatibilities[i] + "</b>" + ", ");
 			};
-			message+=("and <b>" +  incompatibilities[incompatibilities.length-1] + "</b>.</p>");
+			message+=("and <b>" +  incompatibilities[incompatibilities.length-1] + "</b>. ");
 			$(divId).html(message);
+		} else {
+			$(divId).html("");
 		}
 		
 		//make sure we have the CORE requirements
