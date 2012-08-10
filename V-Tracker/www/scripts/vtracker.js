@@ -491,7 +491,7 @@ function route(name) {
 	    	count = (count + 1) % 200;
 	    	
 	    	var icons = modelPath.get('icons');
-	    	icons[0].offset = count  + '%';
+	    	icons[0].offset = (count / 2)  + '%';
 	   		modelPath.set('icons', icons);
 	 	}, interval);
 	}
