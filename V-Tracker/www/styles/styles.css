@@ -27,9 +27,9 @@ body {
     width: 100%;
 }
 
-#trackingpage-map_canvas {
-    width:100%;
+#trackingpage-placeholder {
     height:300px;
+    width:100%;
 }
 
 #startpage-errors {
@@ -54,14 +54,10 @@ body {
     font-weight: bold;
     position: fixed;
     height: auto;
-    width: 100%;
+    width: auto;
 	max-height: 300px;
-	left: 0px;
 	top: 35%;
+    padding: 15px;
     margin: auto;
-	padding-left: 5px;
-	padding-right: 5px;
-	padding-top: 20px;
-	padding-bottom: 20px;
 }
 /******************************************************/
