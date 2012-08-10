@@ -567,15 +567,7 @@ function route(name) {
 var modellingAPI = {
 	createModel:function(route) {
 		//this function takes in a "route" and returns a model as "output"
-	
-		//get the data we need from the route...
-		if (route.model.lon.length == 0 && route.model.lat.length == 0) {
-			var data = {lon: route.geoData.longitude, lat: route.geoData.latitude}
-		} else {
-			var data = {lon: route.model.lon, lat: route.model.lat};
-			data.lon.push(route.geoData.longitude[route.geoData.longitude.length-1]);
-			data.lat.push(route.geoData.latitude[route.geoData.latitude.length-1]);
-		}
+		var data = {lon: route.geoData.longitude, lat: route.geoData.latitude}
 		
 		//we need to make sure it's actually good data
 		if (data.lon.length != data.lat.length || !(data.lon.length > 0)) {route.routeAlerts.add("Data array is not suitable for modelling.");return;}
