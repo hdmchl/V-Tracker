@@ -334,7 +334,6 @@ function route(name) {
 	this.learnCounter = 0;
 	this.timeoutLimit = 10; //limit before we decide that the accuracy is not getting better...
 	
-	//handle route methods
 	this.loadFromStored = function(storedRoute) {
 		//when recovering a route from storage, the methods are all the same for any route
 		//the only difference is the route's properties, so we load those in here:
@@ -350,9 +349,12 @@ function route(name) {
 	var accuracyTimout = 0;
 	this.onGeoMeasurement = function(measurement) {
 		if (measurement.coords.accuracy <= me.minAccuracy) {
+			//if accuracy is okay...
+			
+			//check timeout counter
 			if (accuracyTimout > 0) {me.routeAlerts.add("Accuracy improved. Learning...");}
 			
-			//if all good, add measurement to "data" array
+			//add measurement to "data" array
 			//TODO: USE EUCLIDEAN DISTANCE find the nearest two points, and add the measurement between them
 			me.geoData.timestamp.push(measurement.timestamp);
 			me.geoData.latitude.push(measurement.coords.latitude);
@@ -366,14 +368,17 @@ function route(name) {
 			
 			accuracyTimout = 0; //reset accuracy timeout
 		} else {
-			if (accuracyTimout >= me.timeoutLimit) {
-				geolocationAPI.successCBs = []; //clear callbacks on API
-				geolocationAPI.stopWatching(); //stop collecting measurements, other sensors can be turned off here
-				me.routeAlerts.add("Learning stopped because measurement accuracy has been consistently poor.");
+			//accuracy is poor, check to see how long it has been poor for
+			if (accuracyTimout%me.timeoutLimit == 0) {
+				if (vtrackerAPI.devicePaused) {
+					var geoNotification = new notificationObj();
+					geoNotification.pushNot(notificationsAPI.getTimeAfter(10),"Measurement accuracy has been consistently poor (" + accuracyTimout + ").","",false,"GPSON");
+				}
+				me.routeAlerts.add("Measurement accuracy has been consistently poor (" + accuracyTimout + ").");
 			} else {
-				me.routeAlerts.add("Accuracy is poor (" + accuracyTimout + ").");
-				accuracyTimout++;
+				//me.routeAlerts.add("Accuracy is poor (" + accuracyTimout + ").");
 			}
+			accuracyTimout++;
 			return;
 		}
 		
@@ -728,9 +733,12 @@ var modellingAPI = {
 //************************************** VTRACKERAPI **************************************//
 //these are all my helper scripts
 var vtrackerAPI = {
+	devicePaused: false,
+	
 	//set callback for device pause
 	onPause:function() {
 		console.log("Device paused!");
+		vtrackerAPI.devicePaused = true;
 		//tell the user if GPS is still ON when the application is paused
 		if (geolocationAPI.watchID) {
 			var geoNotification = new notificationObj();
@@ -741,6 +749,7 @@ var vtrackerAPI = {
 	//set callback for device resume
 	onResume:function() {
 		console.log("Device resumed!");
+		vtrackerAPI.devicePaused = false;
 		notificationsAPI.clearAll();
 	},
 	
@@ -750,6 +759,7 @@ var vtrackerAPI = {
 	},
 	
 	//set callback for device offline
+	onOffline:function() {
 		console.log("Device offline!");
 		//tell the user that all went well
 		var offline = new notificationObj();
@@ -758,11 +768,11 @@ var vtrackerAPI = {
 	
 	//link files to the application
 	initApplication:function() {
-		//ABSOLUTELY NO CORDOVA CALLS ARE ALLOWED IN HERE!!
+		//ABSOLUTELY NO CORDOVA-SPECIFIC CALLS ARE ALLOWED IN HERE!!
 		
 		//insert any other initialisations here...
 				
-		//initialise google maps
+		//initialise google maps by programatically including the script
 		if (local == null) {alert("local.js is missing! \n Can't initialise Google Maps"); return;}
 		var myMap = {
 		    GMapScriptURL: "http://maps.googleapis.com/maps/api/js?key=",
