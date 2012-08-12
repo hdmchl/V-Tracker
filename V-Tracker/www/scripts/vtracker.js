@@ -530,6 +530,7 @@ function route(name) {
 		
 		//add method to the geolocation's API callbacks stack
 		geolocationAPI.successCBs.push(me.onGeoMeasurement); 
+		geolocationAPI.errorCBs.push(me.onGeoMeasurementError); 
 		
 		//start collecting measurements, other sensors can be turned on here
 		geolocationAPI.startWatching();
