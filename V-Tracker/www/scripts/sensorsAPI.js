@@ -5,7 +5,7 @@
  *
  */
 
-// These API should probably all be included under one global object: sensorsAPI 
+// These API should probably all be included under one global object called: sensorsAPI 
 
 //format the data for live display on screen
 function formatDate(timestamp) {
@@ -62,7 +62,7 @@ var geolocationAPI = {
 		console.log("geoLocation requested");
 	},
 	
-	// onSuccess: take a snapshot of the current location - can't use "this." in here...
+	// onSuccess: take a snapshot of the current location
 	onSuccess:function(position) {	
 		geolocationAPI.data.timestamp.push(position.timestamp);
 		geolocationAPI.data.latitude.push(position.coords.latitude);
