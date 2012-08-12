@@ -53,28 +53,34 @@
 		<!-- onLoad scripts -->	
 		<script type="text/javascript">
 			function onBodyLoad() {
-				setTimeout(function(){vtrackerAPI.checkBrowserCompatibility("#startpage-errors");},500);
-				vtrackerAPI.initApplication();
-				
 				//wait till Cordova loads before running cordova scripts
 				$(document).bind('deviceready', function(){ onDeviceReady() })
+				
+				//if you want to serve the app to mobile browsers (ie. outside Cordova), you will need to call onDeviceReady manually.
 			}
 			
 			function onDeviceReady() {
 				//We're ready to roll
-				vtrackerAPI.checkBrowserCompatibility("#startpage-errors"); //recheck compatibility
+				setTimeout(function () {vtrackerAPI.checkBrowserCompatibility("#startpage-errors");},500); //recheck compatibility	
 				storageAPI.init("VTracker_db", "1.00", "VTrackerDB", 2 * 1024*1024); //initialise database, the API restricts db use to one db (by design)
+				vtrackerAPI.initApplication();
 				
 				//listen to device pause or resume
 				document.addEventListener("pause", vtrackerAPI.onPause, false);
 				document.addEventListener("resume", vtrackerAPI.onResume, false);
+				
+				//listen to the device's internet connection
+				document.addEventListener("online", vtrackerAPI.onOnline, false);
+				document.addEventListener("offline", vtrackerAPI.onOffline, false);
 			}
 		</script>
 			
 	</head>
 
 	<body onload="onBodyLoad()">
+		<!-- Start of loader -->
 		<div id="loader"><p>Working... this may take a while. Maybe you can grab a coffee or something?<br /><img src="libraries/jquery/images/bar-loader.gif"></p></div>	
+		<!-- /loader -->
 		
 		<!-- Start of startpage -->
 		<div data-role="page" id="startpage" data-theme="c">
@@ -384,8 +390,8 @@
 					<div id="manageRoutesDialog-allRoutes"></div>
 				</fieldset>
 				
-				<a href="javascript:vtracker.recreateModel()" data-role="button" data-theme="b" data-transition="none" data-icon="refresh">Recreate model</a>
 				<a href="javascript:vtracker.viewModel()" data-role="button" data-theme="b" data-transition="none" data-icon="arrow-r">View model</a>
+				<a href="javascript:vtracker.recreateModel()" data-role="button" data-theme="b" data-transition="none" data-icon="refresh">Recreate model</a>				
 				<a href="javascript:vtracker.exportRouteAndModel();" data-role="button" data-theme="b" data-transition="none" data-icon="forward">Export to database</a>
 				<a href="javascript:vtracker.removeRoute()" data-role="button" data-theme="a" data-transition="none" data-icon="delete">Delete</a>
 			</div>
