@@ -131,6 +131,7 @@ var compassAPI = {
 			headingAccuracy: null },
 			
 	successCBs: [], //this is an array of functions that get called "onSuccess"
+	errorCBs: [], //this is an array of functions that get called "onError"
 
 	test:function() {
 		//check if compass works
@@ -167,6 +168,11 @@ var compassAPI = {
 	// onError: Failed to get the compass heading
 	onError:function(compassError) {
 		console.log('Could not get compass data. Error: ' + compassError.code);
+		
+		//execute onError callback functions
+		for(i=0;i<compassAPI.errorCBs.length;i++) {
+			compassAPI.errorCBs[i](compassError);
+		}
 	},
 	
 	// return HTML formatted compass data
@@ -202,6 +208,7 @@ var accelerometerAPI = {
 			z: null },
 	
 	successCBs: [], //this is an array of functions that get called "onSuccess"
+	errorCBs: [], //this is an array of functions that get called "onError"
 	
 	test:function() {
 		//check if accelerometer works
@@ -238,6 +245,11 @@ var accelerometerAPI = {
 	// onError: Failed to get the acceleration
 	onError:function() {
 		console.log('Error: Could not get accelerometer data!');
+		
+		//execute onError callback functions
+		for(i=0;i<accelerometerAPI.errorCBs.length;i++) {
+			accelerometerAPI.errorCBs[i]();
+		}
 	},
 	
 	// return HTML formatted accelerometer data
@@ -332,6 +344,7 @@ var gyroscopeAPI = {
 	
 	executeCBs:function() {
 		gyroscopeAPI.watchID = setTimeout("gyroscopeAPI.executeCBs()", gyroscopeAPI.options.frequency);
+		
 		//execute onSuccess callback functions
 		for(i=0;i<gyroscopeAPI.successCBs.length;i++) {
 			gyroscopeAPI.successCBs[i](gyroscopeAPI.data);
