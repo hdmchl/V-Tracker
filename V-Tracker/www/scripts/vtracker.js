@@ -381,6 +381,10 @@ function route(name) {
 		me.model = modellingAPI.createModel(me); //we pass the method the actual route...
 	}
 	
+	this.onGeoMeasurementError = function(error) {
+		me.routeAlerts.add("geolocation error: " + error.code + ". Message: " + error.message);
+	}
+	
 	this.recreateModel = function(callback) {
 		me.model = {lon: [], lat: []}; //clear the model
 		
@@ -534,7 +538,9 @@ function route(name) {
 	}
 	
 	this.stopLearning = function() {
-		geolocationAPI.successCBs = []; //clear callbacks on API
+		//clear callbacks on API
+		geolocationAPI.successCBs = []; 
+		geolocationAPI.errorCBs = [];
 		
 		//stop collecting measurements, other sensors can be turned off here
 		geolocationAPI.stopWatching();
