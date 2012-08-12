@@ -744,6 +744,19 @@ var vtrackerAPI = {
 		notificationsAPI.clearAll();
 	},
 	
+	//set callback for device online
+	onOnline:function() {
+		console.log("Device online!");
+	},
+	
+	//set callback for device offline
+		console.log("Device offline!");
+		//tell the user that all went well
+		var offline = new notificationObj();
+		offline.alert("User Offline","Looks like you've lost your internet connection. \n Google maps will not work while you are offline.","Okay")
+	},
+	
+	//link files to the application
 	initApplication:function() {
 		//ABSOLUTELY NO CORDOVA CALLS ARE ALLOWED IN HERE!!
 		
