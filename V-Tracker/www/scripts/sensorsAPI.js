@@ -34,6 +34,7 @@ var geolocationAPI = {
 			speed: [] },
 			
 	successCBs: [], //this is an array of functions that get called "onSuccess"
+	errorCBs: [], //this is an array of functions that get called "onError"
 	
 	test:function() {
 		//check if geolocation works
@@ -81,6 +82,11 @@ var geolocationAPI = {
 	// onError Callback receives a PositionError object
 	onError:function(error) {
 		console.log('geoLocation error, Code: ' + error.code + ' & Message: ' + error.message);
+		
+		//execute onSuccess callback functions
+		for(i=0;i<geolocationAPI.errorCBs.length;i++) {
+			geolocationAPI.errorCBs[i](error);
+		}
 	},
 	
 	// return HTML formatted geolocation data
