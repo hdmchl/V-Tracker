@@ -523,10 +523,8 @@ function route(name) {
 		
 		// tell the user what's happening
 		if (me.model.lat.length > 0 && me.model.lon.length > 0) {
-			geolocationAPI.options.enableHighAccuracy = false;
 			me.routeAlerts.add("A model exists for this route - only route changes will be recorded.");
 		} else {
-			geolocationAPI.options.enableHighAccuracy = true;
 			me.routeAlerts.add("No route data exists. A new route will be created.");		
 		}
 		
