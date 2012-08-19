@@ -66,13 +66,47 @@ var vtracker = {
 	},
 	
 	trackMeOnRoute:function() {
-		//TODO: implement tracking, probably by plotting the route, and adding a method that puts a cursor on the plot...
-		//would be good to also calculate "distance travelled/route distance" using haversine
+		var routeName = $('input[name=routesNearby-choice]:checked').val(); //get route name from routesNearby selection
 		
-		var noti = new notificationObj();
-		noti.alert("Under Construction","Not yet bra!","Okay")
+		var rr = storageAPI.localStorageAPI.getObject("route_" + routeName); //get route from storage
+		if (rr == null) {console.log("Error retrieving route from storage");return;}
 		
+		//setup route object
+		vtracker.workingRoute = new route(rr.name);
+		vtracker.workingRoute.loadFromStored(rr);
+		vtracker.workingRoute.alertOps.displayInDiv(true);
+		vtracker.workingRoute.alertOps.divId("#trackingpage-alertsConsole");
+		vtracker.workingRoute.liveTrackingDivId = "#trackingpage-liveInfo";
+		
+		//prepare the page
+		$("#trackingpage-alertsConsole").empty();
+		$("#trackingpage-routeName").html(vtracker.workingRoute.name);
+		vtracker.trackModelOnSatelliteMap();
+		
+		//start tracking
+		vtracker.workingRoute.startTracking();
+		
+		//show the page
 		$.mobile.changePage('#trackingpage', 'none', true, true);
+	},
+	
+	stopTracking:function() {
+		vtracker.workingRoute.stopTracking();
+	},
+	
+	trackModelOnSatelliteMap:function() {
+		//show the model on Google Maps
+		vtracker.workingRoute.showModelOnMap("#trackingpage-placeholder", "SATELLITE");
+	},
+	
+	trackModelOnHybridMap:function() {
+		//show the model on Google Maps
+		vtracker.workingRoute.showModelOnMap("#trackingpage-placeholder", "HYBRID");
+	},
+	
+	trackModelOnRoadMap:function() {
+		//show the model on Google Maps
+		vtracker.workingRoute.showModelOnMap("#trackingpage-placeholder", "ROADMAP");
 	},
 	
 	updateRoute:function() {
@@ -335,6 +369,8 @@ function route(name) {
 	this.minAccuracy = 50; //minimum GPS accuracy tolerated
 	this.learnCounter = 0;
 	this.timeoutLimit = 10; //limit before we decide that the accuracy is not getting better...
+	this.offsetId; //the ID for the interval timer that is used in playbacks
+	this.liveTrackingDivId; //divID for live feedback during tracking
 	
 	this.loadFromStored = function(storedRoute) {
 		//when recovering a route from storage, the methods are all the same for any route
@@ -357,7 +393,6 @@ function route(name) {
 			if (accuracyTimout > 0) {me.routeAlerts.add("Accuracy improved. Learning...");}
 			
 			//add measurement to "data" array
-			//TODO: USE EUCLIDEAN DISTANCE find the nearest two points, and add the measurement between them
 			me.geoData.timestamp.push(measurement.timestamp);
 			me.geoData.latitude.push(measurement.coords.latitude);
 			me.geoData.longitude.push(measurement.coords.longitude);
@@ -371,7 +406,7 @@ function route(name) {
 			accuracyTimout = 0; //reset accuracy timeout
 		} else {
 			//accuracy is poor, check to see how long it has been poor for
-			if (accuracyTimout%me.timeoutLimit == 0) {
+			if (accuracyTimout%me.timeoutLimit == 0 && accuracyTimout != 0) {
 				if (vtrackerAPI.devicePaused) {
 					var geoNotification = new notificationObj();
 					geoNotification.pushNot(notificationsAPI.getTimeAfter(10),"Measurement accuracy has been consistently poor (" + accuracyTimout + ").","",false,"GPSON");
@@ -395,7 +430,7 @@ function route(name) {
 	this.recreateModel = function(callback) {
 		me.model = {lon: [], lat: []}; //clear the model
 		
-		me.model = modellingAPI.createModel(me);
+		me.model = modellingAPI.createModel(me); //recreate model
 		me.save();
 		
 		callback(); //call callback function
@@ -424,8 +459,8 @@ function route(name) {
 		$.plot($(divId), [ numeric.transpose([me.model.lon,me.model.lat]) ], plotOptions);
 	}
 	
-	var modelPath;
 	var map;
+	var modelPath;
 	this.showModelOnMap = function(divId, mapType) {
 		$(divId).empty();
 		
@@ -495,7 +530,6 @@ function route(name) {
 		return length; //in metres
 	}
 	
-	this.offsetId;
 	this.replayModel = function(interval) {
 		clearInterval(me.offsetId);
 		var count = 0;
@@ -515,10 +549,11 @@ function route(name) {
 		var interval = (Number(endTime)-Number(startTime)) / (me.geoData.latitude.length * rate); //calculate interval
 		clearInterval(me.offsetId);
 		
+		var totalRouteDistance = me.getRouteLength(0,me.geoData.latitude.length);
 		var counter = 0;
 	    me.offsetId = window.setInterval(function() {
 	    	counter++;
-	    	var distance = (me.getRouteLength(0,counter) / me.getRouteLength(0,me.geoData.latitude.length))*100;
+	    	var distance = (me.getRouteLength(0,counter) / totalRouteDistance)*100;
 	    	
 	    	var icons = modelPath.get('icons');
 	    	icons[0].offset = distance  + '%';
@@ -527,6 +562,107 @@ function route(name) {
 	   		modelPath.set('icons', icons);	   	
 			map.panTo(new google.maps.LatLng(me.geoData.latitude[counter],me.geoData.longitude[counter])); //pan map
 	 	}, interval);
+	}
+	
+	var currentSegmentIndex = null;
+	this.onTrackingGeoMeasurement = function (measurement) {
+		//set search boundaries
+		if (currentSegmentIndex == null) {
+			//if the current segment is not defined, then find the nearest segment by searching through the whole model
+			var start = 0;
+			var end = trackingModel.length; //endpoint is excluded
+		} else {
+			//if we know the currentSegment, then only look at previous and next segments
+			var start = currentSegmentIndex-1;
+			var end = currentSegmentIndex+2;//endpoint is excluded, ie. that last segment checked is currentSegmentIndex+1
+		}
+		
+		//find the nearest segment within the boundaries set above
+		var shortestDistanceToSegment_Index = [];
+		var shortestDistanceToSegment = [];
+		for (var i=start;i<end;i++) {
+			if (i<0 || i >= trackingModel.length) {continue;} //skip loop if i is out of bounds
+			
+			var shortestDistance = -1;
+			var shortestDistance_index = 0;
+			for (var j=0;j<trackingModel[i].lon.length;j++) {
+				//find EUCLIDEAN distance
+				var a = measurement.coords.longitude - trackingModel[i].lon[j];
+				var b = measurement.coords.latitude - trackingModel[i].lat[j];
+				var distance = Math.sqrt((a*a)+(b*b));
+				
+				//if shorter, then store
+				if (distance < shortestDistance || shortestDistance == -1) {
+					shortestDistance = distance;
+					shortestDistance_index = j;
+				}
+			}
+			//push segment info to array
+			shortestDistanceToSegment_Index.push(shortestDistance_index);
+			shortestDistanceToSegment.push(shortestDistance);
+		}
+		
+		var nearestSegmentIndex = shortestDistanceToSegment.indexOf(Math.min.apply(Math, shortestDistanceToSegment));
+		var nearestSegmentSubindex = shortestDistanceToSegment_Index[nearestSegmentIndex];
+		
+		//if this is the first run, set the current segment index
+		if (currentSegmentIndex == null) {
+			currentSegmentIndex = nearestSegmentIndex;
+			me.routeAlerts.add("Tracking started at segment: " + currentSegmentIndex);
+		} else {
+			//need to make an adjustment, because we're not scanning all segments at this stage
+			currentSegmentIndex = currentSegmentIndex-1 + nearestSegmentIndex;
+		}
+		
+		//calculate distance travelled from start
+		var distanceTravelled = me.getModelLength(0,currentSegmentIndex+1);
+		distanceTravelled += modellingAPI.haversineDistance(trackingModel[currentSegmentIndex].lat[0],
+															trackingModel[currentSegmentIndex].lon[0],
+															trackingModel[currentSegmentIndex].lat[nearestSegmentSubindex],
+															trackingModel[currentSegmentIndex].lon[nearestSegmentSubindex]);
+		var travelledPercentage = (distanceTravelled / me.getModelLength(0,me.model.lat.length))*100;
+
+		//visualise
+		$(me.liveTrackingDivId).html("<p>Travelled: " + Math.round(distanceTravelled) + "m (" + Math.round(travelledPercentage) + "%) from start point</p>")
+		var icons = modelPath.get('icons');
+		icons[0].offset = travelledPercentage  + '%';
+		
+		if (distance == 100 || distance > 100) {}
+		modelPath.set('icons', icons);	   	
+		map.panTo(new google.maps.LatLng(measurement.coords.latitude,measurement.coords.longitude)); //pan map
+	}
+	
+	var trackingModel = [];
+	this.startTracking = function() {
+		//expand the model so that it is extra specific, to be used for tracking
+		var subsegmentSize = me.noiseThreshold; //distance between points in metres
+		for (var i = 1;i<me.model.lon.length;i++) {
+			trackingModel[i-1] = {lon:[],lat:[]};
+			var subsegments = Math.round(modellingAPI.haversineDistance(me.model.lat[i-1],me.model.lon[i-1],me.model.lat[i],me.model.lon[i])/subsegmentSize); //number of subsegments
+			if (subsegments < 2) {subsegments = 2};
+			var additionalLats = numeric.linspace(me.model.lat[i-1],me.model.lat[i],subsegments);
+			var additionalLons = numeric.linspace(me.model.lon[i-1],me.model.lon[i],subsegments);
+			trackingModel[i-1].lat = trackingModel[i-1].lat.concat(additionalLats);
+			trackingModel[i-1].lon = trackingModel[i-1].lon.concat(additionalLons);
+		}
+		
+		//add method to the geolocation's API callbacks stack
+		geolocationAPI.successCBs.push(me.onTrackingGeoMeasurement); 
+		geolocationAPI.errorCBs.push(me.onGeoMeasurementError); 
+		
+		//start collecting measurements, other sensors can be turned on here
+		geolocationAPI.startWatching();
+		
+		me.routeAlerts.add("Initialising");
+	}
+	
+	this.stopTracking = function() {
+		//clear callbacks on API
+		geolocationAPI.successCBs = []; 
+		geolocationAPI.errorCBs = [];
+		
+		//stop collecting measurements, other sensors can be turned off here
+		geolocationAPI.stopWatching();
 	}
 	
 	this.learn = function() {
@@ -538,6 +674,7 @@ function route(name) {
 		// tell the user what's happening
 		if (me.model.lat.length > 0 && me.model.lon.length > 0) {
 			me.routeAlerts.add("A model exists for this route - only route changes will be recorded.");
+			//TODO: ROUTE UPDATING
 		} else {
 			me.routeAlerts.add("No route data exists. A new route will be created.");		
 		}
@@ -780,7 +917,7 @@ var vtrackerAPI = {
 		//ABSOLUTELY NO CORDOVA-SPECIFIC CALLS ARE ALLOWED IN HERE!!
 		
 		//insert any other initialisations here...
-				
+		
 		//initialise google maps by programatically including the script
 		if (local == null) {alert("local.js is missing! \n Can't initialise Google Maps"); return;}
 		var myMap = {

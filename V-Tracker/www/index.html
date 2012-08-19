@@ -283,13 +283,31 @@
 		<div data-role="page" id="trackingpage" data-theme="c">
 			<div data-role="header" data-position="fixed">
 				<h1>Tracking</h1>
-				<a href="#startpage" data-icon="check" data-theme="b" data-transition="none" class="ui-btn-right">Done</a>
+				<a href="#startpage" onclick="vtracker.stopTracking()" data-icon="check" data-theme="b" data-transition="none" class="ui-btn-right">Done</a>
 			</div>
 			
 			<div data-role="content" class="ui-body">
 				<h3 class="h3modified">Route: <span id="trackingpage-routeName"></span></h3>
+
+				<label>Controls:</label>
+				<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+					<a href="javascript:vtracker.trackModelOnSatelliteMap();" data-role="button" data-inline="true">Satellite</a>
+					<a href="javascript:vtracker.trackModelOnHybridMap();" data-role="button" data-inline="true">Hybrid</a>
+					<a href="javascript:vtracker.trackModelOnRoadMap();" data-role="button" data-inline="true">Road Map</a>
+				</div>
+				<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+					<a href="javascript:vtracker.placeholderGrow();" data-role="button" data-inline="true">Grow display</a>
+					<a href="javascript:vtracker.placeholderShrink();" data-role="button" data-inline="true">Shrink display</a>
+				</div>
+				<hr />
+				
+				<h2>Live feedback:</h2>
+				<span id="trackingpage-liveInfo"></span></h2>
 				
 				<div id="trackingpage-placeholder"></div>
+				
+				<h2>Received messages</h2>
+				<div id="trackingpage-alertsConsole"></div>
 			</div>
 		</div><!-- /trackingpage -->
 		
@@ -319,7 +337,7 @@
 					<a href="javascript:vtracker.placeholderGrow();" data-role="button" data-inline="true">Grow display</a>
 					<a href="javascript:vtracker.placeholderShrink();" data-role="button" data-inline="true">Shrink display</a>
 				</div>
-				<label>Replay:</label>
+				<label>Playback:</label>
 				<div data-role="controlgroup" data-type="horizontal" data-mini="true">
 					<a href="javascript:vtracker.replayModel();" data-role="button" data-inline="true">Model</a>
 					<a href="javascript:vtracker.replayRoute();" data-role="button" data-inline="true">Route (x60)</a>
