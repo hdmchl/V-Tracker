@@ -213,13 +213,15 @@ var vtracker = {
 	},
 
 	replayModel:function() {
-		vtracker.workingRoute.replayModel(20);
+		vtracker.workingRoute.replayModel(20); //with 20ms intervals
 	},
 	
 	replayRoute:function() {
-		// if desireable the interval can be set to be a proportional to the time diff b/w points...
-		// currently I am assuming ~5sec between readings... therefore 5000ms/50 = 100ms (ie. factor of 50x)
-		vtracker.workingRoute.replayRoute(100); 
+		vtracker.workingRoute.replayRoute(60); // at a rate of x60
+	},
+	
+	stopReplay:function() {
+		clearInterval(vtracker.workingRoute.offsetId); //stop the replay
 	},
 	
 	placeholderGrow:function() {
@@ -261,7 +263,7 @@ var vtracker = {
 
 		for (i in allItemKeys) {	
 			if(allItemKeys[i].substring(0,6) == "route_") {
-				allRoutes.push(allItemKeys[i].substr(6))
+				allRoutes.push(allItemKeys[i].substr(6));
 			}
 		}
 		
@@ -423,6 +425,7 @@ function route(name) {
 	}
 	
 	var modelPath;
+	var map;
 	this.showModelOnMap = function(divId, mapType) {
 		$(divId).empty();
 		
@@ -458,7 +461,7 @@ function route(name) {
 	   		default: mapOptions.mapTypeId = google.maps.MapTypeId.SATELLITE;
 	   	};
 	   	
-	    var map = new google.maps.Map(document.getElementById(divId.replace('#','')), mapOptions);
+	    map = new google.maps.Map(document.getElementById(divId.replace('#','')), mapOptions);
 	   	
 		var modelCoordinates = [];
 		for (var i in me.model.lon) { modelCoordinates[i] = new google.maps.LatLng(me.model.lat[i],me.model.lon[i]); }
@@ -492,11 +495,11 @@ function route(name) {
 		return length; //in metres
 	}
 	
-	var offsetId;
+	this.offsetId;
 	this.replayModel = function(interval) {
-		clearInterval(offsetId);
+		clearInterval(me.offsetId);
 		var count = 0;
-	    offsetId = window.setInterval(function() {
+	    me.offsetId = window.setInterval(function() {
 	    	count = (count + 1) % 200;
 	    	
 	    	var icons = modelPath.get('icons');
@@ -505,18 +508,24 @@ function route(name) {
 	 	}, interval);
 	}
 	
-	this.replayRoute = function(interval) {
-		clearInterval(offsetId);
+	this.replayRoute = function(rate) {
+		//get route total time
+		var startTime = Date.parse(me.geoData.timestamp[0]);
+		var endTime = Date.parse(me.geoData.timestamp[me.geoData.timestamp.length-1]);
+		var interval = (Number(endTime)-Number(startTime)) / (me.geoData.latitude.length * rate); //calculate interval
+		clearInterval(me.offsetId);
+		
 		var counter = 0;
-	    offsetId = window.setInterval(function() {
+	    me.offsetId = window.setInterval(function() {
 	    	counter++;
 	    	var distance = (me.getRouteLength(0,counter) / me.getRouteLength(0,me.geoData.latitude.length))*100;
 	    	
 	    	var icons = modelPath.get('icons');
 	    	icons[0].offset = distance  + '%';
 	    	
-	    	if (distance == 100 || distance > 100) {clearInterval(offsetId);}
-	   		modelPath.set('icons', icons);
+	    	if (distance == 100 || distance > 100) {clearInterval(me.offsetId);}
+	   		modelPath.set('icons', icons);	   	
+			map.panTo(new google.maps.LatLng(me.geoData.latitude[counter],me.geoData.longitude[counter])); //pan map
 	 	}, interval);
 	}
 	
