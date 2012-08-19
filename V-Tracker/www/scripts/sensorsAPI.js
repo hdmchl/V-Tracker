@@ -21,7 +21,7 @@ var geolocationAPI = {
 	
 	options: {	frequency: 3000, 	//frequency is not part of W3C and is not supported in Cordova v2.0.0 (it was in Cordova v1.6)
 				maximumAge: 5000, 	//Accept a cached position whose age is no greater than the specified time
-				timeout: 8000, 	//max time between call and receipt
+				timeout: 8000, 		//max time between call and receipt
 				enableHighAccuracy: true }, //true is required for Android
 				
 	data: {	timestamp: [],
