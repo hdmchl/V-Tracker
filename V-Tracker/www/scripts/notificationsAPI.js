@@ -5,6 +5,44 @@
  *
  */
 
+//********************************** notificationsAPI *************************************//
+var notificationsAPI = {	
+	badgeCount: 0,
+	
+	test:function() {
+		return typeof navigator.notification == 'object';
+	},
+	
+	// alert dialog dismissed
+ 	alertDismissed:function() {
+		//do something
+	},
+	
+	getTime:function(hh,mm,ss) {
+		var d = new Date();
+			d = d.setSeconds(ss);
+			d = new Date(d);
+			d = d.setMinutes(mm);
+			d = new Date(d);
+			d = d.setHours(hh);
+			d = new Date(d);
+		return d;
+	},
+	
+	getTimeAfter:function(ms) {
+		var d = new Date();
+		d = d.getTime() + ms; //milliseconds from now
+		d = new Date(d);
+		return d;
+	},
+	
+	clearAll:function() {
+		plugins.localNotification.cancelAll();
+		console.log('All notifications cancelled')
+	}
+}
+//******************************** END notificationsAPI ***********************************//
+
 //************************************* notification **************************************//
 //constructor for notification objects
 function notificationObj() {
@@ -61,41 +99,3 @@ function notificationObj() {
 	}	
 }
 //*********************************** END notification ************************************//
-
-//********************************** notificationsAPI *************************************//
-var notificationsAPI = {	
-	badgeCount: 0,
-	
-	test:function() {
-		return typeof navigator.notification == 'object';
-	},
-	
-	// alert dialog dismissed
- 	alertDismissed:function() {
-		//do something
-	},
-	
-	getTime:function(hh,mm,ss) {
-		var d = new Date();
-			d = d.setSeconds(ss);
-			d = new Date(d);
-			d = d.setMinutes(mm);
-			d = new Date(d);
-			d = d.setHours(hh);
-			d = new Date(d);
-		return d;
-	},
-	
-	getTimeAfter:function(ms) {
-		var d = new Date();
-		d = d.getTime() + ms; //milliseconds from now
-		d = new Date(d);
-		return d;
-	},
-	
-	clearAll:function() {
-		plugins.localNotification.cancelAll();
-		console.log('All notifications cancelled')
-	}
-}
-//******************************** END notificationsAPI ***********************************//

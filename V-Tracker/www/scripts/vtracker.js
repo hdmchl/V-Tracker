@@ -22,6 +22,7 @@ var vtracker = {
 			var noti = new notificationObj();
 			var overwrite = noti.confirm("The route name you selected is already in use. Would you like to overwrite it?", function onConfirm(buttonIndex) {
 				if (buttonIndex == 2) {
+					//if overwrite
 					storageAPI.localStorageAPI.removeItem("route_" + routeName);
 					vtracker.startLearningNow(); //rerun this method
 				}
@@ -29,14 +30,14 @@ var vtracker = {
 			return;
 		}
 		
-		//if all good, then proceed through
+		//not that all is good, proceed through
 
 		//create new route object
-		vtracker.workingRoute = new route(routeName); //create a new route object
-		vtracker.workingRoute.alertOps.displayInDiv(true);
-		vtracker.workingRoute.alertOps.divId("#loaderDialog-alertsConsole");
+		vtracker.workingRoute = new route(routeName);
 		
 		//set options
+		vtracker.workingRoute.alertOps.displayInDiv(true);
+		vtracker.workingRoute.alertOps.divId("#loaderDialog-alertsConsole");
 		vtracker.workingRoute.noiseThreshold = noiseThreshold; //set noise threshold
 		vtracker.workingRoute.minAccuracy = minAccuracy; //set min accuracy
 		
@@ -55,7 +56,7 @@ var vtracker = {
 	
 	//***** UPDATE/TRACK ROUTES *****//
 	trackOrUpdateRoutes:function() {
-		var allRoutes = vtracker.getAllRoutes(); //get all routes - in the future, you would only load the routes that are nearby
+		var allRoutes = vtracker.getAllRoutes(); //get all routes - in the future, you can only load the routes that are nearby
 		
 		//create the radio buttons
 		vtracker.createRouteChoices(allRoutes, "#findRoutesDialog-routesNearby", "routesNearby");
@@ -67,6 +68,7 @@ var vtracker = {
 	
 	trackMeOnRoute:function() {
 		var routeName = $('input[name=routesNearby-choice]:checked').val(); //get route name from routesNearby selection
+		if (routeName == null) {return;} //stop "no selection" case
 		
 		var rr = storageAPI.localStorageAPI.getObject("route_" + routeName); //get route from storage
 		if (rr == null) {console.log("Error retrieving route from storage");return;}
@@ -81,13 +83,17 @@ var vtracker = {
 		//prepare the page
 		$("#trackingpage-alertsConsole").empty();
 		$("#trackingpage-routeName").html(vtracker.workingRoute.name);
-		vtracker.trackModelOnSatelliteMap();
+		vtracker.trackModelOnSatelliteMap(); //use Satellite map by default
 		
 		//start tracking
 		vtracker.workingRoute.startTracking();
 		
 		//show the page
 		$.mobile.changePage('#trackingpage', 'none', true, true);
+	},
+	
+	restartTracking:function () {
+		vtracker.workingRoute.resetTracking();
 	},
 	
 	stopTracking:function() {
@@ -111,6 +117,9 @@ var vtracker = {
 	
 	updateRoute:function() {
 		var routeName = $('input[name=routesNearby-choice]:checked').val(); //get route name from routesNearby selection
+		if (routeName == null) {return;} //stop "no selection" case
+		
+		//get latest set of options
 		var noiseThreshold = $('#newRouteDialog-noiseSlider').val(); //get noise threshold
 		var minAccuracy = $('#newRouteDialog-minAccuracy').val(); //get min accuracy
 		
@@ -123,7 +132,7 @@ var vtracker = {
 		vtracker.workingRoute.alertOps.displayInDiv(true);
 		vtracker.workingRoute.alertOps.divId("#loaderDialog-alertsConsole");
 		
-		//refresh options
+		//set options
 		vtracker.workingRoute.noiseThreshold = noiseThreshold; //set noise threshold
 		vtracker.workingRoute.minAccuracy = minAccuracy; //set min accuracy
 		
@@ -154,9 +163,7 @@ var vtracker = {
 	recreateModel:function() {
 		var routeName = $('input[name=allRoutes-choice]:checked').val(); //get route name
 		if (routeName == null) {return;} //stop "no selection" case
-		
-		$("#loader").show();
-		
+
 		var noiseThreshold = $('#optionsDialog-noiseSlider').val(); //get noise threshold
 		var minAccuracy = $('#optionsDialog-minAccuracy').val(); //get min accuracy
 		
@@ -171,18 +178,26 @@ var vtracker = {
 		vtracker.workingRoute.noiseThreshold = noiseThreshold; //set noise threshold
 		vtracker.workingRoute.minAccuracy = minAccuracy; //set min accuracy
 	
-		//tell the user that it may take a while...
-		//confirm before deleting
+		$("#loader").show(); //show loading panel
+		
+		//tell the user that it may take a while... confirm before proceeding
 		var noti = new notificationObj();
-		noti.confirm("Recreating the model for: " + routeName + " may take a while. Are you sure you want to do that?", function onConfirm(buttonIndex) {
+		noti.confirm("Recreating the model for: \"" + routeName + "\" may take a while. Are you sure you want to do that?", function onConfirm(buttonIndex) {
 			if (buttonIndex == 2) {
-					setTimeout(function(){
-						vtracker.workingRoute.recreateModel($("#loader").slideToggle());
-						},1000);
+						//if user agrees, wait a second and then start
+						setTimeout(function() {
+							var startTIME = new Date().getTime(); //get start time
+							
+							vtracker.workingRoute.recreateModel(function () {
+									$("#loader").slideToggle();
+									var endTime = new Date().getTime();
+									var time = endTime - startTIME;
+									noti.alert("Model Created","It took: " + time + "ms to recreate the model.","Okay");
+								});
+							},1000);
 					 }
 		}, "Continue?","Cancel,Yup");
 	},
-	
 	
 	exportRouteAndModel:function() {
 		var routeName = $('input[name=allRoutes-choice]:checked').val(); //get route name
@@ -195,12 +210,13 @@ var vtracker = {
 		vtracker.workingRoute = new route(rr.name);
 		vtracker.workingRoute.loadFromStored(rr);
 		
+		//run export methods
 		vtracker.workingRoute.exportRouteToDB();
 		vtracker.workingRoute.exportModelToDB();
 		
 		//tell the user all went well
 		var success = new notificationObj();
-		success.alert("Exported","The route and its model have been exported.","Okay")
+		success.alert("Done","The route and its model have been exported.","Okay")
 	},
 	
 	viewModel:function() {
@@ -221,6 +237,9 @@ var vtracker = {
 		$("#previewpage-modelLength").html(vtracker.workingRoute.model.lon.length);
 		$("#previewpage-noise").html(vtracker.workingRoute.noiseThreshold);
 		$("#previewpage-placeholder").empty(); //clear placeholder display
+		
+		//show the model on a plot by default
+		vtracker.showModelOnPlot();
 		
 		//display the page
 		$.mobile.changePage('#previewpage', 'none', true, true);
@@ -255,11 +274,11 @@ var vtracker = {
 	},
 	
 	stopReplay:function() {
-		clearInterval(vtracker.workingRoute.offsetId); //stop the replay
+		vtracker.workingRoute.stopReplay(); //stop the replay
 	},
 	
 	placeholderGrow:function() {
-		//if necessary, this method can be made to be "smarter"
+		//adjust the height on both placeholders
 		var currentHeight1 = $("#previewpage-placeholder").height();
 		$("#previewpage-placeholder").height(currentHeight1*1.5);
 		var currentHeight2 = $("#trackingpage-placeholder").height();
@@ -267,7 +286,7 @@ var vtracker = {
 	},
 	
 	placeholderShrink:function() {
-		//if necessary, this method can be made to be "smarter"
+		//adjust the height on both placeholders
 		var currentHeight1 = $("#previewpage-placeholder").height();
 		$("#previewpage-placeholder").height(currentHeight1*0.75);
 		var currentHeight2 = $("#trackingpage-placeholder").height();
@@ -280,16 +299,17 @@ var vtracker = {
 		
 		//confirm before deleting
 		var noti = new notificationObj();
-		noti.confirm("Are you sure you want to delete: " + routeName + "\n This cannot be undone.", function onConfirm(buttonIndex) {
+		noti.confirm("Are you sure you want to delete: \"" + routeName + "\"\n This cannot be undone.", function onConfirm(buttonIndex) {
 			if (buttonIndex == 2) {
+					 //if confirmed delete
 					 storageAPI.localStorageAPI.removeItem("route_" + routeName);
-					 vtracker.manageRoutes(); //refresh dialog
+					 vtracker.manageRoutes(); //reload dialog
 					 }
-		}, "Delete?","Cancel,Delete");
+		}, "Confirm","Cancel,Delete");
 	},
 	//***** END MANAGE ROUTES *****//
 	
-	//GENERAL scripts
+	//***** GENERAL helper scripts *****//
 	getAllRoutes:function() {
 		//return all route names
 		var allRoutes = [];
@@ -297,11 +317,12 @@ var vtracker = {
 
 		for (i in allItemKeys) {	
 			if(allItemKeys[i].substring(0,6) == "route_") {
+				//for each item, if it's a route, add it to the array of routes
 				allRoutes.push(allItemKeys[i].substr(6));
 			}
 		}
 		
-		return allRoutes;	
+		return allRoutes; //return the array of routes
 	},
 	
 	destinationReached:function() {
@@ -323,6 +344,8 @@ var vtracker = {
 	},
 	
 	createRouteChoices:function(routesAry, divId, prefix) {
+		//create radio buttons for the all the routes passed in routesAry and put it in divId, and use "prefix" to identify the radio buttons
+		
 		$(divId).empty(); //empty the div
 		
 		if (routesAry.length == 0) {
@@ -330,6 +353,7 @@ var vtracker = {
 			return;
 		}
 		
+		//if there are routes, create radios and pre-check the last one
 		for (var i=0;i<routesAry.length;i++) {
 			$(divId).append("<input type=\"radio\" checked=\"checked\" name=\"" + prefix  + "-choice\" id=\"" + prefix  + "-choice-" + i + 
 						"\" value=\"" + routesAry[i] + "\" /><label for=\"" + prefix  + "-choice-" + i + "\">" + routesAry[i] + "</label>");
@@ -347,15 +371,16 @@ function route(name) {
 	//create a reference object that can be inherited
 	var me = Object(this);
 	
-	//handle alerts
+	//handle alerts and their options
 	this.routeAlerts = new alertsObj(name);
 	this.alertOps = {
 		displayInDiv:function(state) {me.routeAlerts.displayInDiv = state},
 		divId:function(divId) {me.routeAlerts.divId = divId},	
 	}
-
+	this.liveTrackingDivId; //the divID for live feedback during tracking
+	
 	//handle route properties
-	this.name = name;
+	this.name = name; //route name
 	this.geoData = {timestamp: [],
 					latitude: [],
 					longitude: [],
@@ -363,14 +388,12 @@ function route(name) {
 					accuracy: [],
 					altitudeAccuracy: [],
 					heading: [],
-					speed: [] },
-	this.model = {lon: [], lat: []};
-	this.noiseThreshold = 2; //the threshold radius (in metres) between what is considered to be natural noise fluctuation and what is considered to be a route change
-	this.minAccuracy = 50; //minimum GPS accuracy tolerated
-	this.learnCounter = 0;
-	this.timeoutLimit = 10; //limit before we decide that the accuracy is not getting better...
-	this.offsetId; //the ID for the interval timer that is used in playbacks
-	this.liveTrackingDivId; //divID for live feedback during tracking
+					speed: [] }, //route raw geolocation data
+	this.model = {lon: [], lat: []}; //model coordinates
+	this.noiseThreshold = 2; 	//the threshold radius (in metres) between what is considered to be natural noise fluctuation and what is considered to be a route change
+	this.minAccuracy = 50; 		//minimum GPS accuracy tolerated
+	this.learnCounter = 0; 		//the number of times this route has been learnt
+	this.timeoutLimit = 10; 	//limit before we decide that the accuracy is not going to get better...
 	
 	this.loadFromStored = function(storedRoute) {
 		//when recovering a route from storage, the methods are all the same for any route
@@ -384,13 +407,14 @@ function route(name) {
 		me.timeoutLimit = storedRoute.timeoutLimit;
 	}
 	
-	var accuracyTimout = 0;
-	this.onGeoMeasurement = function(measurement) {
+	var accuracyTimoutCounter = 0; //used for learning and tracking
+	
+	this.onLearningGeoMeasurement = function(measurement) {
 		if (measurement.coords.accuracy <= me.minAccuracy) {
 			//if accuracy is okay...
 			
 			//check timeout counter
-			if (accuracyTimout > 0) {me.routeAlerts.add("Accuracy improved. Learning...");}
+			if (accuracyTimoutCounter > 0) {me.routeAlerts.add("Accuracy is adequate. Learning...");}
 			
 			//add measurement to "data" array
 			me.geoData.timestamp.push(measurement.timestamp);
@@ -403,24 +427,116 @@ function route(name) {
 			me.geoData.speed.push(measurement.coords.heading);
 			//me.routeAlerts.add("measurement added"); //useful for debugging
 			
-			accuracyTimout = 0; //reset accuracy timeout
+			accuracyTimoutCounter = 0; //reset accuracy timeout
 		} else {
 			//accuracy is poor, check to see how long it has been poor for
-			if (accuracyTimout%me.timeoutLimit == 0 && accuracyTimout != 0) {
+			if (accuracyTimoutCounter%me.timeoutLimit == 0 && accuracyTimoutCounter != 0) {
 				if (vtrackerAPI.devicePaused) {
 					var geoNotification = new notificationObj();
-					geoNotification.pushNot(notificationsAPI.getTimeAfter(10),"Measurement accuracy has been consistently poor (" + accuracyTimout + ").","",false,"GPSON");
+					geoNotification.pushNot(notificationsAPI.getTimeAfter(100),"Measurement accuracy has been consistently poor (" + accuracyTimoutCounter + ").","",false,"GPSON");
 				}
-				me.routeAlerts.add("Measurement accuracy has been consistently poor (" + accuracyTimout + ").");
+				me.routeAlerts.add("Measurement accuracy has been consistently poor (" + accuracyTimoutCounter + ").");
 			} else {
-				//me.routeAlerts.add("Accuracy is poor (" + accuracyTimout + ").");
+				//accuracy is poor, but it hasn't hit a multiple of the timeout limit...
+				//me.routeAlerts.add("Accuracy is poor (" + accuracyTimoutCounter + ").");
 			}
-			accuracyTimout++;
+			accuracyTimoutCounter++;
 			return;
 		}
 		
 		//create a model - this method call can be done in a webworker for optimisation
-		me.model = modellingAPI.createModel(me); //we pass the method the actual route...
+		//currently we pass the method the actual route... I wonder if parsing less data would speed things up a little?
+		me.model = modellingAPI.createModel(me);
+	}
+	
+	var currentSegmentIndex = null; //keep track of our current segment's index
+	this.onTrackingGeoMeasurement = function (measurement) {
+		if (measurement.coords.accuracy >= me.minAccuracy) {
+			//accuracy is poor, check to see how long it has been poor for
+			if (accuracyTimoutCounter%me.timeoutLimit == 0 && accuracyTimoutCounter != 0) {
+				if (vtrackerAPI.devicePaused) {
+					var geoNotification = new notificationObj();
+					geoNotification.pushNot(notificationsAPI.getTimeAfter(100),"Measurement accuracy has been consistently poor (" + accuracyTimoutCounter + ").","",false,"GPSON");
+				}
+				me.routeAlerts.add("Measurement accuracy has been consistently poor (" + accuracyTimoutCounter + ").");
+			} else {
+				//accuracy is poor, but it hasn't hit a multiple of the timeout limit...
+				//me.routeAlerts.add("Accuracy is poor (" + accuracyTimoutCounter + ").");
+			}
+			accuracyTimoutCounter++;
+			return;
+		}
+		
+		accuracyTimoutCounter = 0;
+		
+		//set search boundaries
+		if (currentSegmentIndex == null) {
+			//if the current segment is not defined, then find the nearest segment by searching through the whole model
+			var start = 0;
+			var end = detailedModel.length-1 ;
+		} else {
+			//if we know the currentSegment, then only look at the previous, current and next segments
+			var start = currentSegmentIndex-1;
+			var end = currentSegmentIndex+1;
+		}
+		
+		//find the nearest segment within the boundaries set above
+		var shortestDistanceToSegment_Index = [];
+		var shortestDistanceToSegment_Distance = [];
+		for (var i=start;i<end+1;i++) {
+			if (i<0 || i >= detailedModel.length) {continue;} //skip loop if i is out of bounds
+			
+			//for each segment...
+			var shortestDistance = -1;
+			var shortestDistance_index = 0;
+			
+			for (var j in detailedModel[i].lon) {
+				//for each point on the segment...
+				
+				//find EUCLIDEAN distance to current measurement
+				var a = measurement.coords.longitude - detailedModel[i].lon[j];
+				var b = measurement.coords.latitude - detailedModel[i].lat[j];
+				var distance = Math.sqrt((a*a)+(b*b)); 
+				
+				//if distance is shorter than available, then store
+				if (distance < shortestDistance || shortestDistance == -1) {
+					shortestDistance = distance;
+					shortestDistance_index = j; //store the index of the point that is closest
+				}
+			}
+			
+			//push the segment's info to arrays
+			shortestDistanceToSegment_Index.push(shortestDistance_index);
+			shortestDistanceToSegment_Distance.push(shortestDistance);
+		}
+		
+		//once we have the nearest point in each segment, find the nearest segment
+		var nearestSegmentIndex = shortestDistanceToSegment_Distance.indexOf(Math.min.apply(Math, shortestDistanceToSegment_Distance));
+		var nearestSegmentSubindex = shortestDistanceToSegment_Index[nearestSegmentIndex];
+		
+		//if this is the first run, set the current segment index
+		if (currentSegmentIndex == null) {
+			currentSegmentIndex = nearestSegmentIndex;
+			me.routeAlerts.add("Tracking started at segment: " + currentSegmentIndex);
+		} else {
+			//need to make an adjustment, because we're not scanning all segments at this stage
+			currentSegmentIndex = currentSegmentIndex-1 + nearestSegmentIndex;
+		}
+		
+		//calculate distance travelled from start by adding
+		var distanceTravelled = me.getModelLength(0,currentSegmentIndex);
+		distanceTravelled += modellingAPI.haversineDistance(detailedModel[currentSegmentIndex].lat[0],
+															detailedModel[currentSegmentIndex].lon[0],
+															detailedModel[currentSegmentIndex].lat[nearestSegmentSubindex],
+															detailedModel[currentSegmentIndex].lon[nearestSegmentSubindex]);
+		var travelledPercentage = (distanceTravelled / me.getModelLength(0,me.model.lat.length-1))*100;
+
+		//visualise
+		$(me.liveTrackingDivId).html("<p>Travelled: " + Math.round(distanceTravelled) + "m (" + Math.round(travelledPercentage) + "%) from start point</p>")
+		var icons = modelPath.get('icons');
+		icons[0].offset = travelledPercentage  + '%';
+		modelPath.set('icons', icons);	   	
+		map.panTo(new google.maps.LatLng(measurement.coords.latitude,measurement.coords.longitude)); //pan map
 	}
 	
 	this.onGeoMeasurementError = function(error) {
@@ -429,11 +545,22 @@ function route(name) {
 	
 	this.recreateModel = function(callback) {
 		me.model = {lon: [], lat: []}; //clear the model
-		
 		me.model = modellingAPI.createModel(me); //recreate model
 		me.save();
 		
-		callback(); //call callback function
+		callback(); //call callback function on finish
+	}
+	
+	this.getModelLength = function(from, to) {
+		var length = 0;
+		for (var i=from+1;i<to+1;i++) { length += modellingAPI.haversineDistance(me.model.lat[i-1],me.model.lon[i-1],me.model.lat[i],me.model.lon[i]); }
+		return length; //in metres
+	}
+	
+	this.getRouteLength = function(from, to) {
+		var length = 0;
+		for (var i=from+1;i<to+1;i++) { length += modellingAPI.haversineDistance(me.geoData.latitude[i-1],me.geoData.longitude[i-1],me.geoData.latitude[i],me.geoData.longitude[i]); }
+		return length; //in metres
 	}
 	
 	this.showModelOnPlot = function(divId) {
@@ -459,14 +586,14 @@ function route(name) {
 		$.plot($(divId), [ numeric.transpose([me.model.lon,me.model.lat]) ], plotOptions);
 	}
 	
-	var map;
-	var modelPath;
+	var map = null; //make map available to other route methods
+	var modelPath = null; //make map available to other route methods
 	this.showModelOnMap = function(divId, mapType) {
 		$(divId).empty();
 		
         var mapOptions = {
-	          center: new google.maps.LatLng(me.model.lat[0], me.model.lon[0]),
-	          zoom: 14,
+	          center: new google.maps.LatLng(me.model.lat[0], me.model.lon[0]), //center at the start
+	          zoom: 14, //this can be made to be "smarter", and fill the tile with the route
 	          disableDefaultUI: true,
 	          panControl: false,
 			  zoomControl: true,
@@ -498,9 +625,11 @@ function route(name) {
 	   	
 	    map = new google.maps.Map(document.getElementById(divId.replace('#','')), mapOptions);
 	   	
+	   	//load model coordinates into an array of gmaps.latlng's
 		var modelCoordinates = [];
 		for (var i in me.model.lon) { modelCoordinates[i] = new google.maps.LatLng(me.model.lat[i],me.model.lon[i]); }
 		
+		//set options for symbol
 		var lineSymbol = {
 			path: google.maps.SymbolPath.CIRCLE,
 			scale: 4,
@@ -515,25 +644,14 @@ function route(name) {
 	    	icons: [{icon: lineSymbol, offset: '100%'}],
 	  	});
 		
-		modelPath.setMap(map); //generate and render map
+		modelPath.setMap(map); //generate and render model on the map
 	}
 	
-	this.getModelLength = function(from, to) {
-		var length = 0;
-		for (var i=from+1;i<to;i++) { length += modellingAPI.haversineDistance(me.model.lat[i-1],me.model.lon[i-1],me.model.lat[i],me.model.lon[i]); }
-		return length; //in metres
-	}
-	
-	this.getRouteLength = function(from, to) {
-		var length = 0;
-		for (var i=from+1;i<to;i++) { length += modellingAPI.haversineDistance(me.geoData.latitude[i-1],me.geoData.longitude[i-1],me.geoData.latitude[i],me.geoData.longitude[i]); }
-		return length; //in metres
-	}
-	
+	var offsetId = null; //the ID for the interval timer that is used in playbacks
 	this.replayModel = function(interval) {
-		clearInterval(me.offsetId);
+		clearInterval(offsetId);
 		var count = 0;
-	    me.offsetId = window.setInterval(function() {
+	    offsetId = window.setInterval(function() {
 	    	count = (count + 1) % 200;
 	    	
 	    	var icons = modelPath.get('icons');
@@ -543,15 +661,18 @@ function route(name) {
 	}
 	
 	this.replayRoute = function(rate) {
+		clearInterval(offsetId);
+		
 		//get route total time
 		var startTime = Date.parse(me.geoData.timestamp[0]);
 		var endTime = Date.parse(me.geoData.timestamp[me.geoData.timestamp.length-1]);
-		var interval = (Number(endTime)-Number(startTime)) / (me.geoData.latitude.length * rate); //calculate interval
-		clearInterval(me.offsetId);
 		
-		var totalRouteDistance = me.getRouteLength(0,me.geoData.latitude.length);
+		//calculate interval
+		var interval = (Number(endTime)-Number(startTime)) / (me.geoData.latitude.length * rate);
+		
+		var totalRouteDistance = me.getRouteLength(0,me.geoData.latitude.length-1);
 		var counter = 0;
-	    me.offsetId = window.setInterval(function() {
+	    offsetId = window.setInterval(function() {
 	    	counter++;
 	    	var distance = (me.getRouteLength(0,counter) / totalRouteDistance)*100;
 	    	
@@ -564,124 +685,29 @@ function route(name) {
 	 	}, interval);
 	}
 	
-	var currentSegmentIndex = null;
-	this.onTrackingGeoMeasurement = function (measurement) {
-		//set search boundaries
-		if (currentSegmentIndex == null) {
-			//if the current segment is not defined, then find the nearest segment by searching through the whole model
-			var start = 0;
-			var end = trackingModel.length; //endpoint is excluded
-		} else {
-			//if we know the currentSegment, then only look at previous and next segments
-			var start = currentSegmentIndex-1;
-			var end = currentSegmentIndex+2;//endpoint is excluded, ie. that last segment checked is currentSegmentIndex+1
-		}
-		
-		//find the nearest segment within the boundaries set above
-		var shortestDistanceToSegment_Index = [];
-		var shortestDistanceToSegment = [];
-		for (var i=start;i<end;i++) {
-			if (i<0 || i >= trackingModel.length) {continue;} //skip loop if i is out of bounds
-			
-			var shortestDistance = -1;
-			var shortestDistance_index = 0;
-			for (var j=0;j<trackingModel[i].lon.length;j++) {
-				//find EUCLIDEAN distance
-				var a = measurement.coords.longitude - trackingModel[i].lon[j];
-				var b = measurement.coords.latitude - trackingModel[i].lat[j];
-				var distance = Math.sqrt((a*a)+(b*b));
-				
-				//if shorter, then store
-				if (distance < shortestDistance || shortestDistance == -1) {
-					shortestDistance = distance;
-					shortestDistance_index = j;
-				}
-			}
-			//push segment info to array
-			shortestDistanceToSegment_Index.push(shortestDistance_index);
-			shortestDistanceToSegment.push(shortestDistance);
-		}
-		
-		var nearestSegmentIndex = shortestDistanceToSegment.indexOf(Math.min.apply(Math, shortestDistanceToSegment));
-		var nearestSegmentSubindex = shortestDistanceToSegment_Index[nearestSegmentIndex];
-		
-		//if this is the first run, set the current segment index
-		if (currentSegmentIndex == null) {
-			currentSegmentIndex = nearestSegmentIndex;
-			me.routeAlerts.add("Tracking started at segment: " + currentSegmentIndex);
-		} else {
-			//need to make an adjustment, because we're not scanning all segments at this stage
-			currentSegmentIndex = currentSegmentIndex-1 + nearestSegmentIndex;
-		}
-		
-		//calculate distance travelled from start
-		var distanceTravelled = me.getModelLength(0,currentSegmentIndex+1);
-		distanceTravelled += modellingAPI.haversineDistance(trackingModel[currentSegmentIndex].lat[0],
-															trackingModel[currentSegmentIndex].lon[0],
-															trackingModel[currentSegmentIndex].lat[nearestSegmentSubindex],
-															trackingModel[currentSegmentIndex].lon[nearestSegmentSubindex]);
-		var travelledPercentage = (distanceTravelled / me.getModelLength(0,me.model.lat.length))*100;
-
-		//visualise
-		$(me.liveTrackingDivId).html("<p>Travelled: " + Math.round(distanceTravelled) + "m (" + Math.round(travelledPercentage) + "%) from start point</p>")
-		var icons = modelPath.get('icons');
-		icons[0].offset = travelledPercentage  + '%';
-		
-		if (distance == 100 || distance > 100) {}
-		modelPath.set('icons', icons);	   	
-		map.panTo(new google.maps.LatLng(measurement.coords.latitude,measurement.coords.longitude)); //pan map
-	}
-	
-	var trackingModel = [];
-	this.startTracking = function() {
-		//expand the model so that it is extra specific, to be used for tracking
-		var subsegmentSize = me.noiseThreshold; //distance between points in metres
-		for (var i = 1;i<me.model.lon.length;i++) {
-			trackingModel[i-1] = {lon:[],lat:[]};
-			var subsegments = Math.round(modellingAPI.haversineDistance(me.model.lat[i-1],me.model.lon[i-1],me.model.lat[i],me.model.lon[i])/subsegmentSize); //number of subsegments
-			if (subsegments < 2) {subsegments = 2};
-			var additionalLats = numeric.linspace(me.model.lat[i-1],me.model.lat[i],subsegments);
-			var additionalLons = numeric.linspace(me.model.lon[i-1],me.model.lon[i],subsegments);
-			trackingModel[i-1].lat = trackingModel[i-1].lat.concat(additionalLats);
-			trackingModel[i-1].lon = trackingModel[i-1].lon.concat(additionalLons);
-		}
-		
-		//add method to the geolocation's API callbacks stack
-		geolocationAPI.successCBs.push(me.onTrackingGeoMeasurement); 
-		geolocationAPI.errorCBs.push(me.onGeoMeasurementError); 
-		
-		//start collecting measurements, other sensors can be turned on here
-		geolocationAPI.startWatching();
-		
-		me.routeAlerts.add("Initialising");
-	}
-	
-	this.stopTracking = function() {
-		//clear callbacks on API
-		geolocationAPI.successCBs = []; 
-		geolocationAPI.errorCBs = [];
-		
-		//stop collecting measurements, other sensors can be turned off here
-		geolocationAPI.stopWatching();
+	this.stopReplay = function() {
+		clearInterval(offsetId);
 	}
 	
 	this.learn = function() {
 		//housekeeping
 		me.learnCounter++;
-		me.routeAlerts.add("Please stand by while I learn the route <b>" + me.name + "</b>");
-		me.routeAlerts.add("This is update #" + me.learnCounter + ", for route: " + me.name);
+		me.routeAlerts.add("Please hang tight while I learn the route <b>" + me.name + "</b>");
+		me.routeAlerts.add("This is update #" + me.learnCounter);
 		
 		// tell the user what's happening
 		if (me.model.lat.length > 0 && me.model.lon.length > 0) {
 			me.routeAlerts.add("A model exists for this route - only route changes will be recorded.");
 			//TODO: ROUTE UPDATING
 		} else {
-			me.routeAlerts.add("No route data exists. A new route will be created.");		
+			me.routeAlerts.add("No route data exists. A new route will be created.");
 		}
 		
 		//add method to the geolocation's API callbacks stack
-		geolocationAPI.successCBs.push(me.onGeoMeasurement); 
+		geolocationAPI.successCBs.push(me.onLearningGeoMeasurement); 
 		geolocationAPI.errorCBs.push(me.onGeoMeasurementError); 
+	
+		me.routeAlerts.add("Initialising geolocation. Please stand by.");
 		
 		//start collecting measurements, other sensors can be turned on here
 		geolocationAPI.startWatching();
@@ -698,6 +724,45 @@ function route(name) {
 		me.save(); //save route
 		
 		me.routeAlerts.add("Route learning complete.");
+	}
+	
+	var detailedModel = [];
+	this.startTracking = function() {
+		//expand the model so that it is extra specific, to be used for tracking
+		var subsegmentSize = me.noiseThreshold; //distance between points in metres
+		for (var i = 1;i<me.model.lon.length;i++) {
+			detailedModel[i-1] = {lon:[],lat:[]};
+			var subsegments = Math.round(modellingAPI.haversineDistance(me.model.lat[i-1],me.model.lon[i-1],me.model.lat[i],me.model.lon[i])/subsegmentSize); //number of subsegments
+			if (subsegments < 2) {subsegments = 2};
+			var additionalLats = numeric.linspace(me.model.lat[i-1],me.model.lat[i],subsegments);
+			var additionalLons = numeric.linspace(me.model.lon[i-1],me.model.lon[i],subsegments);
+			detailedModel[i-1].lat = detailedModel[i-1].lat.concat(additionalLats);
+			detailedModel[i-1].lon = detailedModel[i-1].lon.concat(additionalLons);
+		}
+		
+		//add method to the geolocation's API callbacks stack
+		geolocationAPI.successCBs.push(me.onTrackingGeoMeasurement); 
+		geolocationAPI.errorCBs.push(me.onGeoMeasurementError); 
+		
+		//start collecting measurements, other sensors can be turned on here
+		geolocationAPI.startWatching();
+		
+		me.routeAlerts.add("Initialising geolocation. Please stand by.");
+	}
+	
+	this.resetTracking = function() {
+		currentSegmentIndex = null;
+	}
+	
+	this.stopTracking = function() {
+		//clear callbacks on API
+		geolocationAPI.successCBs = []; 
+		geolocationAPI.errorCBs = [];
+		
+		//stop collecting measurements, other sensors can be turned off here
+		geolocationAPI.stopWatching();
+		
+		me.routeAlerts.add("Route tracking complete.");
 	}
 	
 	this.save = function() {
@@ -879,47 +944,62 @@ var modellingAPI = {
 //************************************** VTRACKERAPI **************************************//
 //these are all my helper scripts
 var vtrackerAPI = {
-	devicePaused: false,
+	devicePaused: false, //global flag for methods to know if a device has been paused
+	deviceOnline: false, //global flag for methods to know if a device has an internet connection
+	
+	onPauseCBs: [], //this is an array of functions that get called "onPause"
+	onOfflineCBs: [], //this is an array of functions that get called "onOffline"
 	
 	//set callback for device pause
 	onPause:function() {
-		console.log("Device paused!");
+		//console.log("Device paused!");
 		vtrackerAPI.devicePaused = true;
+		
 		//tell the user if GPS is still ON when the application is paused
 		if (geolocationAPI.watchID) {
 			var geoNotification = new notificationObj();
 			geoNotification.pushNot(notificationsAPI.getTimeAfter(5000),"The GPS radio is still on!","",false,"GPSON");
 		}
+		
+		//execute onPause callback functions
+		for(var i in vtrackerAPI.onPauseCBs) {
+			vtrackerAPI.onPauseCBs[i]();
+		}
 	},
 	
 	//set callback for device resume
 	onResume:function() {
-		console.log("Device resumed!");
+		//console.log("Device resumed!");
 		vtrackerAPI.devicePaused = false;
 		notificationsAPI.clearAll();
 	},
 	
 	//set callback for device online
 	onOnline:function() {
-		console.log("Device online!");
+		//console.log("Device online!");
+		vtrackerAPI.deviceOnline = true;
 	},
 	
 	//set callback for device offline
 	onOffline:function() {
-		console.log("Device offline!");
+		//console.log("Device offline!");
+		vtrackerAPI.deviceOnline = false;
+		
 		//tell the user that all went well
 		var offline = new notificationObj();
 		offline.alert("User Offline","Looks like you've lost your internet connection. \n Google maps will not work while you are offline.","Okay")
+		
+		//execute onOffline callback functions
+		for(var i in vtrackerAPI.onOfflineCBs) {
+			vtrackerAPI.onOfflineCBs[i]();
+		}
 	},
 	
-	//link files to the application
-	initApplication:function() {
-		//ABSOLUTELY NO CORDOVA-SPECIFIC CALLS ARE ALLOWED IN HERE!!
-		
-		//insert any other initialisations here...
-		
+	//link google maps files to the application
+	initGoogleMaps:function() {
 		//initialise google maps by programatically including the script
-		if (local == null) {alert("local.js is missing! \n Can't initialise Google Maps"); return;}
+		if (local == null) {alert("local.js is missing! \n Can't initialise Google Maps"); return;} //gmaps API key is in local.js
+		
 		var myMap = {
 		    GMapScriptURL: "http://maps.googleapis.com/maps/api/js?key=",
 		    Map: null,
@@ -935,8 +1015,9 @@ var vtrackerAPI = {
 	
 	//make sure a potential object name is not null or blank
 	validObjName:function(name) {
-		if (name == null || name == "") {
-			console.log("Error: Invalid object name at declaration!");
+		if (name == null || name == "" || !(/^[0-9A-Za-z ]+$/.test(name))) {
+			var noti = new notificationObj();
+			noti.alert("Invalid name!","Please try again using an alphanumeric name.","Okay")
 			return false;
 		} else {
 			return true;
@@ -945,9 +1026,9 @@ var vtrackerAPI = {
 	
 	//make sure the browser engine can do what we need
 	checkBrowserCompatibility:function(divId) {
-		//this is a rough compatibility check
+		//this is a rough compatibility check for browsers, it runs the test method for each API, results are returned into divId
 		var incompatibilities = [];
-		var coreReqs = ['geolocation', 'localstorage'];
+		var coreReqs = ['geolocation', 'localstorage']; //specify the app's absolutely core requirements
 		$(divId).empty();
 		
 		//check if the tests fail
@@ -988,7 +1069,7 @@ var vtrackerAPI = {
 //************************************ END VTRACKERAPI ************************************//
 
 //*************************************** alertsObj ***************************************//
-//constructor for a console alerts object
+//constructor for a console alerts object, used by route objects
 function alertsObj(name) {
 	if (!vtrackerAPI.validObjName(name)) {return;}
 	
@@ -1007,12 +1088,12 @@ function alertsObj(name) {
 		me.data.timestamp.push(new Date(new Date().getTime()));
 		me.data.message.push(message);
 		
-		//if progress window is open, then display latest alerts in window
+		//if flag is true, then display latest alerts in window
 		if(me.displayInDiv) {
 			$(me.divId).append(me.data.message.length + ") " + me.data.message[me.data.message.length-1] + "<br />");
 		}
 		
-		console.log(message); //display message in output console
+		console.log(message); //display message in output console as well
 	};
 }
 //************************************* END alertsObj *************************************//

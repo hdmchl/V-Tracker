@@ -18,7 +18,7 @@
         <!-- have touch icons ready for apple devices -->
 		<link rel="apple-touch-icon" sizes="57x57" href="mobile-safari-images/icon.png" />
 		<link rel="apple-touch-icon" sizes="72x72" href="mobile-safari-images/icon-72.png" />
-		<link rel="apple-touch-icon" sizes="114x114" href="mobile-safari-images/icon@2x.png" />	
+		<link rel="apple-touch-icon" sizes="114x114" href="mobile-safari-images/icon@2x.png" />
 			
 		<!-- link files: you would NEVER have so many separate files if you were serving the app through the internet! -->
 		<!-- general css styling -->
@@ -61,9 +61,9 @@
 			
 			function onDeviceReady() {
 				//We're ready to roll
-				setTimeout(function () {vtrackerAPI.checkBrowserCompatibility("#startpage-errors");},500); //recheck compatibility	
-				storageAPI.init("VTracker_db", "1.00", "VTrackerDB", 2 * 1024*1024); //initialise database, the API restricts db use to one db (by design)
-				vtrackerAPI.initApplication();
+				setTimeout(function () {vtrackerAPI.checkBrowserCompatibility("#startpage-errors");},500); //check compatibility	
+				storageAPI.init("VTracker_db", "1.00", "VTrackerDB", 2 * 1024*1024); //initialise database, the db API restricts db use to one db (by design)
+				vtrackerAPI.initGoogleMaps();
 				
 				//listen to device pause or resume
 				document.addEventListener("pause", vtrackerAPI.onPause, false);
@@ -299,10 +299,13 @@
 					<a href="javascript:vtracker.placeholderGrow();" data-role="button" data-inline="true">Grow display</a>
 					<a href="javascript:vtracker.placeholderShrink();" data-role="button" data-inline="true">Shrink display</a>
 				</div>
+				<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+					<a href="javascript:vtracker.restartTracking();" data-role="button" data-inline="true">Restart</a>
+				</div>
 				<hr />
 				
 				<h2>Live feedback:</h2>
-				<span id="trackingpage-liveInfo"></span></h2>
+				<span id="trackingpage-liveInfo"></span>
 				
 				<div id="trackingpage-placeholder"></div>
 				
@@ -321,8 +324,7 @@
 			<div data-role="content" class="ui-body">
 				<h3 class="h3modified">Route: <span id="previewpage-routeName"></span></h3>
 
-				<p><b>Original data</b> consists of <span id="previewpage-dataLength"></span> data points, collected over <span id="previewpage-learnCounter"></span> learning session(s).
-				<br />The <b>Model</b> consists of <span id="previewpage-modelLength"></span> data points, created using an average noise-threshold radius of <span id="previewpage-noise"></span> metres.</p>
+				<p><b>Original data</b> consists of <span id="previewpage-dataLength"></span> data points, collected over <span id="previewpage-learnCounter"></span> learning session(s). The <b>Model</b> consists of <span id="previewpage-modelLength"></span> data points, created using an average noise-threshold radius of <span id="previewpage-noise"></span> metres.</p>
 			
 				<hr />
 				
@@ -343,6 +345,7 @@
 					<a href="javascript:vtracker.replayRoute();" data-role="button" data-inline="true">Route (x60)</a>
 					<a href="javascript:vtracker.stopReplay();" data-role="button" data-inline="true">Stop</a>
 				</div>
+				<hr />
 				
 				<br />
 				<div id="previewpage-placeholder"></div>				
