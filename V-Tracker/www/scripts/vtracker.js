@@ -116,6 +116,9 @@ var vtracker = {
 	},
 	
 	updateRoute:function() {
+		//TODO: this method never gets called, we never ended up implementing "updating"
+		//updating means that the route will detect changes in the route and replace the changed segments with the new information
+		
 		var routeName = $('input[name=routesNearby-choice]:checked').val(); //get route name from routesNearby selection
 		if (routeName == null) {return;} //stop "no selection" case
 		
