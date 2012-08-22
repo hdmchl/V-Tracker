@@ -390,10 +390,12 @@ function route(name) {
 					heading: [],
 					speed: [] }, //route raw geolocation data
 	this.model = {lon: [], lat: []}; //model coordinates
+	this.modelIndex = 0;		//the furthest index point in the the raw data that is covered by the model, we use this, instead of matching the last model point to the raw data to avoid errors from the same point existing twice
 	this.noiseThreshold = 2; 	//the threshold radius (in metres) between what is considered to be natural noise fluctuation and what is considered to be a route change
 	this.minAccuracy = 50; 		//minimum GPS accuracy tolerated
 	this.learnCounter = 0; 		//the number of times this route has been learnt
-	this.timeoutLimit = 10; 	//limit before we decide that the accuracy is not going to get better...
+	this.timeoutLimit = 10; 	//limit before we decide that the measured data is not going to get better...
+	this.trackingThreshold = 20;//threshold distance used to decide if you are still on route, or have deviated (in metres)
 	
 	this.loadFromStored = function(storedRoute) {
 		//when recovering a route from storage, the methods are all the same for any route
@@ -401,10 +403,12 @@ function route(name) {
 		me.name = storedRoute.name;
 		me.geoData = storedRoute.geoData;
 		me.model = storedRoute.model;
+		me.modelIndex = storedRoute.modelIndex;
 		me.noiseThreshold = storedRoute.noiseThreshold;
 		me.minAccuracy = storedRoute.minAccuracy;
 		me.learnCounter = storedRoute.learnCounter;
 		me.timeoutLimit = storedRoute.timeoutLimit;
+		me.trackingThreshold = storedRoute.trackingThreshold;
 	}
 	
 	var accuracyTimoutCounter = 0; //used for learning and tracking
@@ -446,7 +450,10 @@ function route(name) {
 		
 		//create a model - this method call can be done in a webworker for optimisation
 		//currently we pass the method the actual route... I wonder if parsing less data would speed things up a little?
-		me.model = modellingAPI.createModel(me);
+		var modelInfo = modellingAPI.createModel(me);
+		me.model.lon = me.model.lon.concat(modelInfo[0].lon);
+		me.model.lat = me.model.lat.concat(modelInfo[0].lat);
+		me.modelIndex = modelInfo[1];
 	}
 	
 	var currentSegmentIndex = null; //keep track of our current segment's index
@@ -562,7 +569,14 @@ function route(name) {
 	
 	this.recreateModel = function(callback) {
 		me.model = {lon: [], lat: []}; //clear the model
-		me.model = modellingAPI.createModel(me); //recreate model
+		me.modelIndex = 0;
+		
+		//recreate model
+		var modelInfo = modellingAPI.createModel(me);
+		me.model.lon = me.model.lon.concat(modelInfo[0].lon);
+		me.model.lat = me.model.lat.concat(modelInfo[0].lat);
+		me.modelIndex = modelInfo[1];
+		
 		me.save();
 		
 		callback(); //call callback function on finish
@@ -715,7 +729,6 @@ function route(name) {
 		// tell the user what's happening
 		if (me.model.lat.length > 0 && me.model.lon.length > 0) {
 			me.routeAlerts.add("A model exists for this route - only route changes will be recorded.");
-			//TODO: ROUTE UPDATING
 		} else {
 			me.routeAlerts.add("No route data exists. A new route will be created.");
 		}
@@ -839,7 +852,7 @@ var modellingAPI = {
 		
 		//housekeeping, set some parameters
 		var dataLength = data.lon.length; //get data length
-		var start = 0;
+		var start = route.modelIndex; //start where the modeling finished last time
 		var end = dataLength-1;
 		var borderRadius = route.noiseThreshold; //pull this from the route's properties
 		
@@ -874,7 +887,7 @@ var modellingAPI = {
 		output.lat.push(data.lat[end]);
 		//console.log("Modelling ended at point: " + breakPoint);
 		
-		return output;
+		return [output,start];
 	},
 	
 	getBreakPoint:function(data, start, end, limit) {
