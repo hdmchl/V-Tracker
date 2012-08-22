@@ -462,7 +462,7 @@ function route(name) {
 	var currentSegmentIndex = null; //keep track of our current segment's index
 	var offrouteCounter = 0; //counter to see if user has been consistenly off route
 	this.onTrackingGeoMeasurement = function (measurement) {
-		if (measurement.coords.accuracy >= me.minAccuracy) {
+		if (measurement.coords.accuracy > me.minAccuracy) {
 			//accuracy is poor, check to see how long it has been poor for
 			if (accuracyTimoutCounter%me.timeoutLimit == 0 && accuracyTimoutCounter != 0) {
 				if (vtrackerAPI.devicePaused) {
@@ -539,8 +539,9 @@ function route(name) {
 															 measurement.coords.longitude,
 															 detailedModel[currentSegmentIndex].lat[nearestSegmentSubindex],
 															 detailedModel[currentSegmentIndex].lon[nearestSegmentSubindex]);
+		
 		if (distanceToRoute >= me.trackingThreshold) {
-			if (offrouteCounter%me.timeoutLimit == 0 && offrouteCounter != 0) {
+			if (offrouteCounter%me.timeoutLimit == 0) {
 				var noti = new notificationObj();
 				if (vtrackerAPI.devicePaused) {	
 					noti.pushNot(notificationsAPI.getTimeAfter(100),"It looks like you're futher than " + me.trackingThreshold + "m from the route (" + offrouteCounter + ").","",false,"GPSON");
@@ -548,6 +549,7 @@ function route(name) {
 				noti.alert("Off Route","It seems like you're futher than " + me.trackingThreshold + "m from the route (" + offrouteCounter + "). \n Get back on the route and restart tracking.","Okay");
 			}
 			offrouteCounter++;
+			return;
 		}
 		
 		//calculate distance travelled from start by adding
