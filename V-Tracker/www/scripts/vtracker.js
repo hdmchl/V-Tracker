@@ -450,6 +450,7 @@ function route(name) {
 	}
 	
 	var currentSegmentIndex = null; //keep track of our current segment's index
+	var offrouteCounter = 0; //counter to see if user has been consistenly off route
 	this.onTrackingGeoMeasurement = function (measurement) {
 		if (measurement.coords.accuracy >= me.minAccuracy) {
 			//accuracy is poor, check to see how long it has been poor for
@@ -510,17 +511,33 @@ function route(name) {
 			shortestDistanceToSegment_Distance.push(shortestDistance);
 		}
 		
-		//once we have the nearest point in each segment, find the nearest segment
+		//if it's fine, then find the nearest segment
 		var nearestSegmentIndex = shortestDistanceToSegment_Distance.indexOf(Math.min.apply(Math, shortestDistanceToSegment_Distance));
 		var nearestSegmentSubindex = shortestDistanceToSegment_Index[nearestSegmentIndex];
 		
 		//if this is the first run, set the current segment index
 		if (currentSegmentIndex == null) {
 			currentSegmentIndex = nearestSegmentIndex;
-			me.routeAlerts.add("Tracking started at segment: " + currentSegmentIndex);
+			me.routeAlerts.add("Nearest segment located at: " + currentSegmentIndex);
 		} else {
 			//need to make an adjustment, because we're not scanning all segments at this stage
 			currentSegmentIndex = currentSegmentIndex-1 + nearestSegmentIndex;
+		}
+		
+		//once we have the nearest point, let's work out how far the user is (ie. have we deviated off the route?)
+		var distanceToRoute = modellingAPI.haversineDistance(measurement.coords.latitude,
+															 measurement.coords.longitude,
+															 detailedModel[currentSegmentIndex].lat[nearestSegmentSubindex],
+															 detailedModel[currentSegmentIndex].lon[nearestSegmentSubindex]);
+		if (distanceToRoute >= me.trackingThreshold) {
+			if (offrouteCounter%me.timeoutLimit == 0 && offrouteCounter != 0) {
+				var noti = new notificationObj();
+				if (vtrackerAPI.devicePaused) {	
+					noti.pushNot(notificationsAPI.getTimeAfter(100),"It looks like you're futher than " + me.trackingThreshold + "m from the route (" + offrouteCounter + ").","",false,"GPSON");
+				}
+				noti.alert("Off Route","It seems like you're futher than " + me.trackingThreshold + "m from the route (" + offrouteCounter + "). \n Get back on the route and restart tracking.","Okay");
+			}
+			offrouteCounter++;
 		}
 		
 		//calculate distance travelled from start by adding
