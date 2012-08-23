@@ -421,7 +421,7 @@ function route(name) {
 			//if accuracy is okay...
 			
 			//check timeout counter
-			if (accuracyTimoutCounter > 0) {me.routeAlerts.add("Accuracy is adequate. Learning...");}
+			if (accuracyTimoutCounter > 0) {me.routeAlerts.add("Accuracy has improved. Learning...");}
 			
 			//add measurement to "data" array
 			me.geoData.timestamp.push(measurement.timestamp);
@@ -452,6 +452,10 @@ function route(name) {
 		}
 		
 		//create a model - this method call can be done in a webworker for optimisation
+		//since we just received a new measurement, the route hasn't ended. Therefore we need to remove the last point on the model
+		me.model.lon.pop();
+		me.model.lat.pop();
+		//now we can create the model, by adding the new segments
 		//currently we pass the method the actual route... I wonder if parsing less data would speed things up a little?
 		var modelInfo = modellingAPI.createModel(me);
 		me.model.lon = me.model.lon.concat(modelInfo[0].lon);
@@ -581,7 +585,7 @@ function route(name) {
 		me.model.lon = me.model.lon.concat(modelInfo[0].lon);
 		me.model.lat = me.model.lat.concat(modelInfo[0].lat);
 		me.modelIndex = modelInfo[1];
-		
+
 		me.save();
 		
 		callback(); //call callback function on finish
@@ -728,7 +732,7 @@ function route(name) {
 	this.learn = function() {
 		//housekeeping
 		me.learnCounter++;
-		me.routeAlerts.add("Please hang tight while I learn the route <b>" + me.name + "</b>");
+		me.routeAlerts.add("Please stand by while I learn the route <b>" + me.name + "</b>");
 		me.routeAlerts.add("This is update #" + me.learnCounter);
 		
 		// tell the user what's happening
@@ -742,7 +746,7 @@ function route(name) {
 		geolocationAPI.successCBs.push(me.onLearningGeoMeasurement); 
 		geolocationAPI.errorCBs.push(me.onGeoMeasurementError); 
 	
-		me.routeAlerts.add("Initialising geolocation. Please stand by.");
+		me.routeAlerts.add("Initialising geolocation. Please hang tight until accuracy has improved.");
 		
 		//start collecting measurements, other sensors can be turned on here
 		geolocationAPI.startWatching();
@@ -782,7 +786,7 @@ function route(name) {
 		//start collecting measurements, other sensors can be turned on here
 		geolocationAPI.startWatching();
 		
-		me.routeAlerts.add("Initialising geolocation. Please stand by.");
+		me.routeAlerts.add("Initialising geolocation. Please hang tight until accuracy has improved.");
 	}
 	
 	this.resetTracking = function() {
@@ -853,7 +857,7 @@ var modellingAPI = {
 		var data = {lon: route.geoData.longitude, lat: route.geoData.latitude}
 		
 		//we need to make sure it's actually good data
-		if (data.lon.length != data.lat.length || !(data.lon.length > 0)) {route.routeAlerts.add("Data array is not suitable for modelling.");return;}
+		if (data.lon.length != data.lat.length) {route.routeAlerts.add("Error: data array is not suitable for modelling.");return;}
 		
 		//housekeeping, set some parameters
 		var dataLength = data.lon.length; //get data length
@@ -866,9 +870,11 @@ var modellingAPI = {
 		
 		//push the start point onto the output
 		//console.log("Modelling started from point: " + start)
-		output.lon.push(data.lon[start]);
-		output.lat.push(data.lat[start]);
-
+		if (start == 0 && end == 0) {
+			output.lon.push(data.lon[start]);
+			output.lat.push(data.lat[start]);
+		}
+		
 		//get the first breakpoint after the start point
 		var breakPoint = modellingAPI.getBreakPoint(data, start, end, borderRadius);
 		//console.log("Loop broke, segment created from: " + start + " to " + breakPoint)
@@ -884,12 +890,10 @@ var modellingAPI = {
 			//console.log("Loop broke, segment created from: " + start + " to " + breakPoint)
 		}
 		
-		//at this stage, "breakPoint" must equal "end"
-		if (breakPoint!=end) {route.routeAlerts.add("Error: 'breakPoint' was not the 'end'");return;}
-		
 		//push on the last data point
 		output.lon.push(data.lon[end]);
 		output.lat.push(data.lat[end]);
+
 		//console.log("Modelling ended at point: " + breakPoint);
 		
 		return [output,start];
