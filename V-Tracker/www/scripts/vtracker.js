@@ -15,6 +15,7 @@ var vtracker = {
 		var routeName = $('#newRouteDialog-newRouteName').val(); //get route name
 		var noiseThreshold = $('#optionsDialog-noiseSlider').val(); //get noise threshold
 		var minAccuracy = $('#optionsDialog-minAccuracy').val(); //get min accuracy
+		var trackingThreshold = $('#optionsDialog-trackingThreshold').val(); //get tracking threshold
 		
 		var allRoutes = vtracker.getAllRoutes(); //get all routes
 		if (allRoutes.indexOf(routeName) != -1) {
@@ -38,6 +39,7 @@ var vtracker = {
 		//set options
 		vtracker.workingRoute.alertOps.displayInDiv(true);
 		vtracker.workingRoute.alertOps.divId("#loaderDialog-alertsConsole");
+		vtracker.workingRoute.trackingThreshold = trackingThreshold; //set tracking threshold
 		vtracker.workingRoute.noiseThreshold = noiseThreshold; //set noise threshold
 		vtracker.workingRoute.minAccuracy = minAccuracy; //set min accuracy
 		
@@ -70,6 +72,8 @@ var vtracker = {
 		var routeName = $('input[name=routesNearby-choice]:checked').val(); //get route name from routesNearby selection
 		if (routeName == null) {return;} //stop "no selection" case
 		
+		var trackingThreshold = $('#optionsDialog-trackingThreshold').val(); //get tracking threshold
+		
 		var rr = storageAPI.localStorageAPI.getObject("route_" + routeName); //get route from storage
 		if (rr == null) {console.log("Error retrieving route from storage");return;}
 		
@@ -77,6 +81,7 @@ var vtracker = {
 		vtracker.workingRoute = new route(rr.name);
 		vtracker.workingRoute.loadFromStored(rr);
 		vtracker.workingRoute.alertOps.displayInDiv(true);
+		vtracker.workingRoute.trackingThreshold = trackingThreshold; //set tracking threshold
 		vtracker.workingRoute.alertOps.divId("#trackingpage-alertsConsole");
 		vtracker.workingRoute.liveTrackingDivId = "#trackingpage-liveInfo";
 		
@@ -125,6 +130,7 @@ var vtracker = {
 		//get latest set of options
 		var noiseThreshold = $('#newRouteDialog-noiseSlider').val(); //get noise threshold
 		var minAccuracy = $('#newRouteDialog-minAccuracy').val(); //get min accuracy
+		var trackingThreshold = $('#optionsDialog-trackingThreshold').val(); //get tracking threshold
 		
 		var rr = storageAPI.localStorageAPI.getObject("route_" + routeName); //get route from storage
 		if (rr == null) {console.log("Error retrieving route from storage");return;}
@@ -138,6 +144,7 @@ var vtracker = {
 		//set options
 		vtracker.workingRoute.noiseThreshold = noiseThreshold; //set noise threshold
 		vtracker.workingRoute.minAccuracy = minAccuracy; //set min accuracy
+		vtracker.workingRoute.trackingThreshold = trackingThreshold; //set tracking threshold
 		
 		vtracker.workingRoute.learn(); //start machine learning algorithm
 		
@@ -398,7 +405,7 @@ function route(name) {
 	this.minAccuracy = 50; 		//minimum GPS accuracy tolerated
 	this.learnCounter = 0; 		//the number of times this route has been learnt
 	this.timeoutLimit = 10; 	//limit before we decide that the measured data is not going to get better...
-	this.trackingThreshold = 20;//threshold distance used to decide if you are still on route, or have deviated (in metres)
+	this.trackingThreshold = 50;//threshold distance used to decide if you are still on route, or have deviated (in metres)
 	
 	this.loadFromStored = function(storedRoute) {
 		//when recovering a route from storage, the methods are all the same for any route
@@ -787,6 +794,8 @@ function route(name) {
 		//start collecting measurements, other sensors can be turned on here
 		geolocationAPI.startWatching();
 		
+		//tell the user what's happening
+		me.routeAlerts.add("Tracking started using a threshold of: " + me.trackingThreshold + "m.");
 		me.routeAlerts.add("Initialising geolocation. Please hang tight until accuracy has improved.");
 	}
 	
