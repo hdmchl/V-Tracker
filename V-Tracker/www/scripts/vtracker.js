@@ -551,6 +551,7 @@ function route(name) {
 					noti.pushNot(notificationsAPI.getTimeAfter(100),"It looks like you're futher than " + me.trackingThreshold + "m from the route (" + offrouteCounter + ").","",false,"GPSON");
 				}
 				noti.alert("Off Route","It seems like you're futher than " + me.trackingThreshold + "m from the route (" + offrouteCounter + "). \n Get back on the route and restart tracking.","Okay");
+				currentSegmentIndex = null; //if we have deviated off route, then search for the nearest segment
 			}
 			offrouteCounter++;
 			return;
