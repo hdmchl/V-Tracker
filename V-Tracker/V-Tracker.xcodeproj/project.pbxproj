@@ -10,6 +10,8 @@
 		0F064747155F3D55005CEA6C /* LocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F064746155F3D55005CEA6C /* LocalNotification.m */; };
 		0F2DF1BE154ACFC90022BA94 /* Databases.db in Resources */ = {isa = PBXBuildFile; fileRef = 0F2DF1BD154ACFC90022BA94 /* Databases.db */; };
 		0F2DF1C2154AD2440022BA94 /* 0000000000000001.db in Resources */ = {isa = PBXBuildFile; fileRef = 0F2DF1C1154AD2440022BA94 /* 0000000000000001.db */; };
+		0F3FF77C15F1D3C100478C52 /* libCordova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F17BB5415F1D21E00D8E93B /* libCordova.a */; };
+		0F3FF77E15F1D41800478C52 /* VERSION in Resources */ = {isa = PBXBuildFile; fileRef = 0F3FF77D15F1D41800478C52 /* VERSION */; };
 		0F59D0F5155B4F2F002C669D /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0F59D0F4155B4F2F002C669D /* README.md */; };
 		0F92F57C14FCD07700F344D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F92F57B14FCD07700F344D6 /* Foundation.framework */; };
 		0F92F57E14FCD07700F344D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F92F57D14FCD07700F344D6 /* UIKit.framework */; };
@@ -39,39 +41,46 @@
 		0F92F5BF14FCD07700F344D6 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F92F5BE14FCD07700F344D6 /* MainViewController.m */; };
 		0F92F5C114FCD07700F344D6 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0F92F5C014FCD07700F344D6 /* MainViewController.xib */; };
 		0F92F5CE14FCD0BA00F344D6 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 0F92F5CD14FCD0BA00F344D6 /* www */; };
-		0FD3AD6E15C2173C0092A11D /* libCordova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FD3AD6715C214600092A11D /* libCordova.a */; };
-		0FD3AD7215C217C50092A11D /* VERSION in Resources */ = {isa = PBXBuildFile; fileRef = 0FD3AD7115C217C50092A11D /* VERSION */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		0FD3AD6615C214600092A11D /* PBXContainerItemProxy */ = {
+		0F17BB5315F1D21E00D8E93B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 0FD3AD5C15C2145F0092A11D /* CordovaLib.xcodeproj */;
+			containerPortal = 0F17BB4D15F1D21E00D8E93B /* CordovaLib.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 68A32D7114102E1C006B237C;
 			remoteInfo = CordovaLib;
 		};
-		0FD3AD6815C214600092A11D /* PBXContainerItemProxy */ = {
+		0F17BB5515F1D21E00D8E93B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 0FD3AD5C15C2145F0092A11D /* CordovaLib.xcodeproj */;
+			containerPortal = 0F17BB4D15F1D21E00D8E93B /* CordovaLib.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 686357A9141002F100DF4CF2;
 			remoteInfo = CordovaLibTests;
 		};
-		0FD3AD6A15C214600092A11D /* PBXContainerItemProxy */ = {
+		0F17BB5715F1D21E00D8E93B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 0FD3AD5C15C2145F0092A11D /* CordovaLib.xcodeproj */;
+			containerPortal = 0F17BB4D15F1D21E00D8E93B /* CordovaLib.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 303A4068152124BB00182201;
 			remoteInfo = CordovaLibApp;
+		};
+		0F3FF77915F1D37400478C52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0F17BB4D15F1D21E00D8E93B /* CordovaLib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+			remoteInfo = CordovaLib;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0F064745155F3D55005CEA6C /* LocalNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalNotification.h; sourceTree = "<group>"; };
 		0F064746155F3D55005CEA6C /* LocalNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalNotification.m; sourceTree = "<group>"; };
+		0F17BB4D15F1D21E00D8E93B /* CordovaLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CordovaLib.xcodeproj; path = ../../../CordovaLib/CordovaLib.xcodeproj; sourceTree = "<group>"; };
 		0F2DF1BD154ACFC90022BA94 /* Databases.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = Databases.db; sourceTree = "<group>"; };
 		0F2DF1C1154AD2440022BA94 /* 0000000000000001.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0000000000000001.db; sourceTree = "<group>"; };
+		0F3FF77D15F1D41800478C52 /* VERSION */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VERSION; sourceTree = CORDOVALIB; };
 		0F59D0F4155B4F2F002C669D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		0F92F57714FCD07700F344D6 /* V-Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "V-Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F92F57B14FCD07700F344D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -107,8 +116,6 @@
 		0F92F5C014FCD07700F344D6 /* MainViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainViewController.xib; path = Classes/MainViewController.xib; sourceTree = "<group>"; };
 		0F92F5C314FCD07700F344D6 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; name = README; path = Plugins/README; sourceTree = "<group>"; };
 		0F92F5CD14FCD0BA00F344D6 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
-		0FD3AD5C15C2145F0092A11D /* CordovaLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CordovaLib.xcodeproj; path = ../../../Documents/CordovaLib/CordovaLib.xcodeproj; sourceTree = "<group>"; };
-		0FD3AD7115C217C50092A11D /* VERSION */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VERSION; sourceTree = CORDOVALIB; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,7 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0FD3AD6E15C2173C0092A11D /* libCordova.a in Frameworks */,
+				0F3FF77C15F1D3C100478C52 /* libCordova.a in Frameworks */,
 				0F92F57C14FCD07700F344D6 /* Foundation.framework in Frameworks */,
 				0F92F57E14FCD07700F344D6 /* UIKit.framework in Frameworks */,
 				0F92F58014FCD07700F344D6 /* CoreGraphics.framework in Frameworks */,
@@ -133,22 +140,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0F92F57414FCD07700F344D6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0F17BB4E15F1D21E00D8E93B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0F17BB5415F1D21E00D8E93B /* libCordova.a */,
+				0F17BB5615F1D21E00D8E93B /* CordovaLibTests.octest */,
+				0F17BB5815F1D21E00D8E93B /* CordovaLibApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0F92F56914FCD07700F344D6 = {
 			isa = PBXGroup;
 			children = (
-				0FD3AD5C15C2145F0092A11D /* CordovaLib.xcodeproj */,
+				0F3FF77D15F1D41800478C52 /* VERSION */,
+				0F17BB4D15F1D21E00D8E93B /* CordovaLib.xcodeproj */,
 				0F59D0F4155B4F2F002C669D /* README.md */,
-				0FD3AD7115C217C50092A11D /* VERSION */,
 				0F92F5CD14FCD0BA00F344D6 /* www */,
 				0F92F59514FCD07700F344D6 /* V-Tracker */,
 				0F92F57A14FCD07700F344D6 /* Frameworks */,
@@ -278,16 +288,6 @@
 			name = Plugins;
 			sourceTree = "<group>";
 		};
-		0FD3AD5D15C2145F0092A11D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0FD3AD6715C214600092A11D /* libCordova.a */,
-				0FD3AD6915C214600092A11D /* CordovaLibTests.octest */,
-				0FD3AD6B15C214600092A11D /* CordovaLibApp.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -299,11 +299,11 @@
 				0F92F57114FCD07700F344D6 /* Frameworks */,
 				0F92F57214FCD07700F344D6 /* Resources */,
 				0F92F57314FCD07700F344D6 /* Sources */,
-				0F92F57414FCD07700F344D6 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				0F3FF77A15F1D37400478C52 /* PBXTargetDependency */,
 			);
 			name = "V-Tracker";
 			productName = "V-Tracker";
@@ -331,8 +331,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 0FD3AD5D15C2145F0092A11D /* Products */;
-					ProjectRef = 0FD3AD5C15C2145F0092A11D /* CordovaLib.xcodeproj */;
+					ProductGroup = 0F17BB4E15F1D21E00D8E93B /* Products */;
+					ProjectRef = 0F17BB4D15F1D21E00D8E93B /* CordovaLib.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -343,25 +343,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		0FD3AD6715C214600092A11D /* libCordova.a */ = {
+		0F17BB5415F1D21E00D8E93B /* libCordova.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libCordova.a;
-			remoteRef = 0FD3AD6615C214600092A11D /* PBXContainerItemProxy */;
+			remoteRef = 0F17BB5315F1D21E00D8E93B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0FD3AD6915C214600092A11D /* CordovaLibTests.octest */ = {
+		0F17BB5615F1D21E00D8E93B /* CordovaLibTests.octest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = CordovaLibTests.octest;
-			remoteRef = 0FD3AD6815C214600092A11D /* PBXContainerItemProxy */;
+			remoteRef = 0F17BB5515F1D21E00D8E93B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0FD3AD6B15C214600092A11D /* CordovaLibApp.app */ = {
+		0F17BB5815F1D21E00D8E93B /* CordovaLibApp.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = CordovaLibApp.app;
-			remoteRef = 0FD3AD6A15C214600092A11D /* PBXContainerItemProxy */;
+			remoteRef = 0F17BB5715F1D21E00D8E93B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -386,7 +386,7 @@
 				0F2DF1BE154ACFC90022BA94 /* Databases.db in Resources */,
 				0F2DF1C2154AD2440022BA94 /* 0000000000000001.db in Resources */,
 				0F59D0F5155B4F2F002C669D /* README.md in Resources */,
-				0FD3AD7215C217C50092A11D /* VERSION in Resources */,
+				0F3FF77E15F1D41800478C52 /* VERSION in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,6 +412,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0F3FF77A15F1D37400478C52 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CordovaLib;
+			targetProxy = 0F3FF77915F1D37400478C52 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0F92F59814FCD07700F344D6 /* InfoPlist.strings */ = {
@@ -491,14 +499,16 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					/Users/Shared/Cordova/Frameworks,
-					"\"$(SRCROOT)\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "V-Tracker/V-Tracker-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(BUILT_PRODUCTS_DIR)\"",
+				);
 				INFOPLIST_FILE = "V-Tracker/V-Tracker-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
@@ -527,13 +537,15 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					/Users/Shared/Cordova/Frameworks,
-					"\"$(SRCROOT)\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "V-Tracker/V-Tracker-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(BUILT_PRODUCTS_DIR)\"",
+				);
 				INFOPLIST_FILE = "V-Tracker/V-Tracker-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
