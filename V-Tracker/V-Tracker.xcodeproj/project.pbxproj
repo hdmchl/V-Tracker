@@ -497,7 +497,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Hadi Salem (92E9P9BV3B)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Hadi Salem (92E9P9BV3B)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)\"";
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -524,7 +525,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "V-Tracker";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "6F4F6DEA-8267-471C-8F89-57DB0B0F22F2";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6F4F6DEA-8267-471C-8F89-57DB0B0F22F2";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -534,7 +536,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Hadi Salem (92E9P9BV3B)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Hadi Salem (92E9P9BV3B)";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)\"";
@@ -561,7 +564,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "V-Tracker";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "6F4F6DEA-8267-471C-8F89-57DB0B0F22F2";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6F4F6DEA-8267-471C-8F89-57DB0B0F22F2";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
