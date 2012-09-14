@@ -952,7 +952,8 @@ var modellingAPI = {
 			var RMSD = Math.sqrt(modellingAPI.retAvg(squaredDeviations));
 
 			//console.log("RMSD: " + RMSD)
-			if (RMSD >= limit) {return i-1;}//if it's larger than the limit, then return the previous point (when it was still okay)
+			if (RMSD > limit) {return i-1;} else if (RMSD == limit) {return i;}
+                //if it's larger than the limit, then return the previous point (when it was still okay) - otherwise, return i
 		}
 		
 		//if the RMSD never exceeded the limit, just return the end point		
