@@ -31,7 +31,7 @@ var vtracker = {
 			return;
 		}
 		
-		//not that all is good, proceed through
+		//now that all is good, proceed through
 
 		//create new route object
 		vtracker.workingRoute = new route(routeName);
