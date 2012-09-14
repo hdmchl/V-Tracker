@@ -681,7 +681,7 @@ function route(name) {
 		var lineSymbol = {
 			path: google.maps.SymbolPath.CIRCLE,
 			scale: 4,
-			strokeColor: '#393'
+			strokeColor: '#0000FF'
 		};
 
 	 	modelPath = new google.maps.Polyline({
