@@ -205,7 +205,7 @@ var vtracker = {
 									noti.alert("Model Created","It took: " + time + "ms to recreate the model.","Okay");
 								});
 							},1000);
-					 }
+					 } else {$("#loader").slideToggle();}
 		}, "Continue?","Cancel,Yup");
 	},
 	
