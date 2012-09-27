@@ -459,7 +459,7 @@ function route(name) {
 		}
 		
 		//create a model - this method call can be done in a webworker for optimisation
-		//since we just received a new measurement, the route hasn't ended. Therefore we need to remove the last point on the model
+		//since we just received a new measurement, the route hasn't ended yet. Therefore we need to remove the last point on the model, which is the last measurement taken
 		me.model.lon.pop();
 		me.model.lat.pop();
 		//now we can create the model, by adding the new segments
@@ -866,20 +866,20 @@ var modellingAPI = {
 		//this function takes in a "route" and returns a model as "output"
 		var data = {lon: route.geoData.longitude, lat: route.geoData.latitude}
 		
-		//we need to make sure it's actually good data
+		//validation: we need to make sure it's actually good data
 		if (data.lon.length != data.lat.length) {route.routeAlerts.add("Error: data array is not suitable for modelling.");return;}
 		
 		//housekeeping, set some parameters
-		var dataLength = data.lon.length; //get data length
-		var start = route.modelIndex; //start where the modeling finished last time
-		var end = dataLength-1;
+		var dataLength = data.lon.length; 	//get data length
+		var start = route.modelIndex; 		//start where the modeling finished last time
+		var end = dataLength-1; 			//ie. the last point in the array
 		var borderRadius = route.noiseThreshold; //pull this from the route's properties
 		
 		//declare our output object, which we start adding to
 		var output = {lon: [], lat: []};
 		
 		//push the start point onto the output
-		//console.log("Modelling started from point: " + start)
+		console.log("Modelling started from point: " + start)
 		if (start == 0 && end == 0) {
 			output.lon.push(data.lon[start]);
 			output.lat.push(data.lat[start]);
@@ -897,24 +897,24 @@ var modellingAPI = {
 			
 			start = breakPoint; //change the starting point to the previous breakpoint
 			breakPoint = modellingAPI.getBreakPoint(data, start, end, borderRadius); //find new breakPoint
-			//console.log("Loop broke, segment created from: " + start + " to " + breakPoint)
+			console.log("Loop broke, segment created from: " + start + " to " + breakPoint)
 		}
 		
 		//push on the last data point
 		output.lon.push(data.lon[end]);
 		output.lat.push(data.lat[end]);
 
-		//console.log("Modelling ended at point: " + breakPoint);
+		console.log("Modelling ended at point: " + breakPoint);
 		
+		//return the model and the index point in the data array that is captured by the model - ie the index of the second to last point in the model in the data array
 		return [output,start];
 	},
 	
 	getBreakPoint:function(data, start, end, limit) {
 		//uses "data" from "start" to "end" and returns the point where a straight line fit is still acceptable, under "limit" condition for RMSD
-		//we are creating a piecewise model, using multivariate orinary linear regression, where the minimum residuals is already specified 
-		//  and acts as the "splitter"
+		//we are creating a piecewise model, using orinary linear regression, where the minimum residuals is already specified and acts as the "splitter"
 		
-		//housekeeping: set up our variables
+		//housekeeping: set up our local variables
 		var lat = data.lat;
 		var lon = data.lon;
 		var x = [];
@@ -935,28 +935,31 @@ var modellingAPI = {
 			//we have the x,y components of the vector, so now let's get the angle "alpha" between the vector and the x-axis
 			var alpha = -Math.atan2(y[i], x[i]);
 			
-			//**** STEP 3: apply that model from the start point, to the point of interest and find the squared deviations
+			//**** STEP 3: apply that model/straight-line from the start point to the point of interest and find the squared deviations of intermediatory points
 			var squaredDeviations = []; //reset squared deviations
 			for (var j = start+1; j < i; j++) {
 				//console.log("testing midpoint: " + j)
 				
-				//using the alpha as the rotation angle of the z axis, rotate the vector such that it is aligned with the x-axis
+				//using the alpha as the rotation angle on the z axis, rotate the vector such that it is aligned with the x-axis
 				//at this point, the right angle deviation will equal the y-component: y' = x*sin(-alpha) + y*cos(-alpha)
-				
 				var deviation = x[j]*Math.sin(alpha) + y[j]*Math.cos(alpha); // deviation = y'
+				
+				//push the squared devation onto an array that we can later use to find the RMSD
 				squaredDeviations.push(deviation*deviation);
 				//console.log(deviation);
 			}
 			
 			//**** STEP 4: get the square root of the mean of the squared deviations (Root Mean Squared Deviations = RMSD)
 			var RMSD = Math.sqrt(modellingAPI.retAvg(squaredDeviations));
-
+			
+			//**** STEP 5: do a check on the RMSD
 			//console.log("RMSD: " + RMSD)
 			if (RMSD > limit) {return i-1;} else if (RMSD == limit) {return i;}
-                //if it's larger than the limit, then return the previous point (when it was still okay) - otherwise, return i
+                //if it's larger than the limit, then return the previous point (when it was still okay)
+                //for times when the limit == RMSD (for example: when the limit is 0 and RMSD is also 0 at i=start+1), then return i
 		}
 		
-		//if the RMSD never exceeded the limit, just return the end point		
+		//if the RMSD never exceeded the limit (ie. no breakpoint is found), then just return the end point	of the data	
 		return end;
 	},
 	
