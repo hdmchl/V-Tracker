@@ -821,7 +821,6 @@ function route(name) {
 		//make sql entries
 		var toSQL = null;
 		for (var i=0;i<me.geoData.latitude.length;i++) {
-						'"' + me.geoData.accuracy          + '",' +
 			toSQL =  	'"' + new Date(me.geoData.timestamp[i]) + '",' +
 						'"' + me.geoData.latitude[i]          + '",' +
 						'"' + me.geoData.longitude[i]         + '",' +
@@ -839,8 +838,10 @@ function route(name) {
 		var modelDBname = "model_" + me.name.split(' ').join('_'); //replace spaces with underscores for dbname
 		var table = []; table.push(modelDBname);
 		storageAPI.dropTable(table);
-		storageAPI.createTable(me.model,modelDBname);
-		
+        
+        var modelSchema = {lon: [], lat:[]}; //we can't pass it the actual model object because that has "index" which we don't want to export
+		storageAPI.createTable(modelSchema,modelDBname);
+        
 		//make sql entries
 		var toSQL = null;
 		for (var i=0;i<me.model.lon.length;i++) {
