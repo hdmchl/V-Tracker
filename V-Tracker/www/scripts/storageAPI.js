@@ -150,7 +150,7 @@ var storageAPI = {
 							   				 	for (var i=1; i<results.rows.length; i++) {storageAPI.dbTables[i-1] = results.rows.item(i).name;}
 							   				 }
 									 }, storageAPI.errorCB);
-					   }, storageAPI.errorCB, function() {console.log("detDBTables() returned: " + storageAPI.dbTables)});
+					   }, storageAPI.errorCB, function() {console.log("getDBTables() returned: " + storageAPI.dbTables)});
 	},
 	//****************************** END GET LIST OF TABLES IN DB *****************************//		
 }
