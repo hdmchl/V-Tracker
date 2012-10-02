@@ -399,11 +399,11 @@ function route(name) {
 					altitudeAccuracy: [],
 					heading: [],
 					speed: [] }, //route raw geolocation data
-	this.model = {lon: [], lat: []}; //model coordinates
-	this.modelIndex = 0;		//the furthest index point in the the raw data that is covered by the model, we use this, instead of matching the last model point to the raw data to avoid errors from the same point existing twice
+	this.model = {lon: [], lat: [], index: 0};	//model coordinates and index 
+												//the model's index is the furthest index point in the the raw data that is captured by the model, we use this, instead of matching the last model point to the raw data to avoid errors from the same point existing twice
 	this.noiseThreshold = 2; 	//the threshold radius (in metres) between what is considered to be natural noise fluctuation and what is considered to be a route change
 	this.minAccuracy = 50; 		//minimum GPS accuracy tolerated
-	this.learnCounter = 0; 		//the number of times this route has been learnt
+	this.learnCounter = 0; 		//the number of times this route has been learnt - not much use yet, but will be when I implement route updating
 	this.timeoutLimit = 10; 	//limit before we decide that the measured data is not going to get better...
 	this.trackingThreshold = 50;//threshold distance used to decide if you are still on route, or have deviated (in metres)
 	
@@ -413,7 +413,6 @@ function route(name) {
 		me.name = storedRoute.name;
 		me.geoData = storedRoute.geoData;
 		me.model = storedRoute.model;
-		me.modelIndex = storedRoute.modelIndex;
 		me.noiseThreshold = storedRoute.noiseThreshold;
 		me.minAccuracy = storedRoute.minAccuracy;
 		me.learnCounter = storedRoute.learnCounter;
@@ -462,12 +461,8 @@ function route(name) {
 		//since we just received a new measurement, the route hasn't ended yet. Therefore we need to remove the last point on the model, which is the last measurement taken
 		me.model.lon.pop();
 		me.model.lat.pop();
-		//now we can create the model, by adding the new segments
-		//currently we pass the method the actual route... I wonder if parsing less data would speed things up a little?
-		var modelInfo = modellingAPI.createModel(me);
-		me.model.lon = me.model.lon.concat(modelInfo[0].lon);
-		me.model.lat = me.model.lat.concat(modelInfo[0].lat);
-		me.modelIndex = modelInfo[1];
+		//now we can create the model, by adding the new segments to the model - the algorithm needs the geoData and current model data
+		me.model = modellingAPI.createModel(me);
 	}
 	
 	var currentSegmentIndex = null; //keep track of our current segment's index
@@ -585,16 +580,12 @@ function route(name) {
 	}
 	
 	this.recreateModel = function(callback) {
-		me.model = {lon: [], lat: []}; //clear the model
-		me.modelIndex = 0;
+		me.model = {lon: [], lat: [], index: 0}; //clear the model
 		
 		//recreate model
-		var modelInfo = modellingAPI.createModel(me);
-		me.model.lon = me.model.lon.concat(modelInfo[0].lon);
-		me.model.lat = me.model.lat.concat(modelInfo[0].lat);
-		me.modelIndex = modelInfo[1];
+		me.model = modellingAPI.createModel(me);
 
-		me.save();
+		me.save(); //save the route
 		
 		callback(); //call callback function on finish
 	}
@@ -726,8 +717,8 @@ function route(name) {
 	    	
 	    	var icons = modelPath.get('icons');
 	    	icons[0].offset = distance  + '%';
-	    	
-	    	if (distance == 100 || distance > 100) {clearInterval(me.offsetId);}
+
+	    	if (distance == 100 || distance > 100) {clearInterval(offsetId);}
 	   		modelPath.set('icons', icons);	   	
 			map.panTo(new google.maps.LatLng(me.geoData.latitude[counter],me.geoData.longitude[counter])); //pan map
 	 	}, interval);
@@ -869,17 +860,21 @@ var modellingAPI = {
 		//validation: we need to make sure it's actually good data
 		if (data.lon.length != data.lat.length) {route.routeAlerts.add("Error: data array is not suitable for modelling.");return;}
 		
+		//declare our output object
+		var output = {lon: [], lat: [], index: 0};
+		//load in the current model data
+		output.lon = route.model.lon;
+		output.lat = route.model.lat;
+		output.index = route.model.index;
+		
 		//housekeeping, set some parameters
 		var dataLength = data.lon.length; 	//get data length
-		var start = route.modelIndex; 		//start where the modeling finished last time
+		var start = route.model.index; 		//start where the modeling finished last time
 		var end = dataLength-1; 			//ie. the last point in the array
 		var borderRadius = route.noiseThreshold; //pull this from the route's properties
-		
-		//declare our output object, which we start adding to
-		var output = {lon: [], lat: []};
-		
+
 		//push the start point onto the output
-		console.log("Modelling started from point: " + start)
+		//console.log("Modelling started from point: " + start)
 		if (start == 0 && end == 0) {
 			output.lon.push(data.lon[start]);
 			output.lat.push(data.lat[start]);
@@ -897,17 +892,18 @@ var modellingAPI = {
 			
 			start = breakPoint; //change the starting point to the previous breakpoint
 			breakPoint = modellingAPI.getBreakPoint(data, start, end, borderRadius); //find new breakPoint
-			console.log("Loop broke, segment created from: " + start + " to " + breakPoint)
+			//console.log("Loop broke, segment created from: " + start + " to " + breakPoint)
 		}
 		
 		//push on the last data point
 		output.lon.push(data.lon[end]);
 		output.lat.push(data.lat[end]);
+		output.index = start;
 
-		console.log("Modelling ended at point: " + breakPoint);
-		
+		//console.log("Modelling ended at point: " + breakPoint);
+				
 		//return the model and the index point in the data array that is captured by the model - ie the index of the second to last point in the model in the data array
-		return [output,start];
+		return output;
 	},
 	
 	getBreakPoint:function(data, start, end, limit) {
@@ -1062,10 +1058,9 @@ var vtrackerAPI = {
 		if (local == null) {alert("local.js is missing! \n Can't initialise Google Maps"); return;} //gmaps API key is in local.js
 		
 		var script = document.createElement("script");
+			script.type = "text/javascript";
 			script.src = "http://maps.googleapis.com/maps/api/js?key=" + local.gmapsKey + "&sensor=false&callback=vtrackerAPI.initGoogleMaps";
 			document.body.appendChild(script);
-		/*var myMap = {
-		    Map: null,
 	},
 	
 	//make sure a potential object name is not null or blank
