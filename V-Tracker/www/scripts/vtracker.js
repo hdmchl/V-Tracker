@@ -821,14 +821,15 @@ function route(name) {
 		//make sql entries
 		var toSQL = null;
 		for (var i=0;i<me.geoData.latitude.length;i++) {
-			toSQL =  	'"' + new Date(me.geoData.timestamp) + '",' +
-						'"' + me.geoData.latitude          + '",' +
-						'"' + me.geoData.longitude         + '",' +
-						'"' + me.geoData.altitude          + '",' +
 						'"' + me.geoData.accuracy          + '",' +
-						'"' + me.geoData.altitudeAccuracy  + '",' +
-						'"' + me.geoData.heading           + '",' +
-						'"' + me.geoData.speed             + '"';
+			toSQL =  	'"' + new Date(me.geoData.timestamp[i]) + '",' +
+						'"' + me.geoData.latitude[i]          + '",' +
+						'"' + me.geoData.longitude[i]         + '",' +
+						'"' + me.geoData.altitude[i]          + '",' +
+						'"' + me.geoData.accuracy[i]          + '",' +
+						'"' + me.geoData.altitudeAccuracy[i]  + '",' +
+						'"' + me.geoData.heading[i]           + '",' +
+						'"' + me.geoData.speed[i]             + '"';
 			storageAPI.insertIntoTable(routeDBname,toSQL);
 		}	 
 	}
