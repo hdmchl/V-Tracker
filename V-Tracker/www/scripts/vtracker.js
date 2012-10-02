@@ -1049,21 +1049,31 @@ var vtrackerAPI = {
 	},
 	
 	//link google maps files to the application
-	initGoogleMaps:function() {
+	initGoogleMaps: function () {
+		  var mapOptions = {
+		    zoom: 8,
+		    center: new google.maps.LatLng(-34.397, 150.644),
+		    mapTypeId: google.maps.MapTypeId.ROADMAP
+		  }
+		  var map = new google.maps.Map(document.getElementById("previewpage-placeholder"), mapOptions);
+	},
+	includeGoogleMaps:function() {
 		//initialise google maps by programatically including the script
 		if (local == null) {alert("local.js is missing! \n Can't initialise Google Maps"); return;} //gmaps API key is in local.js
 		
-		var myMap = {
+			script.src = "http://maps.googleapis.com/maps/api/js?key=" + local.gmapsKey + "&sensor=false&callback=vtrackerAPI.initGoogleMaps";
+			document.body.appendChild(script);
+		/*var myMap = {
 		    GMapScriptURL: "http://maps.googleapis.com/maps/api/js?key=",
 		    Map: null,
 		    Geocoder: null,
-		    InitiazlizeMaps: function () {
+		    InitializeMaps: function () {
 		        if (GBrowserIsCompatible()) {
 		            this.Map = new GMap2(document.getElementById("previewpage-placeholder"));
 		        }
 		    }
 		}
-		$.getScript(myMap.GMapScriptURL + local.gmapsKey + "&callback=myMap.InitializeMaps&sensor=false");
+		$.getScript(myMap.GMapScriptURL + local.gmapsKey + "&callback=myMap.InitializeMaps&sensor=false");*/
 	},
 	
 	//make sure a potential object name is not null or blank
