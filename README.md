@@ -1,10 +1,8 @@
-Vehicle Tracker (V-Tracker)
+V-Tracker (Vehicle Tracker)
 ===============
-'V-Tracker' is part of a research project in the Department of Electrical and Computer Systems Engineering (ECSE) at Monash University, Australia. For more information, please refer to the project's [wiki](https://github.com/hadimichael/V-Tracker/wiki "Wiki").
+V-Tracker is part of a research project in the Department of Electrical and Computer Systems Engineering (ECSE) at Monash University, Australia. For more information and documentation, please refer to the project's [wiki](https://github.com/hadimichael/V-Tracker/wiki "Wiki").
 
-## !!work in progress!!
-
-The code in this repository is incomplete and is a work-in-progress.
+[<span style="text-align:center;display:block;max-width:55%;margin:auto;">![alt-text](V-Tracker_Poster.png "AV-Tracker Poster")</span>](https://github.com/hadimichael/V-Tracker/wiki "Wiki")
 
 # License (Apache 2.0)
 
