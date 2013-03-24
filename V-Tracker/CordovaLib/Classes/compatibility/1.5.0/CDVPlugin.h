@@ -17,24 +17,7 @@
  under the License.
  */
 
-//
-//  MainViewController.h
-//  V-Tracker
-//
-//  Created by Hadi Michael on 24-03-2013.
-//  Copyright Monash University 2013. All rights reserved.
+//  Bridge implementation file for using Cordova > 1.5 plugins in 1.5.0.
 //
 
-#import <Cordova/CDVViewController.h>
-#import <Cordova/CDVCommandDelegateImpl.h>
-#import <Cordova/CDVCommandQueue.h>
-
-@interface MainViewController : CDVViewController
-
-@end
-
-@interface MainCommandDelegate : CDVCommandDelegateImpl
-@end
-
-@interface MainCommandQueue : CDVCommandQueue
-@end
+#import <Cordova/CDVPlugin.h>

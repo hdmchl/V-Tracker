@@ -17,24 +17,31 @@
  under the License.
  */
 
-//
-//  MainViewController.h
-//  V-Tracker
-//
-//  Created by Hadi Michael on 24-03-2013.
-//  Copyright Monash University 2013. All rights reserved.
-//
+#import <UIKit/UIKit.h>
+#import "UIDevice+Extensions.h"
 
-#import <Cordova/CDVViewController.h>
-#import <Cordova/CDVCommandDelegateImpl.h>
-#import <Cordova/CDVCommandQueue.h>
+@implementation UIDevice (org_apache_cordova_UIDevice_Extension)
 
-@interface MainViewController : CDVViewController
+- (NSString*)uniqueAppInstanceIdentifier
+{
+    NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
+    static NSString* UUID_KEY = @"CDVUUID";
 
-@end
+    NSString* app_uuid = [userDefaults stringForKey:UUID_KEY];
 
-@interface MainCommandDelegate : CDVCommandDelegateImpl
-@end
+    if (app_uuid == nil) {
+        CFUUIDRef uuidRef = CFUUIDCreate(kCFAllocatorDefault);
+        CFStringRef uuidString = CFUUIDCreateString(kCFAllocatorDefault, uuidRef);
 
-@interface MainCommandQueue : CDVCommandQueue
+        app_uuid = [NSString stringWithString:(__bridge NSString*)uuidString];
+        [userDefaults setObject:app_uuid forKey:UUID_KEY];
+        [userDefaults synchronize];
+
+        CFRelease(uuidString);
+        CFRelease(uuidRef);
+    }
+
+    return app_uuid;
+}
+
 @end

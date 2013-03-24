@@ -17,24 +17,21 @@
  under the License.
  */
 
-//
-//  MainViewController.h
-//  V-Tracker
-//
-//  Created by Hadi Michael on 24-03-2013.
-//  Copyright Monash University 2013. All rights reserved.
-//
+#import "CDVDebugConsole.h"
 
-#import <Cordova/CDVViewController.h>
-#import <Cordova/CDVCommandDelegateImpl.h>
-#import <Cordova/CDVCommandQueue.h>
+@implementation CDVDebugConsole
 
-@interface MainViewController : CDVViewController
+- (void)log:(CDVInvokedUrlCommand*)command
+{
+    NSString* message = [command.arguments objectAtIndex:0];
+    NSDictionary* options = [command.arguments objectAtIndex:1];
+    NSString* log_level = @"INFO";
 
-@end
+    if ([options objectForKey:@"logLevel"]) {
+        log_level = [options objectForKey:@"logLevel"];
+    }
 
-@interface MainCommandDelegate : CDVCommandDelegateImpl
-@end
+    NSLog(@"[%@] %@", log_level, message);
+}
 
-@interface MainCommandQueue : CDVCommandQueue
 @end

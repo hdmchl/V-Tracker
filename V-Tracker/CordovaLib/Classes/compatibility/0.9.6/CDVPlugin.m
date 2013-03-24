@@ -17,24 +17,13 @@
  under the License.
  */
 
-//
-//  MainViewController.h
-//  V-Tracker
-//
-//  Created by Hadi Michael on 24-03-2013.
-//  Copyright Monash University 2013. All rights reserved.
+//  Bridge implementation file for using Cordova plugins in PhoneGap 0.9.6.
 //
 
-#import <Cordova/CDVViewController.h>
-#import <Cordova/CDVCommandDelegateImpl.h>
-#import <Cordova/CDVCommandQueue.h>
+#import "CDVPlugin.h"
 
-@interface MainViewController : CDVViewController
-
+@implementation CDVPlugin
 @end
 
-@interface MainCommandDelegate : CDVCommandDelegateImpl
-@end
-
-@interface MainCommandQueue : CDVCommandQueue
+@implementation CDVPluginResult
 @end

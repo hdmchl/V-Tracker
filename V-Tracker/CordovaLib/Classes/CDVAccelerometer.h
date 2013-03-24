@@ -17,24 +17,23 @@
  under the License.
  */
 
-//
-//  MainViewController.h
-//  V-Tracker
-//
-//  Created by Hadi Michael on 24-03-2013.
-//  Copyright Monash University 2013. All rights reserved.
-//
+#import <UIKit/UIKit.h>
+#import "CDVPlugin.h"
 
-#import <Cordova/CDVViewController.h>
-#import <Cordova/CDVCommandDelegateImpl.h>
-#import <Cordova/CDVCommandQueue.h>
+@interface CDVAccelerometer : CDVPlugin <UIAccelerometerDelegate>
+{
+    double x;
+    double y;
+    double z;
+    NSTimeInterval timestamp;
+}
 
-@interface MainViewController : CDVViewController
+@property (readonly, assign) BOOL isRunning;
+@property (nonatomic, strong) NSString* callbackId;
 
-@end
+- (CDVAccelerometer*)init;
 
-@interface MainCommandDelegate : CDVCommandDelegateImpl
-@end
+- (void)start:(CDVInvokedUrlCommand*)command;
+- (void)stop:(CDVInvokedUrlCommand*)command;
 
-@interface MainCommandQueue : CDVCommandQueue
 @end

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget>
+	<preference name="AllowInlineMediaPlayback" value="false"/>
+	<preference name="AutoHideSplashScreen" value="true"/>
+    <preference name="BackupWebStorage" value="cloud" />
+	<preference name="EnableLocation" value="false"/>
+	<preference name="EnableViewportScale" value="false"/>
+	<preference name="MediaPlaybackRequiresUserAction" value="false"/>
+	<preference name="ShowSplashScreenSpinner" value="true"/>
+    <preference name="FadeSplashScreen" value="true" />
+    <preference name="FadeSplashScreenDuration" value="2" />
+	<preference name="TopActivityIndicator" value="gray"/>
+	<preference name="UIWebViewBounce" value="true"/>
+    
+    <content src="index.html" />        
+        
+	<plugins>
+        <plugin name="InAppBrowser" value="CDVInAppBrowser" />
+		<plugin name="Accelerometer" value="CDVAccelerometer"/>
+		<plugin name="Battery" value="CDVBattery"/>
+		<plugin name="Camera" value="CDVCamera"/>
+		<plugin name="Capture" value="CDVCapture"/>
+		<plugin name="Compass" value="CDVLocation"/>
+		<plugin name="Contacts" value="CDVContacts"/>
+		<plugin name="Debug Console" value="CDVDebugConsole"/>
+		<plugin name="Device" value="CDVDevice"/>
+		<plugin name="File" value="CDVFile"/>
+		<plugin name="FileTransfer" value="CDVFileTransfer"/>
+		<plugin name="Geolocation" value="CDVLocation"/>
+		<plugin name="LocalNotification" value="LocalNotification"/>
+        <plugin name="Logger" value="CDVLogger" />
+		<plugin name="Media" value="CDVSound"/>
+		<plugin name="NetworkStatus" value="CDVConnection"/>
+		<plugin name="Notification" value="CDVNotification"/>
+		<plugin name="SplashScreen" value="CDVSplashScreen"/>
+	</plugins>
+	<access origin="*apache.org"/>
+	<access origin="*github.com"/>
+	<access origin="*googleapis.com"/>
+	<access origin="*gstatic.com"/>
+	<access origin="*monash.edu"/>
+</widget>

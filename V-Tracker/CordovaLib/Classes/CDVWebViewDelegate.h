@@ -17,24 +17,21 @@
  under the License.
  */
 
-//
-//  MainViewController.h
-//  V-Tracker
-//
-//  Created by Hadi Michael on 24-03-2013.
-//  Copyright Monash University 2013. All rights reserved.
-//
+#import <UIKit/UIKit.h>
 
-#import <Cordova/CDVViewController.h>
-#import <Cordova/CDVCommandDelegateImpl.h>
-#import <Cordova/CDVCommandQueue.h>
+/**
+ * Distinguishes top-level navigations from sub-frame navigations.
+ * shouldStartLoadWithRequest is called for every request, but didStartLoad
+ * and didFinishLoad is called only for top-level navigations.
+ * Relevant bug: CB-2389
+ */
+@interface CDVWebViewDelegate : NSObject <UIWebViewDelegate>{
+    __weak NSObject <UIWebViewDelegate>* _delegate;
+    NSInteger _loadCount;
+    NSInteger _state;
+    NSInteger _curLoadToken;
+}
 
-@interface MainViewController : CDVViewController
+- (id)initWithDelegate:(NSObject <UIWebViewDelegate>*)delegate;
 
-@end
-
-@interface MainCommandDelegate : CDVCommandDelegateImpl
-@end
-
-@interface MainCommandQueue : CDVCommandQueue
 @end

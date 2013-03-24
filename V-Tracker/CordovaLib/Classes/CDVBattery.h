@@ -17,24 +17,24 @@
  under the License.
  */
 
-//
-//  MainViewController.h
-//  V-Tracker
-//
-//  Created by Hadi Michael on 24-03-2013.
-//  Copyright Monash University 2013. All rights reserved.
-//
+#import <Foundation/Foundation.h>
+#import "CDVPlugin.h"
 
-#import <Cordova/CDVViewController.h>
-#import <Cordova/CDVCommandDelegateImpl.h>
-#import <Cordova/CDVCommandQueue.h>
+@interface CDVBattery : CDVPlugin {
+    UIDeviceBatteryState state;
+    float level;
+    bool isPlugged;
+    NSString* callbackId;
+}
 
-@interface MainViewController : CDVViewController
+@property (nonatomic) UIDeviceBatteryState state;
+@property (nonatomic) float level;
+@property (nonatomic) bool isPlugged;
+@property (strong) NSString* callbackId;
 
-@end
-
-@interface MainCommandDelegate : CDVCommandDelegateImpl
-@end
-
-@interface MainCommandQueue : CDVCommandQueue
+- (void)updateBatteryStatus:(NSNotification*)notification;
+- (NSDictionary*)getBatteryStatus;
+- (void)start:(CDVInvokedUrlCommand*)command;
+- (void)stop:(CDVInvokedUrlCommand*)command;
+- (void)dealloc;
 @end

@@ -17,24 +17,14 @@
  under the License.
  */
 
-//
-//  MainViewController.h
-//  V-Tracker
-//
-//  Created by Hadi Michael on 24-03-2013.
-//  Copyright Monash University 2013. All rights reserved.
+//  Bridge implementation file for using Cordova plugins in PhoneGap 0.9.6.
 //
 
-#import <Cordova/CDVViewController.h>
-#import <Cordova/CDVCommandDelegateImpl.h>
-#import <Cordova/CDVCommandQueue.h>
-
-@interface MainViewController : CDVViewController
-
-@end
-
-@interface MainCommandDelegate : CDVCommandDelegateImpl
-@end
-
-@interface MainCommandQueue : CDVCommandQueue
-@end
+/*
+ Returns YES if it is at least version specified as NSString(X)
+ Usage:
+ if (IsAtLeastiOSVersion(@"5.1")) {
+ // do something for iOS 5.1 or greater
+ }
+ */
+#define IsAtLeastiOSVersion(X) ([[[UIDevice currentDevice] systemVersion] compare:X options:NSNumericSearch] != NSOrderedAscending)
